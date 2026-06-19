@@ -1,0 +1,39 @@
+type Project @table {
+  name: String!
+  missionStatement: String!
+  heroImageUrl: String!
+  websiteUrl: String
+  socialMediaLinks: String
+}
+
+type Campaign @table {
+  title: String!
+  description: String!
+  targetAmount: Float!
+  currentAmount: Float!
+  project: Project!
+}
+
+type Volunteer @table {
+  fullName: String!
+  email: String!
+  phoneNumber: String!
+  skills: String
+  availabilityNotes: String
+  project: Project!
+}
+
+type Donation @table {
+  amount: Float!
+  donorName: String!
+  timestamp: Timestamp!
+  donorEmail: String
+  message: String
+  campaign: Campaign!
+}
+
+type Subscriber @table {
+  email: String!
+  subscribedAt: Timestamp
+  project: Project!
+}

@@ -1,0 +1,39 @@
+query ListProjects @auth(level: PUBLIC) {
+  projects {
+    id
+    name
+    missionStatement
+  }
+}
+
+mutation CreateDonation($campaignId: UUID!, $donorName: String!, $amount: Float!, $message: String) @auth(level: PUBLIC) {
+  donation_insert(data: {
+    campaign: { id: $campaignId },
+    donorName: $donorName,
+    amount: $amount,
+    message: $message,
+    timestamp_time: { now: true }
+  })
+}
+
+query GetProjectDetails($id: UUID!) @auth(level: PUBLIC) {
+  project(id: $id) {
+    name
+    heroImageUrl
+    campaigns_on_project {
+      title
+      currentAmount
+      targetAmount
+    }
+  }
+}
+
+mutation VolunteerForProject($projectId: UUID!, $fullName: String!, $email: String!, $phoneNumber: String!, $skills: String) @auth(level: USER) {
+  volunteer_insert(data: {
+    project: { id: $projectId },
+    fullName: $fullName,
+    email: $email,
+    phoneNumber: $phoneNumber,
+    skills: $skills
+  })
+}

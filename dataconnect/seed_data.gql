@@ -1,0 +1,26 @@
+mutation SeedDatabase @transaction {
+  project_insertMany(data: [
+    {
+      id: "550e8400-e29b-41d4-a716-446655440000",
+      name: "Ocean Cleanup Initiative",
+      missionStatement: "To remove 90% of floating ocean plastic.",
+      heroImageUrl: "https://example.com/ocean.jpg"
+    },
+    {
+      id: "550e8400-e29b-41d4-a716-446655440001",
+      name: "Global Tree Planting",
+      missionStatement: "Planting a billion trees worldwide.",
+      heroImageUrl: "https://example.com/trees.jpg"
+    }
+  ])
+  campaign_insertMany(data: [
+    {
+      id: "660e8400-e29b-41d4-a716-446655440000",
+      title: "Clean the Pacific",
+      description: "Focusing on the Great Pacific Garbage Patch.",
+      targetAmount: 50000.0,
+      currentAmount: 12000.0,
+      projectId: "550e8400-e29b-41d4-a716-446655440000"
+    }
+  ])
+}
