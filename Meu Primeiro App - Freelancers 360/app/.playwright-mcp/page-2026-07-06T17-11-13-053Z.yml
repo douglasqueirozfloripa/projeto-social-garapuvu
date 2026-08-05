@@ -1,0 +1,35 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: ✿
+      - text: FreelaAvalia 360
+    - generic [ref=e7]: Avaliação 360° entre freelancers e contratantes
+    - heading "Confiança que se constrói dos dois lados" [level=1] [ref=e8]
+    - paragraph [ref=e9]: Contratantes publicam projetos, freelancers participam e, ao final, os dois se avaliam. Reputação transparente para todo mundo trabalhar melhor.
+    - generic [ref=e10]:
+      - button "Criar minha conta" [ref=e11] [cursor=pointer]
+      - button "Entrar" [ref=e12] [cursor=pointer]
+  - generic [ref=e13]:
+    - heading "Como funciona" [level=2] [ref=e14]
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - generic [ref=e17]: 📝
+        - heading "Publique um projeto" [level=3] [ref=e18]
+        - paragraph [ref=e19]: Contratantes criam projetos e definem o freelancer. Simples e rápido.
+      - generic [ref=e20]:
+        - generic [ref=e21]: ⭐
+        - heading "Avaliação 360°" [level=3] [ref=e22]
+        - paragraph [ref=e23]: Ao concluir, freelancer e contratante se avaliam com nota de 1 a 5 e comentário.
+      - generic [ref=e24]:
+        - generic [ref=e25]: 🛡️
+        - heading "Reputação real" [level=3] [ref=e26]
+        - paragraph [ref=e27]: A média das avaliações aparece no perfil de cada pessoa. Nada de avaliação de um lado só.
+  - generic [ref=e29]:
+    - heading "Sobre o projeto" [level=2] [ref=e30]
+    - paragraph [ref=e31]: O FreelaAvalia 360 é um projeto-escola criado no Projeto Social Garapuvu para ensinar, na prática, desenvolvimento e testes de software.
+    - paragraph [ref=e32]: "O Garapuvu — nome da árvore símbolo de Florianópolis — ensina tecnologia de forma 100% gratuita e remota desde 2020. Já formou pessoas de vários estados do Brasil e até da Guiné-Bissau, conectando gente de diferentes lugares pelo mesmo propósito: aprender e abrir portas na tecnologia."
+  - contentinfo [ref=e33]:
+    - text: Feito com 💚 no Projeto Social Garapuvu — conheça em
+    - link "projeto-garapuvu.web.app" [ref=e34] [cursor=pointer]:
+      - /url: https://projeto-garapuvu.web.app/
+    - text: "Instrutor: Douglas Adriano Queiroz"

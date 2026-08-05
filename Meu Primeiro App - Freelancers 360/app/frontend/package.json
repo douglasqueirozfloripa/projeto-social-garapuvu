@@ -1,0 +1,45 @@
+{
+  "name": "freelavalia-frontend",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Frontend (React + Vite) do FreelaAvalia 360 — mobile-first",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:interface": "vitest run -t @interface ",
+    "test:ui": "vitest --ui",
+    "test:report": "vite preview --outDir relatorios/vitest --open",
+    "coverage": "vitest run --coverage",
+    "coverage:report": "open relatorios/cobertura/index.html",
+    "e2e": "playwright test",
+    "e2e:interface": "playwright test --grep @interface",
+    "e2e:e2e": "playwright test --grep @e2e",
+    "e2e:headed": "playwright test --headed",
+    "e2e:headed:slow": "SLOWMO=700 playwright test --headed --workers=1",
+    "e2e:ui": "playwright test --ui",
+    "e2e:debug": "playwright test --debug",
+    "e2e:headed:10s": "playwright test --headed --timeout=10000",
+    "e2e:report": "playwright show-report relatorios/playwright",
+    "e2e:smoke": "SLOWMO=900 playwright test fluxo-completo --headed --workers=1",
+    "e2e:smoke:selecao": "SLOWMO=900 playwright test selecao-candidatos --headed --workers=1",
+    "e2e:smoke:duas-vagas": "SLOWMO=900 playwright test freelancer-duas-vagas --headed --workers=1"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/react": "^16.0.1",
+    "@testing-library/user-event": "^14.5.2",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/coverage-v8": "^2.1.8",
+    "@vitest/ui": "^2.1.9",
+    "jsdom": "^25.0.1",
+    "vite": "^6.0.3",
+    "vitest": "^2.1.8"
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "$description": "Design Tokens do Projeto Social Garapuvu 2026. Formato compatível com o plugin 'Tokens Studio for Figma' (tokens.studio). Importe pelo painel do plugin: Settings > Import. Cada token traz um 'description' explicando o uso — ótimo para ensinar os alunos.",
+
+  "cor": {
+    "$description": "Paleta inspirada no garapuvu (árvore símbolo de Florianópolis): tronco escuro, floração dourada e papel quente.",
+
+    "marca": {
+      "azul-profundo": {
+        "value": "#0E1F38",
+        "type": "color",
+        "description": "COLORS.ink — Azul-marinho profundo. Cor base da marca. Fundo do hero, seção de currículo, rodapé e do favicon. Também é a theme-color do navegador (barra do celular)."
+      },
+      "azul-suave": {
+        "value": "#1B3357",
+        "type": "color",
+        "description": "COLORS.inkSoft — Azul um tom acima do profundo. Usado em textos de parágrafo dentro de cartões claros, para ser mais leve que o preto."
+      },
+      "ouro-floracao": {
+        "value": "#F2B705",
+        "type": "color",
+        "description": "COLORS.bloom — Amarelo-ouro da floração do garapuvu. Cor de destaque/ação: botões principais, palavras em destaque, o ponto do logo 'Garapuvu.' e as pétalas da flor no favicon."
+      },
+      "ambar": {
+        "value": "#E08A00",
+        "type": "color",
+        "description": "COLORS.bloomDeep — Âmbar (ouro mais escuro/maduro). Números, títulos secundários, links e o miolo da flor no favicon. Faz par com o ouro-floração em gradientes."
+      }
+    },
+
+    "natureza": {
+      "casca": {
+        "value": "#5B4636",
+        "type": "color",
+        "description": "COLORS.bark — Marrom da casca/tronco. Legendas, textos de apoio e o galho desenhado (componente Branch)."
+      },
+      "folha": {
+        "value": "#3E6B4F",
+        "type": "color",
+        "description": "COLORS.leaf — Verde-folha. Cor de reserva da paleta natural (folhagem); disponível para novos elementos como ícones ou selos."
+      }
+    },
+
+    "superficie": {
+      "papel": {
+        "value": "#FBF7EE",
+        "type": "color",
+        "description": "COLORS.paper — Bege 'papel quente'. Fundo geral das seções claras e cor do texto sobre o fundo escuro. Dá um ar acolhedor, diferente do branco puro."
+      },
+      "papel-esmaecido": {
+        "value": "#F0E9DA",
+        "type": "color",
+        "description": "COLORS.paperDim — Papel um tom mais escuro. Bordas de cartões, linhas divisórias e fundo de blocos de aviso."
+      },
+      "branco": {
+        "value": "#FFFFFF",
+        "type": "color",
+        "description": "Branco puro. Fundo interno dos cartões (.gp-card) para eles saltarem sobre o papel bege."
+      }
+    },
+
+    "texto": {
+      "nevoa": {
+        "value": "#92A4BE",
+        "type": "color",
+        "description": "COLORS.mist — Azul-cinza 'névoa'. Textos discretos sobre o fundo escuro (ex.: 'Turma 2026', unidade de visitas)."
+      },
+      "azul-claro-corpo": {
+        "value": "#C9D4E4",
+        "type": "color",
+        "description": "Texto de parágrafo sobre o fundo escuro do hero (mais claro que a névoa, para leitura confortável)."
+      },
+      "azul-claro-legenda": {
+        "value": "#9FB0C6",
+        "type": "color",
+        "description": "Legenda sob os títulos da seção escura de currículo."
+      },
+      "azul-rodape": {
+        "value": "#8DA0BA",
+        "type": "color",
+        "description": "Cor do texto do rodapé sobre o azul profundo."
+      }
+    }
+  },
+
+  "fonte": {
+    "familia": {
+      "display": {
+        "value": "Fraunces",
+        "type": "fontFamilies",
+        "description": "Fonte serifada dos títulos e do logo (classe .gp-display). Dá personalidade editorial."
+      },
+      "corpo": {
+        "value": "Inter",
+        "type": "fontFamilies",
+        "description": "Fonte sem serifa do texto corrido, botões e legendas. Alta legibilidade."
+      }
+    },
+    "peso": {
+      "regular": { "value": "400", "type": "fontWeights" },
+      "medio": { "value": "500", "type": "fontWeights" },
+      "semibold": { "value": "600", "type": "fontWeights" },
+      "bold": { "value": "700", "type": "fontWeights" },
+      "black": { "value": "900", "type": "fontWeights", "description": "Usado nos grandes títulos display e no logo." }
+    }
+  },
+
+  "raio": {
+    "botao": { "value": "999px", "type": "borderRadius", "description": "Botões e pílulas totalmente arredondados." },
+    "cartao": { "value": "18px", "type": "borderRadius", "description": "Cartões .gp-card." },
+    "cta": { "value": "28px", "type": "borderRadius", "description": "Bloco grande de chamada para ação." },
+    "favicon": { "value": "22px", "type": "borderRadius", "description": "Cantos arredondados do quadrado do favicon (rx=22 em 100x100)." }
+  }
+}

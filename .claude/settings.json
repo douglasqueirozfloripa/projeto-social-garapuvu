@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -o /dev/null -w \"%{http_code} %{content_type}\\\\n\" http://localhost:5173/favicon.svg)",
+      "Bash(node -e \"console.log\\(JSON.stringify\\(require\\('./package.json'\\).scripts\\)\\)\")",
+      "Bash(npx firebase *)",
+      "Bash(which wkhtmltopdf *)",
+      "Read(//Applications/**)",
+      "Bash('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless --disable-gpu --no-pdf-header-footer '--print-to-pdf=/Users/douglasqueiroz/projeto-social-garapuvu/Modulo 0 - Introdução/Aula0.1_Preparacao_do_Ambiente_Win_Mac.pdf' file:///private/tmp/claude-502/-Users-douglasqueiroz-projeto-social-garapuvu/e8919032-ead8-44b1-9b08-be2eb1543044/scratchpad/ambiente_deck.html)",
+      "Bash(rm -f /private/tmp/claude-502/-Users-douglasqueiroz-projeto-social-garapuvu/e8919032-ead8-44b1-9b08-be2eb1543044/scratchpad/ambiente.pdf)",
+      "Bash('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless=new --disable-gpu --no-pdf-header-footer --print-to-pdf=/private/tmp/claude-502/-Users-douglasqueiroz-projeto-social-garapuvu/e8919032-ead8-44b1-9b08-be2eb1543044/scratchpad/ambiente.pdf file:///private/tmp/claude-502/-Users-douglasqueiroz-projeto-social-garapuvu/e8919032-ead8-44b1-9b08-be2eb1543044/scratchpad/ambiente_deck.html)",
+      "Bash(pkill -f \"Google Chrome\")",
+      "Bash(SCRATCH=\"/private/tmp/claude-502/-Users-douglasqueiroz-projeto-social-garapuvu/e8919032-ead8-44b1-9b08-be2eb1543044/scratchpad\"; DEST=\"/Users/douglasqueiroz/projeto-social-garapuvu/Modulo 0 - Introdução/Aula0.1_Preparacao_do_Ambiente_Win_Mac.pdf\"; cp \"$SCRATCH/ambiente.pdf\" \"$DEST\"; ls -la \"$DEST\"; echo \"=== conteúdo do Módulo 0 \\(nada foi alterado nos existentes\\) ===\"; ls -la \"/Users/douglasqueiroz/projeto-social-garapuvu/Modulo 0 - Introdução/\")"
+    ],
+    "additionalDirectories": [
+      "/Users/douglasqueiroz/projeto-social-garapuvu/Modulo 0 - Introdução"
+    ]
+  }
+}

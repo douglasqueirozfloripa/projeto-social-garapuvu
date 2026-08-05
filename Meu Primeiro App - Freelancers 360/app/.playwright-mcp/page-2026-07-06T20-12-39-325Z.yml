@@ -1,0 +1,41 @@
+- generic [ref=e50]:
+  - banner [ref=e51]:
+    - generic [ref=e52]:
+      - generic [ref=e53]: ✿
+      - text: FreelaAvalia 360
+    - navigation [ref=e54]:
+      - button "Projetos" [ref=e55] [cursor=pointer]
+      - button "Meu perfil" [ref=e56] [cursor=pointer]
+      - generic [ref=e57]: Douglas Contratante · contratante
+      - button "Sair" [ref=e58] [cursor=pointer]
+  - main [ref=e59]:
+    - generic [ref=e60]:
+      - generic [ref=e61]:
+        - heading "Projetos" [level=2] [ref=e62]
+        - button "+ Novo projeto" [active] [ref=e63] [cursor=pointer]
+      - generic [ref=e64]: Nenhum projeto ainda. Clique em “+ Novo projeto”.
+      - dialog [ref=e68]:
+        - generic [ref=e69]:
+          - heading "Novo projeto" [level=2] [ref=e70]
+          - button "Fechar" [ref=e71] [cursor=pointer]: ×
+        - generic [ref=e72]:
+          - generic [ref=e73]: Título do projeto
+          - textbox "Título do projeto" [ref=e74]:
+            - /placeholder: "Ex.: Landing page para loja"
+          - generic [ref=e75]: Descrição do projeto
+          - textbox "Descrição do projeto" [ref=e76]:
+            - /placeholder: Descreva o que precisa ser feito, prazos e o que espera do freelancer.
+          - generic [ref=e77]: Telefone para contato
+          - textbox "Telefone para contato" [ref=e78]:
+            - /placeholder: (48) 90000-0000
+            - text: (48) 90000-0000
+          - generic [ref=e79]: Endereço para contato
+          - textbox "Endereço para contato" [ref=e80]:
+            - /placeholder: Cidade/UF ou endereço
+            - text: Florianópolis/SC
+          - paragraph [ref=e81]: Contato do dono (dougaq@gmail.com). Sugerimos telefone e endereço do seu perfil — ajuste se quiser um contato só para este projeto.
+          - button "Criar projeto" [ref=e83] [cursor=pointer]
+  - contentinfo [ref=e65]:
+    - text: Projeto Social Garapuvu ·
+    - link "projeto-garapuvu.web.app" [ref=e66] [cursor=pointer]:
+      - /url: https://projeto-garapuvu.web.app/

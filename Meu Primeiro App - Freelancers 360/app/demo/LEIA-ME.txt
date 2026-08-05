@@ -1,0 +1,41 @@
+FreelaAvalia 360 — Demo offline (Projeto Social Garapuvu)
+=========================================================
+
+COMO USAR
+---------
+1. Descompacte este ZIP.
+2. Dê dois cliques no arquivo "index.html".
+   Ele abre no seu navegador (Chrome, Edge ou Firefox) e já funciona —
+   NÃO precisa instalar nada, nem internet, nem servidor.
+
+O QUE FUNCIONA
+--------------
+Tudo roda dentro do próprio navegador. Os cadastros (usuários, projetos,
+candidaturas, avaliações) são salvos no seu navegador (localStorage) e
+continuam lá mesmo se você fechar e abrir de novo.
+
+LOGINS PRONTOS (senha de todos: 1234)
+-------------------------------------
+- Contratante: dougaq@gmail.com
+- Freelancer:  douglas.queiroz@clinicorp.com
+- Freelancer:  ana.freela@garapuvu.org
+
+Você também pode criar sua própria conta na tela "Criar conta".
+
+FLUXO SUGERIDO PARA EXPERIMENTAR
+--------------------------------
+1. Entre como CONTRATANTE (dougaq@gmail.com) e publique um projeto.
+2. Saia e entre como FREELANCER (ana.freela@garapuvu.org) e candidate-se.
+3. Volte como contratante: veja os candidatos, selecione um,
+   inicie o trabalho e conclua.
+4. Com o projeto concluído, contratante e freelancer se avaliam (nota 1 a 5).
+
+QUER COMEÇAR DO ZERO?
+---------------------
+Para apagar todos os cadastros e voltar ao estado inicial:
+abra o navegador, tecle F12 → aba "Application"/"Armazenamento" →
+Local Storage → apague as chaves que começam com "freelavalia".
+(Ou use uma janela anônima para testar sem salvar nada.)
+
+Feito com 💚 no Projeto Social Garapuvu — projeto-garapuvu.web.app
+Instrutor: Douglas Adriano Queiroz

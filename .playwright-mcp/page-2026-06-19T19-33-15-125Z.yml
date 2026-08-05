@@ -1,0 +1,167 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e8]:
+      - navigation [ref=e9]:
+        - generic [ref=e11]: Garapuvu.
+        - generic [ref=e12]: Turma 2026
+      - paragraph [ref=e13]: ● Projeto Social · 100% gratuito · remoto
+      - heading "Aprender tecnologia de graça, de qualquer lugar do mundo." [level=1] [ref=e15]
+      - paragraph [ref=e17]: Desde 2020, o Garapuvu ensina lógica de programação, desenvolvimento e testes de software — e, agora, Inteligência Artificial aplicada. De Florianópolis a outros estados do Brasil, e até outros países.
+      - generic [ref=e18]:
+        - button "Quero participar →" [ref=e19] [cursor=pointer]
+        - button "Ver o conteúdo" [ref=e20] [cursor=pointer]
+      - img [ref=e22]
+  - generic [ref=e69]:
+    - generic [ref=e70]:
+      - generic [ref=e71]: 100+
+      - generic [ref=e72]: horas de curso
+    - generic [ref=e73]:
+      - generic [ref=e74]: "26"
+      - generic [ref=e75]: aulas
+    - generic [ref=e76]:
+      - generic [ref=e77]: "6"
+      - generic [ref=e78]: anos de projeto
+    - generic [ref=e79]:
+      - generic [ref=e80]: "2"
+      - generic [ref=e81]: países atendidos
+  - generic [ref=e82]:
+    - paragraph [ref=e83]: Como funciona
+    - heading "Um encontro por semana. O ano inteiro com você." [level=2] [ref=e84]
+    - generic [ref=e85]:
+      - generic [ref=e86]:
+        - generic [ref=e87]: Encontros
+        - generic [ref=e88]: Quartas-feiras, das 19h às 21h
+      - generic [ref=e89]:
+        - generic [ref=e90]: Plataforma
+        - generic [ref=e91]: Aulas remotas via Google Meet
+      - generic [ref=e92]:
+        - generic [ref=e93]: Inscrição
+        - generic [ref=e94]: Basta ter um e-mail e um computador com internet
+      - generic [ref=e95]:
+        - generic [ref=e96]: Suporte
+        - generic [ref=e97]: Professores disponíveis durante a semana
+      - generic [ref=e98]:
+        - generic [ref=e99]: Origem
+        - generic [ref=e100]: Florianópolis, Santa Catarina — e agora em todo o Brasil
+      - generic [ref=e101]:
+        - generic [ref=e102]: Idade mínima
+        - generic [ref=e103]: 16 anos (com autorização dos pais)
+    - generic [ref=e104]:
+      - strong [ref=e105]: "Importante:"
+      - text: participantes a partir de 16 anos são bem-vindos mediante autorização dos pais ou responsáveis. Qualquer nacionalidade pode participar.
+  - generic [ref=e107]:
+    - paragraph [ref=e108]: Planejamento do curso 2026
+    - heading "Três módulos, do fundamento à Inteligência Artificial." [level=2] [ref=e109]
+    - paragraph [ref=e110]: 26 aulas que crescem como os ramos do garapuvu — da raiz dos fundamentos até a floração com IA.
+    - generic [ref=e111]:
+      - generic [ref=e112]:
+        - button "Módulo 01 Fundamentos de Testes de Software" [pressed] [ref=e113] [cursor=pointer]:
+          - generic [ref=e114]: Módulo 01
+          - generic [ref=e115]: Fundamentos de Testes de Software
+        - button "Módulo 02 Prática em Testes de Software" [ref=e116] [cursor=pointer]:
+          - generic [ref=e117]: Módulo 02
+          - generic [ref=e118]: Prática em Testes de Software
+        - button "Módulo 03 Inteligência Artificial e Cursor IDE" [ref=e119] [cursor=pointer]:
+          - generic [ref=e120]: Módulo 03
+          - generic [ref=e121]: Inteligência Artificial e Cursor IDE
+      - generic [ref=e122]:
+        - paragraph [ref=e123]: CTFL · Certified Tester Foundation Level
+        - generic [ref=e124]:
+          - generic [ref=e125]:
+            - generic [ref=e126]: "01"
+            - generic [ref=e127]: Fundamentos, riscos e estratégias de teste
+          - generic [ref=e128]:
+            - generic [ref=e129]: "02"
+            - generic [ref=e130]: Modelos de desenvolvimento, ágil, DevOps e CI/CD
+          - generic [ref=e131]:
+            - generic [ref=e132]: "03"
+            - generic [ref=e133]: Teste estático, revisões e análise de código
+          - generic [ref=e134]:
+            - generic [ref=e135]: "04"
+            - generic [ref=e136]: Níveis e tipos de testes
+          - generic [ref=e137]:
+            - generic [ref=e138]: "05"
+            - generic [ref=e139]: Técnicas de caixa preta, branca e por experiência
+          - generic [ref=e140]:
+            - generic [ref=e141]: "06"
+            - generic [ref=e142]: "Testes de design: acessibilidade, usabilidade e UX/UI"
+          - generic [ref=e143]:
+            - generic [ref=e144]: "07"
+            - generic [ref=e145]: Gerenciamento, planejamento e estimativas de teste
+          - generic [ref=e146]:
+            - generic [ref=e147]: "08"
+            - generic [ref=e148]: Ferramentas, performance e Planning Poker
+          - generic [ref=e149]:
+            - generic [ref=e150]: "09"
+            - generic [ref=e151]: Pirâmide de testes, métricas e KPIs de qualidade
+          - generic [ref=e152]:
+            - generic [ref=e153]: "10"
+            - generic [ref=e154]: Scrum e Kanban
+  - generic [ref=e155]:
+    - paragraph [ref=e156]: Objetivos
+    - heading "Por que o Garapuvu existe" [level=2] [ref=e157]
+    - generic [ref=e158]:
+      - generic [ref=e159]:
+        - heading "Capacitação" [level=3] [ref=e161]
+        - paragraph [ref=e162]: Capacitar profissionais que atuam ou desejam atuar na área de tecnologia.
+      - generic [ref=e163]:
+        - heading "Integração" [level=3] [ref=e165]
+        - paragraph [ref=e166]: Integrar profissionais e mentores no processo de tutoria.
+      - generic [ref=e167]:
+        - heading "Conexão com o mercado" [level=3] [ref=e169]
+        - paragraph [ref=e170]: Aproximar empresas do projeto, criando um banco de profissionais capacitados.
+      - generic [ref=e171]:
+        - heading "Desenvolvimento nacional" [level=3] [ref=e173]
+        - paragraph [ref=e174]: Ajudar no desenvolvimento tecnológico e sustentável do Brasil.
+      - generic [ref=e175]:
+        - heading "Multiplicação" [level=3] [ref=e177]
+        - paragraph [ref=e178]: Disseminar conhecimento e formar novos tutores e professores.
+      - generic [ref=e179]:
+        - heading "Impacto social" [level=3] [ref=e181]
+        - paragraph [ref=e182]: Abrir portas da tecnologia para pessoas de qualquer origem ou país.
+  - generic [ref=e183]:
+    - paragraph [ref=e184]: Marcos 2026
+    - heading "O ano, ramo a ramo" [level=2] [ref=e185]
+    - generic [ref=e186]:
+      - generic [ref=e187]:
+        - generic [ref=e188]: 1º Semestre
+        - generic [ref=e189]:
+          - generic [ref=e190]: →
+          - generic [ref=e191]: Abrir novas turmas (5–20 alunos cada)
+        - generic [ref=e192]:
+          - generic [ref=e193]: →
+          - generic [ref=e194]: Ampliar alcance internacional
+        - generic [ref=e195]:
+          - generic [ref=e196]: →
+          - generic [ref=e197]: Parcerias com empresas de tecnologia
+      - generic [ref=e198]:
+        - generic [ref=e199]: Meio do ano
+        - generic [ref=e200]:
+          - generic [ref=e201]: →
+          - generic [ref=e202]: Formar 30 pessoas até junho
+        - generic [ref=e203]:
+          - generic [ref=e204]: →
+          - generic [ref=e205]: Integrar empresas ao projeto
+        - generic [ref=e206]:
+          - generic [ref=e207]: →
+          - generic [ref=e208]: Consolidar o módulo de IA
+      - generic [ref=e209]:
+        - generic [ref=e210]: 2º Semestre
+        - generic [ref=e211]:
+          - generic [ref=e212]: →
+          - generic [ref=e213]: Formar 50 pessoas até dezembro
+        - generic [ref=e214]:
+          - generic [ref=e215]: →
+          - generic [ref=e216]: Programa de mentoria
+        - generic [ref=e217]:
+          - generic [ref=e218]: →
+          - generic [ref=e219]: Evento de formatura presencial
+  - generic [ref=e221]:
+    - img [ref=e223]
+    - heading "Quer fazer parte do projeto?" [level=2] [ref=e262]
+    - paragraph [ref=e263]: Conheça o conteúdo das aulas e inscreva-se na próxima turma. Basta um e-mail e um computador com internet.
+    - button "Saiba mais e participe →" [ref=e264] [cursor=pointer]
+  - contentinfo [ref=e265]:
+    - generic [ref=e266]: Garapuvu.
+    - text: "Projeto Social Garapuvu 2026 · Instrutor: Douglas Adriano Queiroz"
+    - text: Feito para a comunidade de tecnologia — de Florianópolis para o mundo.

@@ -1,0 +1,32 @@
+- generic [ref=e50]:
+  - banner [ref=e51]:
+    - generic [ref=e52]:
+      - generic [ref=e53]: ✿
+      - text: FreelaAvalia 360
+    - navigation [ref=e54]:
+      - button "Projetos" [ref=e55] [cursor=pointer]
+      - button "Meu perfil" [ref=e56] [cursor=pointer]
+      - generic [ref=e57]: Douglas Contratante · contratante
+      - button "Sair" [ref=e58] [cursor=pointer]
+  - main [ref=e59]:
+    - generic [ref=e60]:
+      - generic [ref=e61]:
+        - heading "Projetos" [level=2] [ref=e62]
+        - button "+ Novo projeto" [ref=e63] [cursor=pointer]
+      - article [ref=e85]:
+        - generic [ref=e86]: Publicado
+        - heading "Landing page para ONG" [level=3] [ref=e87]
+        - paragraph [ref=e88]: Site institucional de uma página com formulário de contato.
+        - paragraph [ref=e89]: "Contratante #1 · Aguardando freelancer"
+        - list [ref=e90]:
+          - listitem [ref=e91]: ✉️ dougaq@gmail.com
+          - listitem [ref=e92]: 📞 (48) 90000-0000
+          - listitem [ref=e93]: 📍 Florianópolis/SC
+        - generic [ref=e94]:
+          - button "Ver candidatos (0)" [ref=e95] [cursor=pointer]
+          - button "Editar" [ref=e96] [cursor=pointer]
+          - button "Excluir" [ref=e97] [cursor=pointer]
+  - contentinfo [ref=e65]:
+    - text: Projeto Social Garapuvu ·
+    - link "projeto-garapuvu.web.app" [ref=e66] [cursor=pointer]:
+      - /url: https://projeto-garapuvu.web.app/

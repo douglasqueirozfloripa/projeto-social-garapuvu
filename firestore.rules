@@ -2,17 +2,29 @@ rules_version='2'
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Contador total de visitantes (documento único `stats/visits`).
+    // Regra permanente (sem data de validade):
+    //  • leitura liberada — qualquer visitante pode ver o total;
+    //  • escrita só permite documentos contendo EXCLUSIVAMENTE o campo
+    //    numérico `count`, evitando que alguém grave lixo na coleção.
+    match /stats/{docId} {
+      allow read: if true;
+      allow create, update: if request.resource.data.keys().hasOnly(['count'])
+                            && request.resource.data.count is int;
+    }
+
+    // Coleção de presença usada pelo contador de visitantes ONLINE agora.
+    //  • leitura liberada — qualquer visitante pode ver a contagem;
+    //  • escrita só permite documentos contendo EXCLUSIVAMENTE `lastSeen`.
+    match /presence/{sessionId} {
+      allow read: if true;
+      allow create, update: if request.resource.data.keys().hasOnly(['lastSeen']);
+      allow delete: if true;
+    }
+
+    // Tudo o que não for `stats`/`presence` fica negado por padrão (seguro).
     match /{document=**} {
-      // This rule allows anyone with your database reference to view, edit,
-      // and delete all data in your database. It is useful for getting
-      // started, but it is configured to expire after 30 days because it
-      // leaves your app open to attackers. At that time, all client
-      // requests to your database will be denied.
-      //
-      // Make sure to write security rules for your app before that time, or
-      // else all client requests to your database will be denied until you
-      // update your rules.
-      allow read, write: if request.time < timestamp.date(2026, 7, 19);
+      allow read, write: if false;
     }
   }
 }

@@ -1,0 +1,35 @@
+- generic [ref=f3e20]:
+  - generic [ref=f3e21]:
+    - generic [ref=f3e22]:
+      - generic [ref=f3e23]: ✿
+      - text: FreelaAvalia 360
+    - generic [ref=f3e24]: Avaliação 360° entre freelancers e contratantes
+    - heading "Confiança que se constrói dos dois lados" [level=1] [ref=f3e25]
+    - paragraph [ref=f3e26]: Contratantes publicam projetos, freelancers participam e, ao final, os dois se avaliam. Reputação transparente para todo mundo trabalhar melhor.
+    - generic [ref=f3e27]:
+      - button "Criar minha conta" [ref=f3e28] [cursor=pointer]
+      - button "Entrar" [ref=f3e29] [cursor=pointer]
+  - generic [ref=f3e30]:
+    - heading "Como funciona" [level=2] [ref=f3e31]
+    - generic [ref=f3e32]:
+      - generic [ref=f3e33]:
+        - generic [ref=f3e34]: 📝
+        - heading "Publique um projeto" [level=3] [ref=f3e35]
+        - paragraph [ref=f3e36]: Contratantes criam projetos e definem o freelancer. Simples e rápido.
+      - generic [ref=f3e37]:
+        - generic [ref=f3e38]: ⭐
+        - heading "Avaliação 360°" [level=3] [ref=f3e39]
+        - paragraph [ref=f3e40]: Ao concluir, freelancer e contratante se avaliam com nota de 1 a 5 e comentário.
+      - generic [ref=f3e41]:
+        - generic [ref=f3e42]: 🛡️
+        - heading "Reputação real" [level=3] [ref=f3e43]
+        - paragraph [ref=f3e44]: A média das avaliações aparece no perfil de cada pessoa. Nada de avaliação de um lado só.
+  - generic [ref=f3e46]:
+    - heading "Sobre o projeto" [level=2] [ref=f3e47]
+    - paragraph [ref=f3e48]: O FreelaAvalia 360 é um projeto-escola criado no Projeto Social Garapuvu para ensinar, na prática, desenvolvimento e testes de software.
+    - paragraph [ref=f3e49]: "O Garapuvu — nome da árvore símbolo de Florianópolis — ensina tecnologia de forma 100% gratuita e remota desde 2020. Já formou pessoas de vários estados do Brasil e até da Guiné-Bissau, conectando gente de diferentes lugares pelo mesmo propósito: aprender e abrir portas na tecnologia."
+  - contentinfo [ref=f3e50]:
+    - text: Feito com 💚 no Projeto Social Garapuvu — conheça em
+    - link "projeto-garapuvu.web.app" [ref=f3e51] [cursor=pointer]:
+      - /url: https://projeto-garapuvu.web.app/
+    - text: "Instrutor: Douglas Adriano Queiroz"
