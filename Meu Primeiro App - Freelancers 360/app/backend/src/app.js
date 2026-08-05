@@ -105,11 +105,12 @@ export function criarApp() {
   /** POST /login — autentica por e-mail e senha; retorna o usuário (sem senha). */
   app.post("/login", (req, res) => {
     const { email, senha } = req.body;
-    if (!emailValido(email) || !senha) return res.status(400).json({ erro: "e-mail ou senha inválidos - 1" });
-    //Performance - Economia de request e processamento.
+    // Performance: rejeita entrada malformada antes de consultar o repositório —
+    // economiza a busca quando o e-mail nem tem formato válido ou a senha veio vazia.
+    if (!emailValido(email) || !senha) return res.status(400).json({ erro: "e-mail ou senha inválidos" });
 
     const u = repo.acharUsuarioPorEmail(email);
-    if (!u || u.senha !== senha) return res.status(401).json({ erro: "e-mail ou senha inválidos - 2" });
+    if (!u || u.senha !== senha) return res.status(401).json({ erro: "e-mail ou senha inválidos" });
     return res.json(semSenha(u));
   });
 

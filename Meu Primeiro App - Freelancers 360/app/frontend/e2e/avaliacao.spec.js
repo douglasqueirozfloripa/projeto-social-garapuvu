@@ -18,7 +18,7 @@ async function cadastrar(page, { nome, papel, email, telefone, endereco }) {
   if (telefone) await page.getByTestId("input-telefone").fill(telefone);
   if (endereco) await page.getByTestId("input-endereco").fill(endereco);
   await page.getByTestId("input-email").fill(email);
-  await page.getByTestId("input-senha-testefalhar").fill("1234");
+  await page.getByTestId("input-senha").fill("1234");
   await page.getByTestId("enviar-auth").click();
   await expect(page.getByTestId("nav-projetos")).toBeVisible();
 }
