@@ -334,7 +334,7 @@ describe("@unitario semSenha (função pura)", () => {
 describe("@integracao Bordas e exceções", () => {
   it("aceita requisições SEM corpo sem quebrar (express.json garante req.body = {})", async () => {
     expect((await request(app).post("/usuarios")).status).toBe(400);
-    expect((await request(app).post("/login")).status).toBe(401);
+    expect((await request(app).post("/login")).status).toBe(400); // sem corpo → falha na validação antes de consultar o repositório
     expect((await request(app).post("/logout")).status).toBe(400);
     expect((await request(app).post("/contratos")).status).toBe(400);
     expect((await request(app).post("/avaliacoes")).status).toBe(404); // sem contratoId → contrato não encontrado

@@ -18,6 +18,18 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Python (Desafio Churn)
+.venv/
+__pycache__/
+.pytest_cache/
+.coverage
+
+# Relatórios de teste (gerados localmente)
+coverage/
+relatorios/
+playwright-report/
+test-results/
+
 # Editor
 .vscode/*
 !.vscode/extensions.json
