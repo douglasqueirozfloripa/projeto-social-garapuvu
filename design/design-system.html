@@ -1,0 +1,787 @@
+<style>
+  /* ─────────────────────────────────────────────────────────
+     Garapuvu — Design System
+     A própria página usa a identidade que documenta.
+     Tokens de UI adaptam ao tema; os swatches mostram o hex real.
+     ───────────────────────────────────────────────────────── */
+
+  :root {
+    /* Cores da marca (valores fixos — são o conteúdo) */
+    --brand-ink: #0E1F38;
+    --brand-ink-soft: #1B3357;
+    --brand-bloom: #F2B705;
+    --brand-bloom-deep: #E08A00;
+    --brand-bark: #5B4636;
+    --brand-leaf: #3E6B4F;
+    --brand-paper: #FBF7EE;
+    --brand-paper-dim: #F0E9DA;
+    --brand-mist: #92A4BE;
+
+    /* Tokens de UI da página — tema claro (mundo "papel") */
+    --bg: #FBF7EE;
+    --bg-2: #F4EEDF;
+    --surface: #FFFFFF;
+    --border: #E7DEC9;
+    --border-strong: #D8CCB0;
+    --text: #0E1F38;
+    --text-soft: #5B4636;
+    --text-dim: #8A7C68;
+    --accent: #E08A00;
+    --accent-quiet: rgba(224, 138, 0, .12);
+    --shadow: 0 1px 2px rgba(14,31,56,.05), 0 8px 24px rgba(14,31,56,.06);
+
+    --serif: 'Fraunces', 'Georgia', 'Times New Roman', serif;
+    --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --mono: 'SF Mono', 'JetBrains Mono', 'Consolas', ui-monospace, monospace;
+
+    --step--1: clamp(.78rem, .76rem + .1vw, .84rem);
+    --step-0:  clamp(.98rem, .95rem + .15vw, 1.06rem);
+    --step-1:  clamp(1.15rem, 1.05rem + .4vw, 1.35rem);
+    --step-2:  clamp(1.4rem, 1.2rem + .8vw, 1.85rem);
+    --step-3:  clamp(1.9rem, 1.4rem + 2vw, 2.9rem);
+    --step-4:  clamp(2.6rem, 1.6rem + 4vw, 4.8rem);
+
+    --maxw: 1080px;
+    --radius-card: 18px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0B182D;
+      --bg-2: #0E1F38;
+      --surface: #15294A;
+      --border: rgba(255,255,255,.10);
+      --border-strong: rgba(255,255,255,.18);
+      --text: #FBF7EE;
+      --text-soft: #B7C3D6;
+      --text-dim: #92A4BE;
+      --accent: #F2B705;
+      --accent-quiet: rgba(242, 183, 5, .14);
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 30px rgba(0,0,0,.35);
+    }
+  }
+  /* Toggle do visualizador vence a media query nos dois sentidos */
+  :root[data-theme="light"] {
+    --bg: #FBF7EE; --bg-2: #F4EEDF; --surface: #FFFFFF;
+    --border: #E7DEC9; --border-strong: #D8CCB0;
+    --text: #0E1F38; --text-soft: #5B4636; --text-dim: #8A7C68;
+    --accent: #E08A00; --accent-quiet: rgba(224,138,0,.12);
+    --shadow: 0 1px 2px rgba(14,31,56,.05), 0 8px 24px rgba(14,31,56,.06);
+  }
+  :root[data-theme="dark"] {
+    --bg: #0B182D; --bg-2: #0E1F38; --surface: #15294A;
+    --border: rgba(255,255,255,.10); --border-strong: rgba(255,255,255,.18);
+    --text: #FBF7EE; --text-soft: #B7C3D6; --text-dim: #92A4BE;
+    --accent: #F2B705; --accent-quiet: rgba(242,183,5,.14);
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 30px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing: border-box; }
+  body, .ds { margin: 0; }
+  .ds {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: var(--step-0);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    transition: background .3s ease, color .3s ease;
+  }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+  h1, h2, h3 { font-family: var(--serif); font-weight: 900; line-height: 1.05; letter-spacing: -.02em; text-wrap: balance; margin: 0; }
+  p { max-width: 65ch; }
+  a { color: var(--accent); }
+
+  .eyebrow {
+    font-family: var(--sans);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    background: var(--brand-ink);
+    color: var(--brand-paper);
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  .hero::after {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(120% 90% at 85% -10%, rgba(242,183,5,.18), transparent 55%),
+      linear-gradient(to top, rgba(11,24,45,.6), transparent 40%);
+    pointer-events: none;
+  }
+  .hero .wrap { position: relative; z-index: 1; padding-top: 68px; padding-bottom: 72px; }
+  .hero-mark { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 40px; }
+  .hero-mark svg { width: 40px; height: 40px; border-radius: 10px; display: block; }
+  .hero-logo { font-family: var(--serif); font-weight: 900; font-size: 1.4rem; }
+  .hero-logo .dot { color: var(--brand-bloom); }
+  .hero h1 { font-size: var(--step-4); max-width: 16ch; }
+  .hero h1 em { color: var(--brand-bloom); font-style: italic; }
+  .hero p.lede { color: #C9D4E4; font-size: var(--step-1); margin-top: 22px; max-width: 46ch; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 34px; color: var(--brand-mist); font-size: var(--step--1); }
+  .hero-meta b { color: var(--brand-paper); font-weight: 600; }
+
+  /* Botão de tema */
+  .theme-toggle {
+    position: absolute; top: 20px; right: 20px; z-index: 3;
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,.08);
+    color: var(--brand-paper);
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 999px; padding: 8px 14px;
+    font-family: var(--sans); font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: background .2s, transform .15s;
+  }
+  .theme-toggle:hover { background: rgba(255,255,255,.16); transform: translateY(-1px); }
+
+  /* ── SECTIONS ── */
+  section.block { padding: 72px 0 8px; }
+  .sec-head { margin-bottom: 34px; }
+  .sec-head h2 { font-size: var(--step-3); margin-top: 8px; }
+  .sec-head p { color: var(--text-soft); margin-top: 12px; }
+
+  /* ── COLOR SWATCHES ── */
+  .group-label {
+    font-size: var(--step--1); font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--text-dim);
+    margin: 30px 0 14px; display: flex; align-items: center; gap: 12px;
+  }
+  .group-label::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+  .swatch {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    display: flex; flex-direction: column;
+  }
+  .swatch .chip { height: 92px; position: relative; }
+  .swatch .chip .var {
+    position: absolute; left: 12px; bottom: 10px;
+    font-family: var(--mono); font-size: 11px;
+    padding: 3px 8px; border-radius: 6px;
+    background: rgba(255,255,255,.82); color: #0E1F38;
+  }
+  .swatch .chip .var.on-light { background: rgba(14,31,56,.78); color: #FBF7EE; }
+  .swatch .body { padding: 14px 16px 16px; }
+  .swatch .name { font-family: var(--serif); font-weight: 600; font-size: 1.05rem; }
+  .swatch .hex {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: var(--mono); font-size: 13px; color: var(--text-soft);
+    background: transparent; border: 0; padding: 4px 0; cursor: copy;
+    margin-top: 2px;
+  }
+  .swatch .hex:hover { color: var(--accent); }
+  .swatch .hex svg { width: 13px; height: 13px; opacity: .6; }
+  .swatch .use { font-size: var(--step--1); color: var(--text-dim); margin: 8px 0 0; line-height: 1.5; }
+
+  /* ── TYPOGRAPHY ── */
+  .type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .type-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 26px 28px; box-shadow: var(--shadow); }
+  .type-card .tag { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: .04em; }
+  .type-card .sample-serif { font-family: var(--serif); font-weight: 900; font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1; margin: 14px 0 6px; letter-spacing: -.02em; }
+  .type-card .sample-sans { font-family: var(--sans); font-size: 1.05rem; line-height: 1.55; margin: 14px 0 0; color: var(--text-soft); }
+  .type-card .meta { font-size: var(--step--1); color: var(--text-dim); margin-top: 14px; }
+
+  .scale-row { display: flex; align-items: baseline; gap: 18px; padding: 12px 0; border-top: 1px solid var(--border); }
+  .scale-row:first-of-type { border-top: 0; }
+  .scale-row .lbl { font-family: var(--mono); font-size: 12px; color: var(--text-dim); width: 92px; flex: none; }
+  .scale-row .demo { font-family: var(--serif); font-weight: 900; letter-spacing: -.02em; line-height: 1.05; }
+
+  .weights { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 8px; }
+  .weights span { font-family: var(--sans); font-size: 1.6rem; }
+  .weights .wlbl { display: block; font-family: var(--mono); font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+
+  /* ── FAVICON ── */
+  .fav-layout { display: grid; grid-template-columns: minmax(0, 320px) 1fr; gap: 36px; align-items: start; }
+  .fav-stage {
+    background: var(--bg-2); border: 1px solid var(--border); border-radius: 20px;
+    padding: 28px; display: flex; flex-direction: column; align-items: center; gap: 18px;
+  }
+  .fav-stage svg.big { width: 180px; height: 180px; filter: drop-shadow(0 10px 24px rgba(14,31,56,.28)); }
+  .fav-sizes { display: flex; align-items: flex-end; gap: 16px; }
+  .fav-sizes svg { display: block; border-radius: 22%; }
+  .fav-sizes figure { margin: 0; text-align: center; }
+  .fav-sizes figcaption { font-family: var(--mono); font-size: 11px; color: var(--text-dim); margin-top: 6px; }
+  .fav-parts { display: flex; flex-direction: column; gap: 14px; }
+  .fav-part { display: grid; grid-template-columns: 44px 1fr; gap: 16px; align-items: start; padding: 14px 0; border-top: 1px solid var(--border); }
+  .fav-part:first-child { border-top: 0; }
+  .fav-part .dot { width: 44px; height: 44px; border-radius: 12px; border: 1px solid rgba(0,0,0,.08); }
+  .fav-part h4 { margin: 0 0 4px; font-family: var(--serif); font-weight: 600; font-size: 1.1rem; }
+  .fav-part p { margin: 0; font-size: var(--step--1); color: var(--text-soft); }
+  .fav-part code { font-family: var(--mono); font-size: 12px; color: var(--accent); }
+
+  /* ── COMPONENTS ── */
+  .comp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+  .comp {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-card);
+    padding: 24px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 16px;
+  }
+  .comp h4 { margin: 0; font-family: var(--serif); font-weight: 600; font-size: 1.1rem; }
+  .comp .demo-area { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 12px 0; }
+  .comp p.note { margin: 0; font-size: var(--step--1); color: var(--text-dim); }
+
+  .btn { cursor: pointer; border: none; font-family: var(--sans); font-weight: 700; border-radius: 999px; padding: 13px 26px; font-size: 15px; transition: transform .15s, box-shadow .15s; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-primary { background: var(--brand-bloom); color: var(--brand-ink); }
+  .btn-primary:hover { box-shadow: 0 12px 30px rgba(240,138,0,.35); }
+  .btn-ghost-dark { background: var(--brand-ink); color: var(--brand-bloom); }
+  .btn-ghost-line { background: transparent; color: var(--text); box-shadow: inset 0 0 0 1.5px var(--border-strong); }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 6px 13px; border-radius: 999px;
+    background: var(--brand-ink); color: var(--brand-paper);
+    font-size: 12.5px; font-weight: 600;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.14);
+  }
+  .pill b { color: var(--brand-bloom); }
+  .pill .u { color: var(--brand-mist); }
+
+  .demo-card {
+    background: var(--surface); border: 1px solid var(--border-strong);
+    border-radius: 16px; padding: 18px 20px; width: 100%;
+  }
+  .demo-card .accent-bar { width: 28px; height: 4px; border-radius: 4px; background: var(--brand-bloom); margin-bottom: 10px; }
+  .demo-card h5 { margin: 0 0 4px; font-size: 15px; }
+  .demo-card p { margin: 0; font-size: 13.5px; color: var(--text-soft); }
+
+  .radii { display: flex; flex-wrap: wrap; gap: 18px; }
+  .radii figure { margin: 0; text-align: center; }
+  .radii .box { width: 96px; height: 72px; background: var(--accent-quiet); border: 1.5px solid var(--accent); }
+  .radii figcaption { font-family: var(--mono); font-size: 11px; color: var(--text-dim); margin-top: 8px; }
+
+  /* ── FOOTER ── */
+  footer.ds-foot { margin-top: 72px; background: var(--brand-ink); color: #8DA0BA; text-align: center; padding: 40px 24px; font-size: 14px; }
+  footer.ds-foot .flogo { font-family: var(--serif); font-weight: 900; color: var(--brand-paper); font-size: 18px; }
+  footer.ds-foot .flogo .dot { color: var(--brand-bloom); }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%) translateY(20px);
+    background: var(--brand-ink); color: var(--brand-paper);
+    padding: 10px 18px; border-radius: 999px; font-size: 13px; font-weight: 600;
+    box-shadow: 0 10px 30px rgba(0,0,0,.3); opacity: 0; pointer-events: none;
+    transition: opacity .2s, transform .2s; z-index: 20;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+  /* ── NAV / índice ── */
+  .toc { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
+  .toc .wrap { display: flex; gap: 6px 20px; flex-wrap: wrap; align-items: center; padding-top: 12px; padding-bottom: 12px; }
+  .toc a { color: var(--text-soft); text-decoration: none; font-size: var(--step--1); font-weight: 600; letter-spacing: .02em; padding: 4px 2px; border-bottom: 2px solid transparent; }
+  .toc a:hover { color: var(--accent); border-color: var(--accent); }
+  .toc .brandtag { font-family: var(--serif); font-weight: 900; color: var(--text); margin-right: auto; }
+  .toc .brandtag .dot { color: var(--accent); }
+
+  /* ── Eyebrow demo ── */
+  .eyebrow-demo { font-size: 12px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--brand-bloom-deep); }
+
+  /* ── Module tabs ── */
+  .modtab { text-align: left; border: none; padding: 16px 18px; border-radius: 16px; font-family: var(--sans); cursor: pointer; width: 100%; transition: background .2s, color .2s; }
+  .modtab .mtn { font-family: var(--serif); font-size: 12px; font-weight: 600; opacity: .7; }
+  .modtab .mtt { font-family: var(--serif); font-size: 18px; font-weight: 900; line-height: 1.1; margin-top: 3px; }
+  .modtab.active { background: var(--brand-bloom); color: var(--brand-ink); }
+  .modtab.idle { background: var(--brand-ink); color: var(--brand-paper); }
+
+  /* ── Lesson list ── */
+  .lesson { display: grid; grid-template-columns: 30px 1fr; gap: 12px; align-items: start; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .lesson:last-child { border-bottom: none; }
+  .lesson .lnum { font-family: var(--serif); font-weight: 600; color: var(--brand-bloom-deep); font-size: 14px; }
+  .lesson .ltxt { font-size: 14.5px; line-height: 1.4; }
+
+  /* ── Stat card ── */
+  .statcard { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 22px 18px; text-align: center; box-shadow: var(--shadow); }
+  .statcard .sv { font-family: var(--serif); font-weight: 900; font-size: 2.4rem; color: var(--brand-bloom-deep); line-height: 1; }
+  .statcard .sl { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--brand-bark); margin-top: 6px; }
+
+  /* ── Social icons ── */
+  .social { display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 999px; color: var(--brand-paper); background: var(--brand-ink); box-shadow: inset 0 0 0 1px rgba(255,255,255,.16); transition: color .2s, background .2s, transform .15s; cursor: pointer; }
+  .social:hover { color: var(--brand-ink); background: var(--brand-bloom); transform: translateY(-2px); }
+
+  /* ── CTA gradient ── */
+  .cta-demo { background: linear-gradient(120deg, var(--brand-bloom-deep), var(--brand-bloom)); border-radius: 22px; padding: 28px 26px; color: var(--brand-ink); text-align: center; position: relative; overflow: hidden; }
+  .cta-demo h5 { font-family: var(--serif); font-weight: 900; font-size: 1.4rem; margin: 0 0 12px; }
+  .cta-demo .btn { background: var(--brand-ink); color: var(--brand-bloom); }
+
+  /* ── Section anatomy ── */
+  .anat { display: grid; gap: 16px; }
+  .anat-row { display: grid; grid-template-columns: 52px 1fr auto; gap: 18px; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px 20px; box-shadow: var(--shadow); }
+  .anat-row .idx { font-family: var(--serif); font-weight: 900; font-size: 1.5rem; color: var(--accent); text-align: center; }
+  .anat-row h4 { margin: 0 0 3px; font-family: var(--serif); font-weight: 600; font-size: 1.15rem; }
+  .anat-row p { margin: 0; font-size: var(--step--1); color: var(--text-soft); max-width: none; }
+  .anat-row .bg { font-family: var(--mono); font-size: 11px; padding: 5px 10px; border-radius: 999px; white-space: nowrap; }
+  .anat-row .bg.dark { background: var(--brand-ink); color: var(--brand-paper); }
+  .anat-row .bg.light { background: var(--brand-paper); color: var(--brand-ink); border: 1px solid var(--border-strong); }
+  .anat-row .bg.grad { background: linear-gradient(120deg, var(--brand-bloom-deep), var(--brand-bloom)); color: var(--brand-ink); }
+
+  @media (max-width: 760px) {
+    .type-grid { grid-template-columns: 1fr; }
+    .fav-layout { grid-template-columns: 1fr; }
+    .anat-row { grid-template-columns: 40px 1fr; }
+    .anat-row .bg { grid-column: 2; justify-self: start; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+
+<div class="ds">
+  <!-- ══ HERO ══ -->
+  <header class="hero">
+    <button class="theme-toggle" id="themeBtn" aria-label="Alternar tema claro/escuro">
+      <span id="themeIcon">🌙</span><span id="themeLabel">Tema escuro</span>
+    </button>
+    <div class="wrap">
+      <div class="hero-mark">
+        <!-- Favicon oficial, renderizado inline -->
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <rect width="100" height="100" rx="22" fill="#0E1F38"/>
+          <g transform="translate(50 50)">
+            <g fill="#F2B705">
+              <ellipse cx="0" cy="-22" rx="12" ry="24"/>
+              <ellipse cx="0" cy="-22" rx="12" ry="24" transform="rotate(72)"/>
+              <ellipse cx="0" cy="-22" rx="12" ry="24" transform="rotate(144)"/>
+              <ellipse cx="0" cy="-22" rx="12" ry="24" transform="rotate(216)"/>
+              <ellipse cx="0" cy="-22" rx="12" ry="24" transform="rotate(288)"/>
+            </g>
+            <circle r="11" fill="#E08A00"/>
+            <circle r="4.5" fill="#F2B705"/>
+          </g>
+        </svg>
+        <span class="hero-logo">Garapuvu<span class="dot">.</span></span>
+      </div>
+      <p class="eyebrow" style="color: var(--brand-bloom);">Design System · Turma 2026</p>
+      <h1>A linguagem visual do <em>garapuvu</em>, do tronco à floração.</h1>
+      <p class="lede">Cores, tipografia, o favicon e os componentes que dão forma ao Projeto Social Garapuvu — uma referência para quem for criar telas, materiais ou novas páginas.</p>
+      <div class="hero-meta">
+        <span><b>9</b> cores de marca</span>
+        <span><b>2</b> famílias tipográficas</span>
+        <span><b>1</b> flor como assinatura</span>
+        <span>Clique em qualquer <b>#hex</b> para copiar</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══ ÍNDICE ══ -->
+  <nav class="toc" aria-label="Seções do design system">
+    <div class="wrap">
+      <span class="brandtag">Garapuvu<span class="dot">.</span></span>
+      <a href="#cores">Cores</a>
+      <a href="#tipografia">Tipografia</a>
+      <a href="#favicon">Favicon</a>
+      <a href="#componentes">Componentes</a>
+      <a href="#secoes">Seções</a>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <!-- ══ CORES ══ -->
+    <section class="block" id="cores">
+      <div class="sec-head">
+        <p class="eyebrow">01 · Fundamentos</p>
+        <h2>Cores</h2>
+        <p>A paleta nasce da árvore garapuvu, símbolo de Florianópolis: o azul-marinho profundo do céu e da noite, o ouro da floração no verão, o marrom do tronco e o bege quente do papel. Cada cor tem um nome-token usado no código (<code style="font-family:var(--mono);color:var(--accent)">COLORS.*</code>).</p>
+      </div>
+
+      <div class="group-label">Marca — identidade e ação</div>
+      <div class="swatches" id="grpMarca"></div>
+
+      <div class="group-label">Natureza — apoio e ilustração</div>
+      <div class="swatches" id="grpNatureza"></div>
+
+      <div class="group-label">Superfície — fundos e cartões</div>
+      <div class="swatches" id="grpSuperficie"></div>
+
+      <div class="group-label">Texto — sobre o fundo escuro</div>
+      <div class="swatches" id="grpTexto"></div>
+    </section>
+
+    <!-- ══ TIPOGRAFIA ══ -->
+    <section class="block" id="tipografia">
+      <div class="sec-head">
+        <p class="eyebrow">02 · Fundamentos</p>
+        <h2>Tipografia</h2>
+        <p>Duas famílias, dois papéis. Uma serifada com personalidade editorial para os títulos e a marca; uma sem serifa, altamente legível, para todo o resto. <em>Nota:</em> as fontes de produção são <b>Fraunces</b> e <b>Inter</b> (Google Fonts); nesta página offline elas caem para uma serifada e uma sans do sistema.</p>
+      </div>
+
+      <div class="type-grid">
+        <div class="type-card">
+          <span class="tag">display · títulos e logo</span>
+          <div class="sample-serif">Fraunces</div>
+          <div class="meta">Serifada de contraste alto, peso 900 nos grandes títulos. Usada com <code style="font-family:var(--mono)">letter-spacing: -.02em</code>. Classe <code style="font-family:var(--mono)">.gp-display</code>.</div>
+          <p class="sample-sans" style="font-family:var(--serif); color:var(--text)">Aprender tecnologia de graça, de qualquer lugar do mundo.</p>
+        </div>
+        <div class="type-card">
+          <span class="tag">corpo · texto, botões, legendas</span>
+          <div class="sample-serif" style="font-family:var(--sans); font-weight:800;">Inter</div>
+          <div class="meta">Sem serifa, neutra e legível. Pesos 400–700. Fonte padrão de leitura e interface.</div>
+          <p class="sample-sans">Desde 2020, o Garapuvu ensina lógica de programação, desenvolvimento e testes de software — e, agora, Inteligência Artificial aplicada.</p>
+        </div>
+      </div>
+
+      <div class="type-card" style="margin-top:20px;">
+        <span class="tag">escala tipográfica (display)</span>
+        <div style="margin-top:12px;">
+          <div class="scale-row"><span class="lbl">4.75rem</span><span class="demo" style="font-size:2.6rem">Título hero</span></div>
+          <div class="scale-row"><span class="lbl">2.6rem</span><span class="demo" style="font-size:2rem">Título de seção</span></div>
+          <div class="scale-row"><span class="lbl">2rem</span><span class="demo" style="font-size:1.6rem">Números / stats</span></div>
+          <div class="scale-row"><span class="lbl">1.3rem</span><span class="demo" style="font-size:1.25rem">Subtítulo de módulo</span></div>
+        </div>
+        <div class="meta" style="margin-top:18px;">Pesos disponíveis</div>
+        <div class="weights">
+          <span style="font-weight:400">Aa<span class="wlbl">400 regular</span></span>
+          <span style="font-weight:500">Aa<span class="wlbl">500 médio</span></span>
+          <span style="font-weight:600">Aa<span class="wlbl">600 semibold</span></span>
+          <span style="font-weight:700">Aa<span class="wlbl">700 bold</span></span>
+          <span style="font-weight:900">Aa<span class="wlbl">900 black</span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ FAVICON ══ -->
+    <section class="block" id="favicon">
+      <div class="sec-head">
+        <p class="eyebrow">03 · Marca</p>
+        <h2>O favicon: a flor do garapuvu</h2>
+        <p>O ícone que aparece na aba do navegador é uma flor de garapuvu estilizada sobre o azul-marinho da marca. É um SVG de <code style="font-family:var(--mono);color:var(--accent)">100×100</code> — nítido em qualquer tamanho, do favicon de 16px ao ícone de app.</p>
+      </div>
+
+      <div class="fav-layout">
+        <div class="fav-stage">
+          <svg class="big" viewBox="0 0 100 100" aria-label="Favicon do Garapuvu: flor dourada sobre fundo azul-marinho">
+            <rect width="100" height="100" rx="22" fill="#0E1F38"/>
+            <g transform="translate(50 50)">
+              <g fill="#F2B705">
+                <ellipse cx="0" cy="-22" rx="12" ry="24"/>
+                <ellipse cx="0" cy="-22" rx="12" ry="24" transform="rotate(72)"/>
+                <ellipse cx="0" cy="-22" rx="12" ry="24" transform="rotate(144)"/>
+                <ellipse cx="0" cy="-22" rx="12" ry="24" transform="rotate(216)"/>
+                <ellipse cx="0" cy="-22" rx="12" ry="24" transform="rotate(288)"/>
+              </g>
+              <circle r="11" fill="#E08A00"/>
+              <circle r="4.5" fill="#F2B705"/>
+            </g>
+          </svg>
+          <div class="fav-sizes" id="favSizes"></div>
+        </div>
+
+        <div class="fav-parts">
+          <div class="fav-part">
+            <span class="dot" style="background:#0E1F38"></span>
+            <div>
+              <h4>Fundo — quadrado arredondado</h4>
+              <p><code>&lt;rect rx="22"&gt;</code> em <code>#0E1F38</code> (azul-profundo). Os cantos com raio 22 dão o formato de ícone de app moderno. É a mesma cor do hero e da <code>theme-color</code> do site.</p>
+            </div>
+          </div>
+          <div class="fav-part">
+            <span class="dot" style="background:#F2B705"></span>
+            <div>
+              <h4>5 pétalas — a floração</h4>
+              <p>Cinco elipses <code>#F2B705</code> (ouro-floração) giradas de 72° em 72° (0, 72, 144, 216, 288) formam a flor. Representam a floração amarela que cobre o garapuvu no verão.</p>
+            </div>
+          </div>
+          <div class="fav-part">
+            <span class="dot" style="background:#E08A00"></span>
+            <div>
+              <h4>Miolo — círculo âmbar</h4>
+              <p>Um <code>&lt;circle&gt;</code> de <code>#E08A00</code> (âmbar) no centro, dando profundidade e maturidade à flor.</p>
+            </div>
+          </div>
+          <div class="fav-part">
+            <span class="dot" style="background:#F2B705"></span>
+            <div>
+              <h4>Núcleo — ponto de brilho</h4>
+              <p>Um pequeno círculo <code>#F2B705</code> por cima do âmbar cria o ponto de luz central. É o mesmo ouro do ponto do logo <b>Garapuvu<span style="color:var(--accent)">.</span></b></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ COMPONENTES ══ -->
+    <section class="block" id="componentes">
+      <div class="sec-head">
+        <p class="eyebrow">04 · Biblioteca</p>
+        <h2>Componentes</h2>
+        <p>Cada elemento reutilizável do app, com o visual real e o token que o compõe. São os "blocos de montar" das páginas.</p>
+      </div>
+
+      <div class="comp-grid">
+        <div class="comp">
+          <h4>Eyebrow (rótulo)</h4>
+          <div class="demo-area">
+            <span class="eyebrow-demo">● Projeto Social · 100% gratuito</span>
+          </div>
+          <p class="note">Rótulo em caixa-alta, negrito, com <code style="font-family:var(--mono)">letter-spacing .22em</code>. Abre cada seção. Classe <code style="font-family:var(--mono)">.gp-eyebrow</code>.</p>
+        </div>
+
+        <div class="comp">
+          <h4>Botões</h4>
+          <div class="demo-area">
+            <button class="btn btn-primary">Quero participar →</button>
+            <button class="btn btn-ghost-line">Ver o conteúdo</button>
+          </div>
+          <div class="demo-area">
+            <button class="btn btn-ghost-dark">Saiba mais →</button>
+          </div>
+          <p class="note">Primário (ouro), contorno e o de dentro do CTA (azul sobre ouro). Raio total, elevação no hover. Classe <code style="font-family:var(--mono)">.gp-btn</code>.</p>
+        </div>
+
+        <div class="comp">
+          <h4>Pílula de visitas</h4>
+          <div class="demo-area">
+            <span class="pill"><span>👁️</span><b>1.284</b><span class="u">visitas</span></span>
+          </div>
+          <p class="note">Contador ao vivo (Firebase) sobre o fundo escuro. Número em ouro, unidade em névoa. Componente <code style="font-family:var(--mono)">VisitorCount</code>.</p>
+        </div>
+
+        <div class="comp">
+          <h4>Cartão</h4>
+          <div class="demo-area">
+            <div class="demo-card">
+              <div class="accent-bar"></div>
+              <h5>Impacto social</h5>
+              <p>Abrir portas da tecnologia para pessoas de qualquer origem ou país.</p>
+            </div>
+          </div>
+          <p class="note">Fundo branco, borda suave, barra de acento em ouro, raio 18px. Classe <code style="font-family:var(--mono)">.gp-card</code>.</p>
+        </div>
+
+        <div class="comp">
+          <h4>Cartão de número (stat)</h4>
+          <div class="demo-area" style="gap:14px;">
+            <div class="statcard"><div class="sv">100+</div><div class="sl">horas de curso</div></div>
+            <div class="statcard"><div class="sv">26</div><div class="sl">aulas</div></div>
+          </div>
+          <p class="note">Número grande em âmbar (Fraunces 900) e legenda em caixa-alta. Ficam sobrepostos ao hero.</p>
+        </div>
+
+        <div class="comp">
+          <h4>Abas de módulo</h4>
+          <div class="demo-area" style="flex-direction:column; align-items:stretch;">
+            <button class="modtab active"><div class="mtn">Módulo 01</div><div class="mtt">Fundamentos de Testes</div></button>
+            <button class="modtab idle"><div class="mtn">Módulo 02</div><div class="mtt">Prática em Testes</div></button>
+          </div>
+          <p class="note">Ativa: fundo ouro + texto azul. Inativa: azul translúcido + texto papel. Classe <code style="font-family:var(--mono)">.gp-modtab</code>.</p>
+        </div>
+
+        <div class="comp">
+          <h4>Lista de aulas</h4>
+          <div class="demo-area" style="flex-direction:column; align-items:stretch; gap:0;">
+            <div class="lesson"><span class="lnum">01</span><span class="ltxt">Fundamentos, riscos e estratégias de teste</span></div>
+            <div class="lesson"><span class="lnum">02</span><span class="ltxt">Modelos de desenvolvimento, ágil e CI/CD</span></div>
+            <div class="lesson"><span class="lnum">03</span><span class="ltxt">Teste estático, revisões e análise de código</span></div>
+          </div>
+          <p class="note">Número em âmbar (Fraunces) + texto, separados por linha fina. Classes <code style="font-family:var(--mono)">.gp-lesson / .gp-num</code>.</p>
+        </div>
+
+        <div class="comp">
+          <h4>Ícones sociais</h4>
+          <div class="demo-area">
+            <span class="social" title="Instagram">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.8"/><circle cx="17.2" cy="6.8" r="1.2" fill="currentColor"/></svg>
+            </span>
+            <span class="social" title="LinkedIn">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3V9zm6 0h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.4c0-1.29-.02-2.95-1.8-2.95-1.8 0-2.08 1.4-2.08 2.85V21H9V9z"/></svg>
+            </span>
+          </div>
+          <p class="note">Botão circular; no hover inverte para fundo ouro + ícone azul. Componente <code style="font-family:var(--mono)">SocialLinks</code>.</p>
+        </div>
+
+        <div class="comp">
+          <h4>Galho florido (assinatura)</h4>
+          <div class="demo-area" style="background:var(--brand-ink); border-radius:14px; padding:18px;">
+            <svg viewBox="0 0 200 80" width="100%" height="70" aria-hidden="true" style="overflow:visible">
+              <path d="M5 70 Q 70 60 110 35 T 195 12" fill="none" stroke="#5B4636" stroke-width="3" stroke-linecap="round"/>
+              <path d="M60 62 Q 80 50 70 38" fill="none" stroke="#5B4636" stroke-width="2" stroke-linecap="round"/>
+              <path d="M130 28 Q 150 30 150 16" fill="none" stroke="#5B4636" stroke-width="2" stroke-linecap="round"/>
+              <g id="branchBlooms"></g>
+            </svg>
+          </div>
+          <p class="note">Galho de casca com flores douradas ao longo da curva — o elemento-assinatura. Componente <code style="font-family:var(--mono)">Branch</code>.</p>
+        </div>
+
+        <div class="comp">
+          <h4>Bloco CTA</h4>
+          <div class="demo-area" style="align-items:stretch;">
+            <div class="cta-demo">
+              <h5>Quer fazer parte?</h5>
+              <button class="btn">Saiba mais e participe →</button>
+            </div>
+          </div>
+          <p class="note">Gradiente âmbar → ouro com galho no canto. Único bloco com fundo em gradiente.</p>
+        </div>
+
+        <div class="comp">
+          <h4>Revelar no scroll (Reveal)</h4>
+          <div class="demo-area">
+            <span style="font-size:13px; color:var(--text-soft)">opacity 0 → 1 · translateY(18px → 0) · 0.7s</span>
+          </div>
+          <p class="note">Envolve blocos e os revela ao entrar na tela (IntersectionObserver). Respeita <code style="font-family:var(--mono)">prefers-reduced-motion</code>. Componente <code style="font-family:var(--mono)">Reveal</code>.</p>
+        </div>
+
+        <div class="comp">
+          <h4>Raios de canto</h4>
+          <div class="demo-area">
+            <div class="radii">
+              <figure><div class="box" style="border-radius:999px"></div><figcaption>999px · botão</figcaption></figure>
+              <figure><div class="box" style="border-radius:18px"></div><figcaption>18px · cartão</figcaption></figure>
+              <figure><div class="box" style="border-radius:28px"></div><figcaption>28px · CTA</figcaption></figure>
+              <figure><div class="box" style="border-radius:22%"></div><figcaption>22 · favicon</figcaption></figure>
+            </div>
+          </div>
+          <p class="note">Cantos generosos dão o tom acolhedor da marca.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ SEÇÕES DA PÁGINA ══ -->
+    <section class="block" id="secoes">
+      <div class="sec-head">
+        <p class="eyebrow">05 · Anatomia</p>
+        <h2>Seções da página</h2>
+        <p>Como a landing page é montada, de cima a baixo. O ritmo alterna fundos claros (papel) e escuros (azul) para dar respiro e separar assuntos — a etiqueta à direita mostra o fundo de cada seção.</p>
+      </div>
+
+      <div class="anat">
+        <div class="anat-row"><span class="idx">1</span><div><h4>Hero</h4><p>Imagem do garapuvu florido + título display, botões de ação, contador de visitas e o galho. A porta de entrada.</p></div><span class="bg dark">fundo azul</span></div>
+        <div class="anat-row"><span class="idx">2</span><div><h4>Stats</h4><p>Quatro números-chave (horas, aulas, anos, países) em cartões que "flutuam" sobre a virada do hero.</p></div><span class="bg light">cartões · papel</span></div>
+        <div class="anat-row"><span class="idx">3</span><div><h4>Como funciona</h4><p>Grade de pares chave/valor (encontros, plataforma, inscrição…) mais um bloco de aviso sobre idade.</p></div><span class="bg light">fundo papel</span></div>
+        <div class="anat-row"><span class="idx">4</span><div><h4>Currículo</h4><p>Abas dos três módulos à esquerda e a lista de aulas do módulo ativo à direita. Seção-assinatura.</p></div><span class="bg dark">fundo azul</span></div>
+        <div class="anat-row"><span class="idx">5</span><div><h4>Objetivos</h4><p>Grade de 3 colunas com os porquês do projeto, cada cartão com barra de acento em ouro.</p></div><span class="bg light">fundo papel</span></div>
+        <div class="anat-row"><span class="idx">6</span><div><h4>Marcos 2026</h4><p>Linha do tempo em 3 cartões (semestres), cada item marcado com uma seta dourada.</p></div><span class="bg light">fundo papel</span></div>
+        <div class="anat-row"><span class="idx">7</span><div><h4>CTA</h4><p>Bloco em gradiente ouro convidando à inscrição via WhatsApp, com o galho no canto.</p></div><span class="bg grad">gradiente ouro</span></div>
+        <div class="anat-row"><span class="idx">8</span><div><h4>Rodapé</h4><p>Logo, redes sociais e crédito do projeto sobre o azul-marinho, fechando o ciclo do topo.</p></div><span class="bg dark">fundo azul</span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="ds-foot">
+    <div class="flogo">Garapuvu<span class="dot">.</span></div>
+    <p style="margin:8px 0 0;">Design System · Projeto Social Garapuvu 2026 · de Florianópolis para o mundo</p>
+  </footer>
+
+  <div class="toast" id="toast">Copiado!</div>
+</div>
+
+<script>
+  // ── Dados das cores (nome, token, hex, uso, se o rótulo do chip vai em texto claro) ──
+  const COLORS = {
+    grpMarca: [
+      { name: "Azul-profundo", token: "--brand-ink", hex: "#0E1F38", onLight: false, use: "Cor base da marca. Fundo do hero, currículo, rodapé, favicon e theme-color do navegador." },
+      { name: "Azul-suave", token: "--brand-ink-soft", hex: "#1B3357", onLight: false, use: "Textos de parágrafo em cartões claros — mais leve que o azul-profundo." },
+      { name: "Ouro-floração", token: "--brand-bloom", hex: "#F2B705", onLight: true, use: "Cor de destaque e ação: botões, palavras em destaque, o ponto do logo e as pétalas." },
+      { name: "Âmbar", token: "--brand-bloom-deep", hex: "#E08A00", onLight: false, use: "Ouro maduro: números, links, títulos secundários e o miolo da flor." },
+    ],
+    grpNatureza: [
+      { name: "Casca", token: "--brand-bark", hex: "#5B4636", onLight: false, use: "Marrom do tronco: legendas, textos de apoio e o galho ilustrado (Branch)." },
+      { name: "Folha", token: "--brand-leaf", hex: "#3E6B4F", onLight: false, use: "Verde-folha de reserva na paleta natural — pronto para novos ícones ou selos." },
+    ],
+    grpSuperficie: [
+      { name: "Papel", token: "--brand-paper", hex: "#FBF7EE", onLight: true, use: "Bege quente. Fundo das seções claras e texto sobre o fundo escuro." },
+      { name: "Papel-esmaecido", token: "--brand-paper-dim", hex: "#F0E9DA", onLight: true, use: "Bordas, linhas divisórias e blocos de aviso." },
+      { name: "Branco", token: "#FFFFFF", hex: "#FFFFFF", onLight: true, use: "Fundo interno dos cartões, para saltarem sobre o papel bege." },
+    ],
+    grpTexto: [
+      { name: "Névoa", token: "--brand-mist", hex: "#92A4BE", onLight: false, use: "Azul-cinza para textos discretos sobre o escuro (ex.: 'Turma 2026')." },
+      { name: "Azul-corpo", token: "—", hex: "#C9D4E4", onLight: true, use: "Parágrafos sobre o fundo escuro do hero." },
+      { name: "Azul-legenda", token: "—", hex: "#9FB0C6", onLight: true, use: "Legendas sob os títulos da seção escura." },
+      { name: "Azul-rodapé", token: "—", hex: "#8DA0BA", onLight: true, use: "Texto do rodapé sobre o azul-profundo." },
+    ],
+  };
+
+  const copyIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
+
+  function swatchHTML(c) {
+    const varLabel = c.token;
+    return `<div class="swatch">
+      <div class="chip" style="background:${c.hex}">
+        <span class="var ${c.onLight ? '' : 'on-light'}">${varLabel}</span>
+      </div>
+      <div class="body">
+        <div class="name">${c.name}</div>
+        <button class="hex" data-hex="${c.hex}">${c.hex} ${copyIcon}</button>
+        <p class="use">${c.use}</p>
+      </div>
+    </div>`;
+  }
+
+  for (const [id, list] of Object.entries(COLORS)) {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = list.map(swatchHTML).join("");
+  }
+
+  // Favicon em vários tamanhos
+  const favSvg = (px) => `<svg width="${px}" height="${px}" viewBox="0 0 100 100">
+    <rect width="100" height="100" rx="22" fill="#0E1F38"/>
+    <g transform="translate(50 50)"><g fill="#F2B705">
+    <ellipse cx="0" cy="-22" rx="12" ry="24"/><ellipse cx="0" cy="-22" rx="12" ry="24" transform="rotate(72)"/>
+    <ellipse cx="0" cy="-22" rx="12" ry="24" transform="rotate(144)"/><ellipse cx="0" cy="-22" rx="12" ry="24" transform="rotate(216)"/>
+    <ellipse cx="0" cy="-22" rx="12" ry="24" transform="rotate(288)"/></g>
+    <circle r="11" fill="#E08A00"/><circle r="4.5" fill="#F2B705"/></g></svg>`;
+  document.getElementById("favSizes").innerHTML = [64, 32, 16]
+    .map(px => `<figure>${favSvg(px)}<figcaption>${px}px</figcaption></figure>`).join("");
+
+  // Flores ao longo do galho-assinatura (mesma lógica do componente Branch)
+  const blooms = 6;
+  let branchHTML = "";
+  for (let i = 0; i < blooms; i++) {
+    const t = i / (blooms - 1);
+    const x = 5 + t * 190;
+    const y = 70 - t * 58 - Math.sin(t * Math.PI) * 6;
+    const petals = [0, 72, 144, 216, 288]
+      .map(a => `<ellipse cx="0" cy="-5" rx="2.4" ry="5" fill="#F2B705" transform="rotate(${a})" opacity="0.95"/>`)
+      .join("");
+    branchHTML += `<g transform="translate(${x} ${y})">${petals}<circle r="2.2" fill="#E08A00"/></g>`;
+  }
+  const branchEl = document.getElementById("branchBlooms");
+  if (branchEl) branchEl.innerHTML = branchHTML;
+
+  // Copiar hex
+  const toast = document.getElementById("toast");
+  let toastTimer;
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest(".hex");
+    if (!btn) return;
+    const hex = btn.dataset.hex;
+    navigator.clipboard?.writeText(hex).then(() => {
+      toast.textContent = hex + " copiado";
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 1400);
+    });
+  });
+
+  // Toggle de tema
+  const btn = document.getElementById("themeBtn");
+  const icon = document.getElementById("themeIcon");
+  const label = document.getElementById("themeLabel");
+  function currentIsDark() {
+    const attr = document.documentElement.getAttribute("data-theme");
+    if (attr) return attr === "dark";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  function syncBtn() {
+    const dark = currentIsDark();
+    icon.textContent = dark ? "☀️" : "🌙";
+    label.textContent = dark ? "Tema claro" : "Tema escuro";
+  }
+  btn.addEventListener("click", () => {
+    const next = currentIsDark() ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    syncBtn();
+  });
+  syncBtn();
+</script>

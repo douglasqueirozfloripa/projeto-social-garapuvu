@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { track } from "./firebase.js";
+import useVisitorCount from "./useVisitorCount.js";
 import heroBg from "./assets/garapuvu-hero.jpg";
 
 // ─────────────────────────────────────────────────────────────
@@ -9,6 +10,10 @@ import heroBg from "./assets/garapuvu-hero.jpg";
 // veja src/firebase.js. Quando o Analytics não está disponível (SSR,
 // navegador sem suporte), o track faz no-op seguro com log no console.
 // ─────────────────────────────────────────────────────────────
+
+// Redes sociais do projeto e do instrutor.
+const INSTAGRAM_URL = "https://www.instagram.com/projetogarapuvu/";
+const LINKEDIN_URL = "https://br.linkedin.com/in/douglas-adriano-queiroz-ctfl-680b1978";
 
 // Contato via WhatsApp — formato internacional: 55 (Brasil) + 48 (DDD) + número.
 const WHATSAPP_NUMBER = "5548999886724";
@@ -198,6 +203,100 @@ function Branch({ blooms = 5, flip = false }) {
   );
 }
 
+// Total de visitantes que já acessaram, exibido ao lado da marca no topo.
+// Pílula discreta sobre o fundo escuro do hero.
+function VisitorCount() {
+  const count = useVisitorCount();
+  if (count == null) return null; // ainda carregando ou indisponível
+
+  const formatted = count.toLocaleString("pt-BR");
+
+  return (
+    <span
+      aria-live="polite"
+      title="Total de pessoas que já visitaram"
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 7,
+        padding: "5px 12px",
+        borderRadius: 999,
+        background: "rgba(255,255,255,.08)",
+        boxShadow: "inset 0 0 0 1px rgba(255,255,255,.14)",
+        fontSize: 12.5,
+        fontWeight: 600,
+        color: COLORS.paper,
+        lineHeight: 1,
+        whiteSpace: "nowrap",
+      }}
+    >
+      <span aria-hidden="true" style={{ fontSize: 13 }}>👁️</span>
+      <strong style={{ color: COLORS.bloom }}>{formatted}</strong>
+      <span style={{ color: COLORS.mist }}>{count === 1 ? "visita" : "visitas"}</span>
+    </span>
+  );
+}
+
+// Links para as redes sociais — registra o clique no Analytics e abre em nova aba.
+function SocialLinks() {
+  const links = [
+    {
+      href: INSTAGRAM_URL,
+      label: "Instagram do Projeto Garapuvu",
+      event: "social_instagram",
+      icon: (
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" strokeWidth="1.8" />
+          <circle cx="12" cy="12" r="4.2" stroke="currentColor" strokeWidth="1.8" />
+          <circle cx="17.2" cy="6.8" r="1.2" fill="currentColor" />
+        </svg>
+      ),
+    },
+    {
+      href: LINKEDIN_URL,
+      label: "LinkedIn de Douglas Adriano Queiroz",
+      event: "social_linkedin",
+      icon: (
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+          <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3V9zm6 0h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.4c0-1.29-.02-2.95-1.8-2.95-1.8 0-2.08 1.4-2.08 2.85V21H9V9z" />
+        </svg>
+      ),
+    },
+  ];
+
+  return (
+    <div style={{ display: "inline-flex", gap: 14, marginBottom: 18 }}>
+      {links.map((l) => (
+        <a
+          key={l.event}
+          href={l.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={l.label}
+          title={l.label}
+          onClick={() => track(l.event)}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: 42,
+            height: 42,
+            borderRadius: 999,
+            color: COLORS.paper,
+            background: "rgba(255,255,255,.07)",
+            boxShadow: "inset 0 0 0 1px rgba(255,255,255,.16)",
+            transition: "color .2s, background .2s, transform .15s",
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = COLORS.ink; e.currentTarget.style.background = COLORS.bloom; e.currentTarget.style.transform = "translateY(-2px)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = COLORS.paper; e.currentTarget.style.background = "rgba(255,255,255,.07)"; e.currentTarget.style.transform = "none"; }}
+        >
+          {l.icon}
+        </a>
+      ))}
+    </div>
+  );
+}
+
 export default function GarapuvuLanding() {
   const [openModule, setOpenModule] = useState(0);
 
@@ -270,9 +369,12 @@ export default function GarapuvuLanding() {
         <div style={{ position: "absolute", inset: 0,
           background: `linear-gradient(to top, ${COLORS.ink} 0%, transparent 28%)` }} />
         <div className="gp-wrap" style={{ position: "relative", paddingTop: 40, paddingBottom: 64 }}>
-          <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 70 }}>
-            <span className="gp-display" style={{ fontWeight: 900, fontSize: 22 }}>
-              Garapuvu<span style={{ color: COLORS.bloom }}>.</span>
+          <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 70, gap: 12, flexWrap: "wrap" }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 12 }}>
+              <span className="gp-display" style={{ fontWeight: 900, fontSize: 22 }}>
+                Garapuvu<span style={{ color: COLORS.bloom }}>.</span>
+              </span>
+              <VisitorCount />
             </span>
             <span className="gp-eyebrow" style={{ color: COLORS.mist }}>Turma 2026</span>
           </nav>
@@ -292,8 +394,7 @@ export default function GarapuvuLanding() {
             <p style={{ fontSize: 19, lineHeight: 1.6, color: "#C9D4E4", maxWidth: 620, marginTop: 26 }}>
               Desde 2020, o Garapuvu ensina lógica de programação, desenvolvimento e
               testes de software — e, agora, Inteligência Artificial aplicada. De
-              Florianópolis a outros estados do Brasil e à Guiné-Bissau, conectando
-              pessoas pelo mesmo propósito: aprender.
+              Florianópolis a outros estados do Brasil, e até outros países.
             </p>
           </Reveal>
 
@@ -462,6 +563,8 @@ export default function GarapuvuLanding() {
         <div className="gp-display" style={{ color: COLORS.paper, fontWeight: 900, fontSize: 18, marginBottom: 6 }}>
           Garapuvu<span style={{ color: COLORS.bloom }}>.</span>
         </div>
+        <SocialLinks />
+        <br />
         Projeto Social Garapuvu 2026 · Instrutor: Douglas Adriano Queiroz<br />
         Feito para a comunidade de tecnologia — de Florianópolis para o mundo.
       </footer>

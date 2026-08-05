@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="10.3.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="10.3.001" expanded="true" name="Desafio Churn - Garapuvu">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="UTF-8"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="10.3.001" expanded="true" height="68" name="1 - Ler clientes.csv" width="90" x="45" y="34">
+        <parameter key="csv_file" value="clientes.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="trim_lines" value="false"/>
+        <parameter key="use_quotes" value="true"/>
+        <parameter key="quotes_character" value="&quot;"/>
+        <parameter key="escape_character" value="\"/>
+        <parameter key="skip_comments" value="false"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="grouped_digits" value="false"/>
+        <parameter key="date_format" value=""/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="encoding" value="UTF-8"/>
+        <description align="center" color="yellow" colored="false" width="126">Aponte para o seu clientes.csv (Parameters -&gt; csv_file).</description>
+      </operator>
+      <operator activated="true" class="replace_missing_values" compatibility="10.3.001" expanded="true" height="103" name="2 - Tratar faltantes" width="90" x="180" y="34">
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="default" value="average"/>
+        <list key="columns"/>
+        <description align="center" color="yellow" colored="false" width="126">Validacao/limpeza: preenche valores ausentes.</description>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="10.3.001" expanded="true" height="82" name="3 - Definir alvo (cancelou)" width="90" x="315" y="34">
+        <parameter key="attribute_name" value="cancelou"/>
+        <parameter key="target_role" value="label"/>
+        <list key="set_additional_roles">
+          <parameter key="id" value="id"/>
+        </list>
+        <description align="center" color="yellow" colored="false" width="126">O alvo a prever = cancelou (Sim/Nao). 'id' vira identificador.</description>
+      </operator>
+      <operator activated="true" class="split_data" compatibility="10.3.001" expanded="true" height="103" name="4 - Dividir treino/teste" width="90" x="450" y="34">
+        <enumeration key="partitions">
+          <parameter key="ratio" value="0.7"/>
+          <parameter key="ratio" value="0.3"/>
+        </enumeration>
+        <parameter key="sampling_type" value="automatic"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="2001"/>
+        <description align="center" color="yellow" colored="false" width="126">70% treino, 30% teste (seed fixa = reprodutivel).</description>
+      </operator>
+      <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="10.3.001" expanded="true" height="103" name="5 - Arvore de Decisao" width="90" x="585" y="34">
+        <parameter key="criterion" value="gain_ratio"/>
+        <parameter key="maximal_depth" value="10"/>
+        <parameter key="apply_pruning" value="true"/>
+        <parameter key="confidence" value="0.1"/>
+        <parameter key="apply_prepruning" value="true"/>
+        <parameter key="minimal_gain" value="0.01"/>
+        <parameter key="minimal_leaf_size" value="2"/>
+        <parameter key="minimal_size_for_split" value="4"/>
+        <parameter key="number_of_prepruning_alternatives" value="3"/>
+        <description align="center" color="yellow" colored="false" width="126">Modelo que aprende a prever o churn.</description>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="10.3.001" expanded="true" height="82" name="6 - Aplicar Modelo" width="90" x="720" y="187">
+        <list key="application_parameters"/>
+        <description align="center" color="yellow" colored="false" width="126">Aplica o modelo nos 30% de teste.</description>
+      </operator>
+      <operator activated="true" class="performance_classification" compatibility="10.3.001" expanded="true" height="82" name="7 - Desempenho (F1)" width="90" x="855" y="187">
+        <parameter key="main_criterion" value="f_measure"/>
+        <parameter key="accuracy" value="true"/>
+        <parameter key="classification_error" value="false"/>
+        <parameter key="kappa" value="true"/>
+        <parameter key="precision" value="true"/>
+        <parameter key="recall" value="true"/>
+        <parameter key="f_measure" value="true"/>
+        <list key="class_weights"/>
+        <description align="center" color="yellow" colored="false" width="126">Meta do desafio: F1 &gt;= 0,75.</description>
+      </operator>
+      <connect from_op="1 - Ler clientes.csv" from_port="output" to_op="2 - Tratar faltantes" to_port="example set input"/>
+      <connect from_op="2 - Tratar faltantes" from_port="example set output" to_op="3 - Definir alvo (cancelou)" to_port="example set input"/>
+      <connect from_op="3 - Definir alvo (cancelou)" from_port="example set output" to_op="4 - Dividir treino/teste" to_port="example set"/>
+      <connect from_op="4 - Dividir treino/teste" from_port="partition 1" to_op="5 - Arvore de Decisao" to_port="training set"/>
+      <connect from_op="4 - Dividir treino/teste" from_port="partition 2" to_op="6 - Aplicar Modelo" to_port="unlabelled data"/>
+      <connect from_op="5 - Arvore de Decisao" from_port="model" to_op="6 - Aplicar Modelo" to_port="model"/>
+      <connect from_op="6 - Aplicar Modelo" from_port="labelled data" to_op="7 - Desempenho (F1)" to_port="labelled data"/>
+      <connect from_op="5 - Arvore de Decisao" from_port="model" to_port="result 1"/>
+      <connect from_op="7 - Desempenho (F1)" from_port="performance" to_port="result 2"/>
+      <connect from_op="7 - Desempenho (F1)" from_port="example set" to_port="result 3"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+      <portSpacing port="sink_result 4" spacing="0"/>
+    </process>
+  </operator>
+</process>

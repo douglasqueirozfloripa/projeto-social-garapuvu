@@ -1,0 +1,13 @@
+- generic [ref=f2e36]:
+  - heading "FreelaAvalia 360" [level=2] [ref=f2e37]
+  - generic [ref=f2e38]:
+    - button "Entrar" [ref=f2e39] [cursor=pointer]
+    - button "Criar conta" [ref=f2e40] [cursor=pointer]
+  - generic [ref=f2e41]:
+    - generic [ref=f2e42]: E-mail
+    - textbox [ref=f2e43]
+    - generic [ref=f2e44]: Senha
+    - textbox "mínimo 4 caracteres" [ref=f2e45]
+    - button "Entrar" [ref=f2e47] [cursor=pointer]
+  - paragraph [ref=f2e48]:
+    - button "← Voltar para a página inicial" [ref=f2e49] [cursor=pointer]

@@ -1,0 +1,20 @@
+- generic [ref=f2e50]:
+  - banner [ref=f2e51]:
+    - generic [ref=f2e52]:
+      - generic [ref=f2e53]: ✿
+      - text: FreelaAvalia 360
+    - navigation [ref=f2e54]:
+      - button "Projetos" [ref=f2e55] [cursor=pointer]
+      - button "Meu perfil" [ref=f2e56] [cursor=pointer]
+      - generic [ref=f2e57]: Freela · freelancer
+      - button "Sair" [ref=f2e58] [cursor=pointer]
+  - main [ref=f2e59]:
+    - generic [ref=f2e60]:
+      - generic [ref=f2e61]:
+        - heading "Projetos" [level=2] [ref=f2e62]
+        - generic [ref=f2e63]: Freelancers participam dos projetos publicados
+      - generic [ref=f2e64]: Nenhum projeto ainda.
+  - contentinfo [ref=f2e65]:
+    - text: Projeto Social Garapuvu ·
+    - link "projeto-garapuvu.web.app" [ref=f2e66] [cursor=pointer]:
+      - /url: https://projeto-garapuvu.web.app/

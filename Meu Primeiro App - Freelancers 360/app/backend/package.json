@@ -1,0 +1,21 @@
+{
+  "name": "freelavalia-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Backend do FreelaAvalia 360 — plataforma de freelancers com avaliação 360°",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "vitest run",
+    "test:unit": "vitest run -t @unitario",
+    "test:integracao": "vitest run -t @integracao",
+    "coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^2.1.8",
+    "supertest": "^7.0.0",
+    "vitest": "^2.1.8"
+  }
+}

@@ -1,0 +1,6 @@
+pytest
+pytest-cov
+# Para o desafio "para ir além" (modelo de verdade com scikit-learn e API):
+# scikit-learn
+# fastapi
+# uvicorn

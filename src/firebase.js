@@ -5,6 +5,7 @@
 // (Firestore/Storage) e dos domínios autorizados no console do Firebase.
 import { initializeApp } from "firebase/app";
 import { getAnalytics, isSupported, logEvent } from "firebase/analytics";
+import { getFirestore } from "firebase/firestore";
 
 // Configuração do app web (gerada no console do Firebase).
 // Para Firebase JS SDK v7.20.0+, measurementId é opcional.
@@ -20,6 +21,9 @@ const firebaseConfig = {
 
 // Inicializa o app Firebase.
 const app = initializeApp(firebaseConfig);
+
+// Firestore — usado pelo contador de visitantes online em tempo real.
+const db = getFirestore(app);
 
 // Analytics só roda no navegador e quando suportado (evita erros em SSR/build
 // e em ambientes sem cookies/IndexedDB).
@@ -44,5 +48,5 @@ export function track(eventName, params = {}) {
   }
 }
 
-export { app, analytics };
+export { app, analytics, db };
 export default app;

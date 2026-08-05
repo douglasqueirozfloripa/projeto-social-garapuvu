@@ -1,0 +1,108 @@
+/* index.css — Estilo MOBILE-FIRST do FreelaAvalia 360 (cores do Projeto Garapuvu). */
+:root {
+  --verde: #2E7D32; --verde-escuro: #14401A; --verde-claro: #7CB342;
+  --amarelo: #F9A825; --fundo: #F1F8E9; --tinta: #1B3A1B; --cinza: #55695C;
+  --borda: #D7E8C8; --branco: #fff;
+  --azul: #1565C0; --coral: #EF6C00;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, "Segoe UI", Roboto, Arial, sans-serif; color: var(--tinta); background: var(--fundo); font-size: 16px; line-height: 1.5; }
+h1,h2,h3 { color: var(--verde-escuro); }
+button { min-height: 44px; padding: 10px 18px; border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; background: var(--verde); color: #fff; cursor: pointer; transition: filter .15s; }
+button:hover { filter: brightness(1.05); }
+button.secundario { background: #fff; color: var(--verde); border: 2px solid var(--verde); }
+button.amarelo { background: var(--amarelo); color: var(--verde-escuro); }
+button.ghost { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,.6); }
+button.perigo { background: #fff; color: #b0341d; border: 2px solid #F5B7A8; }
+button:disabled { opacity: .5; cursor: default; }
+.opcional { font-weight: 400; color: var(--cinza); font-size: .85rem; }
+label { display: block; font-weight: 600; margin: 10px 0 4px; }
+input, select, textarea { width: 100%; padding: 12px; border: 1px solid var(--borda); border-radius: 8px; font-size: 16px; background: #fff; }
+.msg-ok { color: var(--verde); font-weight: 700; }
+.msg-erro { background:#FBE9E7; border:1px solid #F5B7A8; color:#b0341d; padding:10px 12px; border-radius:8px; font-weight:600; }
+.container { padding: 16px; max-width: 100%; }
+
+/* ---------- LANDING ---------- */
+.hero { background: linear-gradient(135deg, #14401A 0%, #2E7D32 60%, #43A047 100%); color: #fff; padding: 40px 20px 56px; text-align: center; position: relative; }
+.hero .marca { display:flex; align-items:center; justify-content:center; gap:8px; font-weight:800; letter-spacing:.5px; margin-bottom:16px; }
+.hero .leaf { width:34px; height:34px; background:var(--amarelo); border-radius:50%; display:grid; place-items:center; color:var(--verde-escuro); font-size:18px; }
+.hero h1 { color:#fff; font-size: clamp(1.9rem, 7vw, 3.2rem); margin: 6px 0; line-height:1.1; }
+.hero p.tag { color:#DCEFCF; font-size: 1.05rem; max-width: 620px; margin: 10px auto 24px; }
+.hero .cta { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+.hero .cta button { min-width: 150px; }
+.selo360 { display:inline-block; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.35); border-radius:999px; padding:4px 14px; font-size:.85rem; margin-bottom:6px; }
+.secao { max-width: 980px; margin: 0 auto; padding: 28px 18px; }
+.secao h2 { text-align:center; font-size:1.6rem; }
+.features { display:grid; grid-template-columns: 1fr; gap: 14px; margin-top: 16px; }
+.feature { background:#fff; border:1px solid var(--borda); border-radius:14px; padding:18px; }
+.feature .ico { width:44px; height:44px; border-radius:12px; display:grid; place-items:center; font-size:22px; color:#fff; background:var(--verde); margin-bottom:8px; }
+.sobre { background:#fff; border:1px solid var(--borda); border-radius:14px; padding:20px; }
+.rodape { background: var(--verde-escuro); color:#CFE8C4; text-align:center; padding:22px 16px; font-size:.9rem; }
+.rodape a { color:#FFE08A; font-weight:700; text-decoration:none; }
+
+/* ---------- AUTH ---------- */
+.auth-wrap { min-height: 100vh; display:grid; place-items:center; padding:20px; background: linear-gradient(135deg,#14401A,#2E7D32); }
+.auth-card { background:#fff; border-radius:16px; padding:26px; width:100%; max-width:400px; box-shadow:0 12px 40px rgba(0,0,0,.25); }
+.auth-card h2 { margin-top:0; text-align:center; }
+.auth-tabs { display:flex; gap:8px; margin-bottom:14px; }
+.auth-tabs button { flex:1; }
+.link-btn { background:none; color:var(--verde); min-height:auto; padding:0; text-decoration:underline; font-weight:600; }
+
+/* ---------- APP SHELL ---------- */
+.app-shell { min-height: 100vh; display:flex; flex-direction:column; }
+.app-shell > main { flex: 1 0 auto; }
+.app-shell > .rodape { flex-shrink: 0; }
+header.topo { background: var(--verde-escuro); color:#fff; padding: 12px 16px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+header.topo .marca { font-weight:800; display:flex; align-items:center; gap:8px; }
+header.topo .leaf { width:28px; height:28px; background:var(--amarelo); border-radius:50%; display:grid; place-items:center; color:var(--verde-escuro); }
+.nav { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.userchip { background:rgba(255,255,255,.14); border-radius:999px; padding:4px 12px; font-size:.85rem; }
+
+/* ---------- PROJETOS ---------- */
+.projetos-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin: 6px 0 14px; flex-wrap:wrap; }
+.projetos-grid { display:grid; grid-template-columns: 1fr; gap: 14px; }
+.projeto-card { background:#fff; border:1px solid var(--borda); border-radius:14px; padding:16px; box-shadow:0 2px 8px rgba(20,64,26,.06); display:flex; flex-direction:column; gap:8px; }
+.projeto-card h3 { margin:0; font-size:1.15rem; }
+.projeto-card .descricao { margin:0; color:var(--tinta); font-size:.95rem; white-space:pre-wrap; }
+.projeto-card .meta { color:var(--cinza); font-size:.9rem; }
+.projeto-card .contato { list-style:none; margin:0; padding:8px 0 0; display:flex; flex-direction:column; gap:4px; font-size:.9rem; color:var(--verde-escuro); border-top:1px solid var(--borda); }
+.projeto-card .acoes { margin-top:auto; display:flex; gap:8px; flex-wrap:wrap; padding-top:8px; }
+.badge { display:inline-block; border-radius:999px; padding:3px 12px; font-size:.8rem; font-weight:700; }
+.badge.aberto { background:#E3F2FD; color:#1565C0; }
+.badge.em_aprovacao { background:#F3E5F5; color:#6A1B9A; }
+.badge.em_andamento { background:#FFF3CC; color:#8A6D00; }
+.badge.concluido { background:#E8F5E9; color:#2E7D32; }
+.dica { font-size:.9rem; color:var(--cinza); }
+.candidatos-lista { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
+.candidato { display:flex; align-items:center; justify-content:space-between; gap:12px; border:1px solid var(--borda); border-radius:12px; padding:12px; }
+.candidato .reputacao { display:flex; align-items:center; gap:8px; margin-top:4px; }
+.candidato .estrela { font-size:1.1rem; }
+.candidato-acoes { display:flex; flex-direction:column; gap:6px; flex-shrink:0; }
+.vazio { background:#fff; border:1px dashed var(--borda); border-radius:14px; padding:30px; text-align:center; color:var(--cinza); }
+.estrelas { display:inline-flex; gap:2px; }
+.estrela { background:none; min-height:auto; padding:2px; font-size:1.6rem; color:var(--amarelo); }
+.estrela:not(.on) { color:#ccd6c2; }
+
+/* ---------- MODAL ---------- */
+.modal-overlay { position:fixed; inset:0; background:rgba(20,32,20,.55); display:grid; place-items:center; padding:16px; z-index:50; }
+.modal { background:#fff; border-radius:16px; padding:22px; width:100%; max-width:460px; box-shadow:0 16px 50px rgba(0,0,0,.3); max-height:90vh; overflow:auto; }
+.modal-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.modal-head h2 { margin:0; font-size:1.25rem; }
+.fechar { background:none; color:var(--cinza); min-height:auto; padding:4px 8px; font-size:1.4rem; }
+
+/* ---------- BREAKPOINTS ---------- */
+@media (min-width: 700px) {
+  .features { grid-template-columns: repeat(3, 1fr); }
+  .projetos-grid { grid-template-columns: repeat(2, 1fr); }
+  .container { max-width: 980px; margin: 0 auto; }
+}
+@media (min-width: 1024px) {
+  .projetos-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ---------- FEATURE FLAGS (novo_dashboard, pagamento_destaque) ---------- */
+.banner-novo { background:linear-gradient(90deg, var(--verde-claro,#e8f5e9), #fff8e1); color:var(--verde-escuro,#14401A); padding:10px 16px; text-align:center; font-size:.95rem; border-bottom:2px solid var(--amarelo,#F9A825); }
+.banner-novo code { background:rgba(0,0,0,.06); padding:1px 5px; border-radius:5px; }
+.app-shell.tema-novo .topo { background:linear-gradient(90deg, var(--verde-escuro,#14401A), var(--verde,#2E7D32)); }
+.badge.destaque { background:var(--amarelo,#F9A825); color:#3a2c00; margin-left:6px; }
+.projeto-card.destacado { border:2px solid var(--amarelo,#F9A825); box-shadow:0 6px 20px rgba(249,168,37,.25); }

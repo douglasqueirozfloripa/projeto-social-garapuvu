@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Fundo azul-marinho do Garapuvu, cantos arredondados -->
+  <rect width="100" height="100" rx="22" fill="#0E1F38"/>
+  <!-- Flor do garapuvu: 5 pétalas douradas em torno do centro âmbar -->
+  <g transform="translate(50 50)">
+    <g fill="#F2B705">
+      <ellipse cx="0" cy="-22" rx="12" ry="24"/>
+      <ellipse cx="0" cy="-22" rx="12" ry="24" transform="rotate(72)"/>
+      <ellipse cx="0" cy="-22" rx="12" ry="24" transform="rotate(144)"/>
+      <ellipse cx="0" cy="-22" rx="12" ry="24" transform="rotate(216)"/>
+      <ellipse cx="0" cy="-22" rx="12" ry="24" transform="rotate(288)"/>
+    </g>
+    <circle r="11" fill="#E08A00"/>
+    <circle r="4.5" fill="#F2B705"/>
+  </g>
+</svg>
