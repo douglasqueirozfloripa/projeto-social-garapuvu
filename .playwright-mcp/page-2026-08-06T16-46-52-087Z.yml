@@ -1,0 +1,194 @@
+- generic [ref=f15e3]:
+  - banner [ref=f15e4]:
+    - generic [ref=f15e8]:
+      - navigation [ref=f15e9]:
+        - generic [ref=f15e10]:
+          - generic [ref=f15e11]: Garapuvu.
+          - generic "Total de pessoas que já visitaram" [ref=f15e12]:
+            - generic [ref=f15e13]: 👁️
+            - strong [ref=f15e14]: "1"
+            - generic [ref=f15e15]: visita
+        - generic [ref=f15e16]:
+          - generic [ref=f15e17]: Turma 2026
+          - button "Mudar para o tema claro (dia)" [ref=f15e18] [cursor=pointer]:
+            - generic [ref=f15e22]: Dia
+      - generic [ref=f15e23]:
+        - generic [ref=f15e24]:
+          - paragraph [ref=f15e25]: ● Projeto Social · 100% gratuito · remoto
+          - heading "Aprender tecnologia de graça, de qualquer lugar do mundo." [level=1] [ref=f15e27]
+          - paragraph [ref=f15e29]: Desde 2020, o Garapuvu ensina lógica de programação, desenvolvimento e testes de software — e, agora, Inteligência Artificial e Data Science aplicados. De Florianópolis a outros estados do Brasil, e até outros países.
+          - generic [ref=f15e30]:
+            - button "Quero participar →" [ref=f15e31] [cursor=pointer]
+            - button "Ver o conteúdo" [ref=f15e32] [cursor=pointer]
+        - iframe [ref=f15e81]
+  - generic [ref=f15e83]:
+    - generic [ref=f15e84]:
+      - generic [ref=f15e85]: 140+
+      - generic [ref=f15e86]: horas de curso
+    - generic [ref=f15e87]:
+      - generic [ref=f15e88]: "36"
+      - generic [ref=f15e89]: aulas
+    - generic [ref=f15e90]:
+      - generic [ref=f15e91]: "6"
+      - generic [ref=f15e92]: anos de projeto
+    - generic [ref=f15e93]:
+      - generic [ref=f15e94]: "2"
+      - generic [ref=f15e95]: países atendidos
+  - generic [ref=f15e96]:
+    - paragraph [ref=f15e97]: Como funciona
+    - heading "Um encontro por semana. O ano inteiro com você." [level=2] [ref=f15e98]
+    - generic [ref=f15e99]:
+      - generic [ref=f15e100]:
+        - generic [ref=f15e101]: Encontros
+        - generic [ref=f15e102]: Quartas-feiras, das 18h às 20h
+      - generic [ref=f15e103]:
+        - generic [ref=f15e104]: Plataforma
+        - generic [ref=f15e105]: Aulas remotas via Google Meet
+      - generic [ref=f15e106]:
+        - generic [ref=f15e107]: Inscrição
+        - generic [ref=f15e108]: Basta ter um e-mail e um computador com internet
+      - generic [ref=f15e109]:
+        - generic [ref=f15e110]: Suporte
+        - generic [ref=f15e111]: Professores disponíveis durante a semana
+      - generic [ref=f15e112]:
+        - generic [ref=f15e113]: Origem
+        - generic [ref=f15e114]: Florianópolis, Santa Catarina — e agora em todo o Brasil
+      - generic [ref=f15e115]:
+        - generic [ref=f15e116]: Idade mínima
+        - generic [ref=f15e117]: 16 anos (com autorização dos pais)
+    - generic [ref=f15e118]:
+      - strong [ref=f15e119]: "Importante:"
+      - text: participantes a partir de 16 anos são bem-vindos mediante autorização dos pais ou responsáveis. Qualquer nacionalidade pode participar.
+  - generic [ref=f15e121]:
+    - paragraph [ref=f15e122]: Planejamento do curso 2026
+    - heading "Cinco módulos, do fundamento à Inteligência Artificial e aos dados." [level=2] [ref=f15e123]
+    - paragraph [ref=f15e124]: 36 aulas que crescem como os ramos do garapuvu — da raiz dos fundamentos até a floração com IA e Data Science.
+    - generic [ref=f15e125]:
+      - generic [ref=f15e126]:
+        - button "Módulo 01 Fundamentos de Testes de Software" [pressed] [ref=f15e127] [cursor=pointer]:
+          - generic [ref=f15e128]: Módulo 01
+          - generic [ref=f15e129]: Fundamentos de Testes de Software
+        - button "Módulo 02 Prática em Testes de Software" [ref=f15e130] [cursor=pointer]:
+          - generic [ref=f15e131]: Módulo 02
+          - generic [ref=f15e132]: Prática em Testes de Software
+        - button "Módulo 03 Inteligência Artificial e Cursor IDE" [ref=f15e133] [cursor=pointer]:
+          - generic [ref=f15e134]: Módulo 03
+          - generic [ref=f15e135]: Inteligência Artificial e Cursor IDE
+        - button "Módulo 04 Data Science e Testes" [ref=f15e136] [cursor=pointer]:
+          - generic [ref=f15e137]: Módulo 04
+          - generic [ref=f15e138]: Data Science e Testes
+        - button "Módulo Bônus Mercado de Trabalho" [ref=f15e139] [cursor=pointer]:
+          - generic [ref=f15e140]: Módulo Bônus
+          - generic [ref=f15e141]: Mercado de Trabalho
+      - generic [ref=f15e142]:
+        - paragraph [ref=f15e143]: CTFL · Certified Tester Foundation Level
+        - generic [ref=f15e144]:
+          - generic [ref=f15e145]:
+            - generic [ref=f15e146]: "01"
+            - generic [ref=f15e147]: Fundamentos, riscos e estratégias de teste
+          - generic [ref=f15e148]:
+            - generic [ref=f15e149]: "02"
+            - generic [ref=f15e150]: Modelos de desenvolvimento, ágil, DevOps e CI/CD
+          - generic [ref=f15e151]:
+            - generic [ref=f15e152]: "03"
+            - generic [ref=f15e153]: Teste estático, revisões e análise de código
+          - generic [ref=f15e154]:
+            - generic [ref=f15e155]: "04"
+            - generic [ref=f15e156]: Níveis e tipos de testes
+          - generic [ref=f15e157]:
+            - generic [ref=f15e158]: "05"
+            - generic [ref=f15e159]: Técnicas de caixa preta, branca e por experiência
+          - generic [ref=f15e160]:
+            - generic [ref=f15e161]: "06"
+            - generic [ref=f15e162]: "Testes de design: acessibilidade, usabilidade e UX/UI"
+          - generic [ref=f15e163]:
+            - generic [ref=f15e164]: "07"
+            - generic [ref=f15e165]: Gerenciamento, planejamento e estimativas de teste
+          - generic [ref=f15e166]:
+            - generic [ref=f15e167]: "08"
+            - generic [ref=f15e168]: Ferramentas, performance e Planning Poker
+          - generic [ref=f15e169]:
+            - generic [ref=f15e170]: "09"
+            - generic [ref=f15e171]: Pirâmide de testes, métricas e KPIs de qualidade
+          - generic [ref=f15e172]:
+            - generic [ref=f15e173]: "10"
+            - generic [ref=f15e174]: Scrum e Kanban
+  - generic [ref=f15e175]:
+    - paragraph [ref=f15e176]: Objetivos
+    - heading "Por que o Garapuvu existe" [level=2] [ref=f15e177]
+    - generic [ref=f15e178]:
+      - generic [ref=f15e179]:
+        - heading "Capacitação" [level=3] [ref=f15e181]
+        - paragraph [ref=f15e182]: Capacitar profissionais que atuam ou desejam atuar na área de tecnologia.
+      - generic [ref=f15e183]:
+        - heading "Integração" [level=3] [ref=f15e185]
+        - paragraph [ref=f15e186]: Integrar profissionais e mentores no processo de tutoria.
+      - generic [ref=f15e187]:
+        - heading "Conexão com o mercado" [level=3] [ref=f15e189]
+        - paragraph [ref=f15e190]: Aproximar empresas do projeto, criando um banco de profissionais capacitados.
+      - generic [ref=f15e191]:
+        - heading "Desenvolvimento nacional" [level=3] [ref=f15e193]
+        - paragraph [ref=f15e194]: Ajudar no desenvolvimento tecnológico e sustentável do Brasil.
+      - generic [ref=f15e195]:
+        - heading "Multiplicação" [level=3] [ref=f15e197]
+        - paragraph [ref=f15e198]: Disseminar conhecimento e formar novos tutores e professores.
+      - generic [ref=f15e199]:
+        - heading "Impacto social" [level=3] [ref=f15e201]
+        - paragraph [ref=f15e202]: Abrir portas da tecnologia para pessoas de qualquer origem ou país.
+  - generic [ref=f15e203]:
+    - paragraph [ref=f15e204]: Marcos 2026 – 2027
+    - heading "O ano, ramo a ramo" [level=2] [ref=f15e205]
+    - generic [ref=f15e206]:
+      - generic [ref=f15e207]:
+        - generic [ref=f15e208]: Junho 2026 — Início
+        - generic [ref=f15e209]:
+          - generic [ref=f15e210]: ✓
+          - generic [ref=f15e211]:
+            - text: Primeira turma do ano em aula
+            - generic [ref=f15e212]: (concluído)
+        - generic [ref=f15e213]:
+          - generic [ref=f15e214]: ✓
+          - generic [ref=f15e215]:
+            - text: Módulo de IA consolidado
+            - generic [ref=f15e216]: (concluído)
+        - generic [ref=f15e217]:
+          - generic [ref=f15e218]: ✓
+          - generic [ref=f15e219]:
+            - text: Encontros remotos, uma noite por semana
+            - generic [ref=f15e220]: (concluído)
+      - generic [ref=f15e221]:
+        - generic [ref=f15e222]: Dezembro 2026
+        - generic [ref=f15e223]:
+          - generic [ref=f15e224]: →
+          - generic [ref=f15e225]: Formar 30 pessoas até o fim do ano
+        - generic [ref=f15e226]:
+          - generic [ref=f15e227]: →
+          - generic [ref=f15e228]: Consolidar o conteúdo do Módulo 4 — Data Science e Testes
+        - generic [ref=f15e229]:
+          - generic [ref=f15e230]: →
+          - generic [ref=f15e231]: Integrar empresas parceiras ao projeto
+      - generic [ref=f15e232]:
+        - generic [ref=f15e233]: Julho 2027
+        - generic [ref=f15e234]:
+          - generic [ref=f15e235]: →
+          - generic [ref=f15e236]: Formar 50 pessoas
+        - generic [ref=f15e237]:
+          - generic [ref=f15e238]: →
+          - generic [ref=f15e239]: Programa de mentoria
+        - generic [ref=f15e240]:
+          - generic [ref=f15e241]: →
+          - generic [ref=f15e242]: Evento de formatura presencial
+  - generic [ref=f15e244]:
+    - heading "Quer fazer parte do projeto?" [level=2] [ref=f15e285]
+    - paragraph [ref=f15e286]: Conheça o conteúdo das aulas e inscreva-se na próxima turma. Basta um e-mail e um computador com internet.
+    - button "Saiba mais e participe →" [ref=f15e287] [cursor=pointer]
+  - contentinfo [ref=f15e288]:
+    - generic [ref=f15e289]: Garapuvu.
+    - generic [ref=f15e290]:
+      - link "Instagram do Projeto Garapuvu" [ref=f15e291] [cursor=pointer]:
+        - /url: https://www.instagram.com/projetogarapuvu/
+      - link "LinkedIn de Douglas Adriano Queiroz" [ref=f15e296] [cursor=pointer]:
+        - /url: https://br.linkedin.com/in/douglas-adriano-queiroz-ctfl-680b1978
+      - link "Repositório do Projeto Garapuvu no GitHub" [ref=f15e299] [cursor=pointer]:
+        - /url: https://github.com/douglasqueirozfloripa/projeto-social-garapuvu
+    - text: "Projeto Social Garapuvu 2026 · Instrutor: Douglas Adriano QueirozFeito para a comunidade de tecnologia — de Florianópolis para o mundo."

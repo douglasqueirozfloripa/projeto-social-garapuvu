@@ -10,10 +10,15 @@
       "Bash(rm -f /private/tmp/claude-502/-Users-douglasqueiroz-projeto-social-garapuvu/e8919032-ead8-44b1-9b08-be2eb1543044/scratchpad/ambiente.pdf)",
       "Bash('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless=new --disable-gpu --no-pdf-header-footer --print-to-pdf=/private/tmp/claude-502/-Users-douglasqueiroz-projeto-social-garapuvu/e8919032-ead8-44b1-9b08-be2eb1543044/scratchpad/ambiente.pdf file:///private/tmp/claude-502/-Users-douglasqueiroz-projeto-social-garapuvu/e8919032-ead8-44b1-9b08-be2eb1543044/scratchpad/ambiente_deck.html)",
       "Bash(pkill -f \"Google Chrome\")",
-      "Bash(SCRATCH=\"/private/tmp/claude-502/-Users-douglasqueiroz-projeto-social-garapuvu/e8919032-ead8-44b1-9b08-be2eb1543044/scratchpad\"; DEST=\"/Users/douglasqueiroz/projeto-social-garapuvu/Modulo 0 - Introdução/Aula0.1_Preparacao_do_Ambiente_Win_Mac.pdf\"; cp \"$SCRATCH/ambiente.pdf\" \"$DEST\"; ls -la \"$DEST\"; echo \"=== conteúdo do Módulo 0 \\(nada foi alterado nos existentes\\) ===\"; ls -la \"/Users/douglasqueiroz/projeto-social-garapuvu/Modulo 0 - Introdução/\")"
+      "Bash(SCRATCH=\"/private/tmp/claude-502/-Users-douglasqueiroz-projeto-social-garapuvu/e8919032-ead8-44b1-9b08-be2eb1543044/scratchpad\"; DEST=\"/Users/douglasqueiroz/projeto-social-garapuvu/Modulo 0 - Introdução/Aula0.1_Preparacao_do_Ambiente_Win_Mac.pdf\"; cp \"$SCRATCH/ambiente.pdf\" \"$DEST\"; ls -la \"$DEST\"; echo \"=== conteúdo do Módulo 0 \\(nada foi alterado nos existentes\\) ===\"; ls -la \"/Users/douglasqueiroz/projeto-social-garapuvu/Modulo 0 - Introdução/\")",
+      "Bash(nohup npx vite --port 5173)",
+      "Bash(rm -f hero-sem-video.png .playwright-mcp/page-2026-08-06T1[56]*.yml .playwright-mcp/page-2026-08-06T16-0*.yml && git status --short && ls design/)",
+      "Bash(python3 -c ' *)",
+      "Bash(python3 -c \"print\\(open\\('design/design-system.html',encoding='utf-8'\\).read\\(\\).count\\('página'\\)\\)\")"
     ],
     "additionalDirectories": [
-      "/Users/douglasqueiroz/projeto-social-garapuvu/Modulo 0 - Introdução"
+      "/Users/douglasqueiroz/projeto-social-garapuvu/Modulo 0 - Introdução",
+      "/Users/douglasqueiroz/projeto-social-garapuvu/.playwright-mcp"
     ]
   }
 }

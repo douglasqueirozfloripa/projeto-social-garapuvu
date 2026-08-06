@@ -8,9 +8,22 @@
     <meta name="theme-color" content="#0E1F38" />
     <meta
       name="description"
-      content="Projeto Social Garapuvu 2026 — aprender tecnologia de graça, de qualquer lugar do mundo. Lógica, desenvolvimento, testes de software e IA aplicada. 100% gratuito e remoto."
+      content="Projeto Social Garapuvu 2026 — aprender tecnologia de graça, de qualquer lugar do mundo. Lógica, desenvolvimento, testes de software, IA aplicada e Data Science. 36 aulas, 100% gratuito e remoto."
     />
     <title>Projeto Social Garapuvu 2026</title>
+    <script>
+      // Aplica o tema salvo ANTES da primeira pintura. Sem isto, quem escolheu o
+      // tema claro veria um piscar escuro a cada carregamento (o React só ajusta
+      // o <html> depois de montar). Sem preferência salva, o padrão é o escuro.
+      (function () {
+        try {
+          var t = localStorage.getItem("gp_theme");
+          document.documentElement.dataset.theme = t === "light" ? "light" : "dark";
+        } catch (e) {
+          document.documentElement.dataset.theme = "dark";
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
