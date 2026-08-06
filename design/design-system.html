@@ -1,3 +1,6 @@
+<meta charset="utf-8">
+<!-- Sem esta linha o navegador assume windows-1252 ao servir o arquivo por HTTP
+     e todos os acentos quebram ("página" vira "pÃ¡gina"). -->
 <style>
   /* ─────────────────────────────────────────────────────────
      Garapuvu — Design System
@@ -45,22 +48,22 @@
     --radius-card: 18px;
   }
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #0B182D;
-      --bg-2: #0E1F38;
-      --surface: #15294A;
-      --border: rgba(255,255,255,.10);
-      --border-strong: rgba(255,255,255,.18);
-      --text: #FBF7EE;
-      --text-soft: #B7C3D6;
-      --text-dim: #92A4BE;
-      --accent: #F2B705;
-      --accent-quiet: rgba(242, 183, 5, .14);
-      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 30px rgba(0,0,0,.35);
-    }
+  /* Escuro e o PADRAO deste documento e da landing: o :root ja nasce escuro,
+     independente do tema do sistema operacional. O claro entra so pelo botao. */
+  :root {
+    --bg: #0B182D;
+    --bg-2: #0E1F38;
+    --surface: #15294A;
+    --border: rgba(255,255,255,.10);
+    --border-strong: rgba(255,255,255,.18);
+    --text: #FBF7EE;
+    --text-soft: #B7C3D6;
+    --text-dim: #92A4BE;
+    --accent: #F2B705;
+    --accent-quiet: rgba(242, 183, 5, .14);
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 30px rgba(0,0,0,.35);
   }
-  /* Toggle do visualizador vence a media query nos dois sentidos */
+  /* O botao do topo troca para o claro (e volta) */
   :root[data-theme="light"] {
     --bg: #FBF7EE; --bg-2: #F4EEDF; --surface: #FFFFFF;
     --border: #E7DEC9; --border-strong: #D8CCB0;
@@ -406,6 +409,15 @@
 
       <div class="group-label">Texto — sobre o fundo escuro</div>
       <div class="swatches" id="grpTexto"></div>
+
+      <div class="group-label">Tema — os tokens que trocam entre escuro e claro</div>
+      <p style="max-width:70ch;margin:0 0 18px;color:var(--text-soft);font-size:var(--step--1);line-height:1.6">
+        A landing tem dois temas, com o <strong>escuro como padrão</strong>. Estas variáveis CSS
+        (<code style="font-family:var(--mono);color:var(--accent)">--gp-*</code>) são o que muda quando
+        alguém clica no sol/lua do topo; o restante da paleta acima é âncora de marca e fica igual nos
+        dois. Os nomes são <em>semânticos</em> — dizem o papel da cor, não qual cor é.
+      </p>
+      <div class="swatches" id="grpTema"></div>
     </section>
 
     <!-- ══ TIPOGRAFIA ══ -->
@@ -659,9 +671,9 @@
         <div class="anat-row"><span class="idx">1</span><div><h4>Hero</h4><p>Imagem do garapuvu florido + título display, botões de ação, contador de visitas e o galho. A porta de entrada.</p></div><span class="bg dark">fundo azul</span></div>
         <div class="anat-row"><span class="idx">2</span><div><h4>Stats</h4><p>Quatro números-chave (horas, aulas, anos, países) em cartões que "flutuam" sobre a virada do hero.</p></div><span class="bg light">cartões · papel</span></div>
         <div class="anat-row"><span class="idx">3</span><div><h4>Como funciona</h4><p>Grade de pares chave/valor (encontros, plataforma, inscrição…) mais um bloco de aviso sobre idade.</p></div><span class="bg light">fundo papel</span></div>
-        <div class="anat-row"><span class="idx">4</span><div><h4>Currículo</h4><p>Abas dos três módulos à esquerda e a lista de aulas do módulo ativo à direita. Seção-assinatura.</p></div><span class="bg dark">fundo azul</span></div>
+        <div class="anat-row"><span class="idx">4</span><div><h4>Currículo</h4><p>Abas dos cinco módulos à esquerda e a lista de aulas do módulo ativo à direita. Seção-assinatura.</p></div><span class="bg dark">fundo azul</span></div>
         <div class="anat-row"><span class="idx">5</span><div><h4>Objetivos</h4><p>Grade de 3 colunas com os porquês do projeto, cada cartão com barra de acento em ouro.</p></div><span class="bg light">fundo papel</span></div>
-        <div class="anat-row"><span class="idx">6</span><div><h4>Marcos 2026</h4><p>Linha do tempo em 3 cartões (semestres), cada item marcado com uma seta dourada.</p></div><span class="bg light">fundo papel</span></div>
+        <div class="anat-row"><span class="idx">6</span><div><h4>Marcos 2026 – 2027</h4><p>Linha do tempo em 3 cartões (jun/2026, dez/2026, jul/2027); concluído leva ✓ verde, pendente leva → dourado.</p></div><span class="bg light">fundo papel</span></div>
         <div class="anat-row"><span class="idx">7</span><div><h4>CTA</h4><p>Bloco em gradiente ouro convidando à inscrição via WhatsApp, com o galho no canto.</p></div><span class="bg grad">gradiente ouro</span></div>
         <div class="anat-row"><span class="idx">8</span><div><h4>Rodapé</h4><p>Logo, redes sociais e crédito do projeto sobre o azul-marinho, fechando o ciclo do topo.</p></div><span class="bg dark">fundo azul</span></div>
       </div>
@@ -694,6 +706,20 @@
       { name: "Papel-esmaecido", token: "--brand-paper-dim", hex: "#F0E9DA", onLight: true, use: "Bordas, linhas divisórias e blocos de aviso." },
       { name: "Branco", token: "#FFFFFF", hex: "#FFFFFF", onLight: true, use: "Fundo interno dos cartões, para saltarem sobre o papel bege." },
     ],
+    grpTema: [
+      { name: "Fundo da página", token: "--gp-page", hex: "#0A1728", hexLight: "#FBF7EE", onLight: false, use: "Fundo geral. No escuro é o tom mais profundo da página; no claro, o bege papel." },
+      { name: "Cartão", token: "--gp-surface", hex: "#16304F", hexLight: "#FFFFFF", onLight: false, use: "Fundo dos cartões (.gp-card): stats, objetivos, marcos e a lista de aulas." },
+      { name: "Bloco de aviso", token: "--gp-surface-alt", hex: "#1B3A5E", hexLight: "#F0E9DA", onLight: false, use: "Superfície secundária — o aviso sobre idade mínima." },
+      { name: "Borda", token: "--gp-border", hex: "#22405F", hexLight: "#F0E9DA", onLight: false, use: "Bordas de cartão e linhas divisórias entre aulas e pares chave/valor." },
+      { name: "Texto principal", token: "--gp-text", hex: "#EAF1FA", hexLight: "#0E1F38", onLight: false, use: "Títulos e texto corrido sobre a página. 15,8:1 no escuro; 15,4:1 no claro." },
+      { name: "Texto de apoio", token: "--gp-text-soft", hex: "#C2D2E6", hexLight: "#1B3357", onLight: false, use: "Parágrafos dentro de cartões — um passo abaixo do texto principal." },
+      { name: "Legenda", token: "--gp-muted", hex: "#93A9C4", hexLight: "#5B4636", onLight: false, use: "Rótulos dos stats, tag do módulo e textos discretos. No claro é o marrom casca." },
+      { name: "Galho ilustrado", token: "--gp-branch", hex: "#C08A4A", hexLight: "#5B4636", onLight: false, use: "Traço do componente Branch. No escuro o marrom some, então vira âmbar amadeirado." },
+      { name: "Verde-folha", token: "--gp-leaf", hex: "#6FBF8B", hexLight: "#3E6B4F", onLight: false, use: "✓ dos marcos já concluídos. Clareia no escuro para manter contraste no cartão." },
+      { name: "Âmbar de texto", token: "--gp-bloom-deep", hex: "#F0A020", hexLight: "#A85F00", onLight: false, use: "Números, eyebrows e links. O valor claro foi escurecido para passar em contraste (4,9:1)." },
+      { name: "Âmbar decorativo", token: "--gp-bloom-warm", hex: "#E08A00", hexLight: "#E08A00", onLight: false, use: "Só onde não há texto: gradiente do CTA e miolo da flor. Mantém o âmbar original nos dois temas." },
+      { name: "Faixa escura", token: "--gp-band", hex: "#102944", hexLight: "#0E1F38", onLight: false, use: "Fundo do hero, do currículo e do rodapé. No escuro sobe um tom para continuar se separando da página." },
+    ],
     grpTexto: [
       { name: "Névoa", token: "--brand-mist", hex: "#92A4BE", onLight: false, use: "Azul-cinza para textos discretos sobre o escuro (ex.: 'Turma 2026')." },
       { name: "Azul-corpo", token: "—", hex: "#C9D4E4", onLight: true, use: "Parágrafos sobre o fundo escuro do hero." },
@@ -706,6 +732,23 @@
 
   function swatchHTML(c) {
     const varLabel = c.token;
+    // Tokens de tema trazem dois valores: o chip vira meio a meio (escuro | claro)
+    // e os dois hexes ficam copiáveis.
+    if (c.hexLight) {
+      return `<div class="swatch">
+        <div class="chip" style="background:linear-gradient(90deg, ${c.hex} 0 50%, ${c.hexLight} 50% 100%)">
+          <span class="var on-light">${varLabel}</span>
+        </div>
+        <div class="body">
+          <div class="name">${c.name}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center">
+            <button class="hex" data-hex="${c.hex}" title="Valor no tema escuro">🌙 ${c.hex} ${copyIcon}</button>
+            <button class="hex" data-hex="${c.hexLight}" title="Valor no tema claro">☀️ ${c.hexLight} ${copyIcon}</button>
+          </div>
+          <p class="use">${c.use}</p>
+        </div>
+      </div>`;
+    }
     return `<div class="swatch">
       <div class="chip" style="background:${c.hex}">
         <span class="var ${c.onLight ? '' : 'on-light'}">${varLabel}</span>
@@ -769,9 +812,8 @@
   const icon = document.getElementById("themeIcon");
   const label = document.getElementById("themeLabel");
   function currentIsDark() {
-    const attr = document.documentElement.getAttribute("data-theme");
-    if (attr) return attr === "dark";
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    // Sem atributo, o padrao e escuro - igual a landing.
+    return document.documentElement.getAttribute("data-theme") !== "light";
   }
   function syncBtn() {
     const dark = currentIsDark();

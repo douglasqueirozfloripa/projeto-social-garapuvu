@@ -1,9 +1,7 @@
 {
-  "$description": "Design Tokens do Projeto Social Garapuvu 2026. Formato compatível com o plugin 'Tokens Studio for Figma' (tokens.studio). Importe pelo painel do plugin: Settings > Import. Cada token traz um 'description' explicando o uso — ótimo para ensinar os alunos.",
-
+  "$description": "Design Tokens do Projeto Social Garapuvu 2026. Formato compativel com o plugin 'Tokens Studio for Figma' (tokens.studio). Importe pelo painel do plugin: Settings > Import. A landing tem DOIS temas: o escuro e o padrao e o claro entra pelo botao sol/lua do topo. Em 'cor.tema' cada token traz os dois valores (escuro e claro) — sao as variaveis CSS --gp-* que trocam; o restante da paleta e ancora de marca e nao muda entre os temas.",
   "cor": {
     "$description": "Paleta inspirada no garapuvu (árvore símbolo de Florianópolis): tronco escuro, floração dourada e papel quente.",
-
     "marca": {
       "azul-profundo": {
         "value": "#0E1F38",
@@ -23,10 +21,9 @@
       "ambar": {
         "value": "#E08A00",
         "type": "color",
-        "description": "COLORS.bloomDeep — Âmbar (ouro mais escuro/maduro). Números, títulos secundários, links e o miolo da flor no favicon. Faz par com o ouro-floração em gradientes."
+        "description": "COLORS.bloomWarm / --gp-bloom-warm — Ambar (ouro mais escuro/maduro). Uso DECORATIVO nos dois temas: gradiente do CTA e miolo da flor do favicon. ATENCAO: nao use em texto sobre fundo claro — da 2,7:1, abaixo do minimo. Para texto existe o par 'cor.tema.ambar-texto-*'."
       }
     },
-
     "natureza": {
       "casca": {
         "value": "#5B4636",
@@ -39,7 +36,6 @@
         "description": "COLORS.leaf — Verde-folha. Cor de reserva da paleta natural (folhagem); disponível para novos elementos como ícones ou selos."
       }
     },
-
     "superficie": {
       "papel": {
         "value": "#FBF7EE",
@@ -57,7 +53,6 @@
         "description": "Branco puro. Fundo interno dos cartões (.gp-card) para eles saltarem sobre o papel bege."
       }
     },
-
     "texto": {
       "nevoa": {
         "value": "#92A4BE",
@@ -79,9 +74,121 @@
         "type": "color",
         "description": "Cor do texto do rodapé sobre o azul profundo."
       }
+    },
+    "tema": {
+      "$description": "Tokens SEMANTICOS que mudam com o tema (variaveis CSS --gp-*). Sufixo -escuro = padrao; -claro = alternativa diurna.",
+      "pagina-escuro": {
+        "value": "#0A1728",
+        "type": "color",
+        "description": "--gp-page (padrao). Fundo geral da pagina no tema escuro."
+      },
+      "pagina-claro": {
+        "value": "#FBF7EE",
+        "type": "color",
+        "description": "--gp-page no tema claro. E o mesmo bege 'papel quente' da paleta de superficie."
+      },
+      "cartao-escuro": {
+        "value": "#16304F",
+        "type": "color",
+        "description": "--gp-surface (padrao). Fundo dos cartoes .gp-card."
+      },
+      "cartao-claro": {
+        "value": "#FFFFFF",
+        "type": "color",
+        "description": "--gp-surface no tema claro. Branco puro."
+      },
+      "aviso-escuro": {
+        "value": "#1B3A5E",
+        "type": "color",
+        "description": "--gp-surface-alt (padrao). Superficie secundaria: bloco de aviso de idade minima."
+      },
+      "aviso-claro": {
+        "value": "#F0E9DA",
+        "type": "color",
+        "description": "--gp-surface-alt no tema claro."
+      },
+      "borda-escuro": {
+        "value": "#22405F",
+        "type": "color",
+        "description": "--gp-border (padrao). Bordas de cartao e divisorias entre aulas."
+      },
+      "borda-claro": {
+        "value": "#F0E9DA",
+        "type": "color",
+        "description": "--gp-border no tema claro."
+      },
+      "texto-escuro": {
+        "value": "#EAF1FA",
+        "type": "color",
+        "description": "--gp-text (padrao). Texto principal sobre a pagina. Contraste 15,8:1."
+      },
+      "texto-claro": {
+        "value": "#0E1F38",
+        "type": "color",
+        "description": "--gp-text no tema claro. Contraste 15,4:1."
+      },
+      "texto-apoio-escuro": {
+        "value": "#C2D2E6",
+        "type": "color",
+        "description": "--gp-text-soft (padrao). Paragrafos dentro de cartoes."
+      },
+      "texto-apoio-claro": {
+        "value": "#1B3357",
+        "type": "color",
+        "description": "--gp-text-soft no tema claro."
+      },
+      "legenda-escuro": {
+        "value": "#93A9C4",
+        "type": "color",
+        "description": "--gp-muted (padrao). Rotulos dos stats, tag do modulo, textos discretos."
+      },
+      "legenda-claro": {
+        "value": "#5B4636",
+        "type": "color",
+        "description": "--gp-muted no tema claro — o marrom casca."
+      },
+      "galho-escuro": {
+        "value": "#C08A4A",
+        "type": "color",
+        "description": "--gp-branch (padrao). Traco do componente Branch: o marrom sumiria no escuro, entao vira ambar amadeirado."
+      },
+      "galho-claro": {
+        "value": "#5B4636",
+        "type": "color",
+        "description": "--gp-branch no tema claro — o marrom casca."
+      },
+      "folha-escuro": {
+        "value": "#6FBF8B",
+        "type": "color",
+        "description": "--gp-leaf (padrao). Check dos marcos concluidos, clareado para manter contraste no cartao."
+      },
+      "folha-claro": {
+        "value": "#3E6B4F",
+        "type": "color",
+        "description": "--gp-leaf no tema claro."
+      },
+      "ambar-texto-escuro": {
+        "value": "#F0A020",
+        "type": "color",
+        "description": "--gp-bloom-deep (padrao). Ambar usado em TEXTO: numeros, eyebrows e links."
+      },
+      "ambar-texto-claro": {
+        "value": "#A85F00",
+        "type": "color",
+        "description": "--gp-bloom-deep no tema claro. Escurecido em relacao ao ambar historico (#E08A00) porque aquele reprovava em contraste sobre branco (2,7:1); este da 4,9:1."
+      },
+      "faixa-escuro": {
+        "value": "#102944",
+        "type": "color",
+        "description": "--gp-band (padrao). Fundo do hero, do curriculo e do rodape. Sobe um tom em relacao a pagina para continuar se separando dela."
+      },
+      "faixa-claro": {
+        "value": "#0E1F38",
+        "type": "color",
+        "description": "--gp-band no tema claro — o azul-profundo da marca."
+      }
     }
   },
-
   "fonte": {
     "familia": {
       "display": {
@@ -96,18 +203,49 @@
       }
     },
     "peso": {
-      "regular": { "value": "400", "type": "fontWeights" },
-      "medio": { "value": "500", "type": "fontWeights" },
-      "semibold": { "value": "600", "type": "fontWeights" },
-      "bold": { "value": "700", "type": "fontWeights" },
-      "black": { "value": "900", "type": "fontWeights", "description": "Usado nos grandes títulos display e no logo." }
+      "regular": {
+        "value": "400",
+        "type": "fontWeights"
+      },
+      "medio": {
+        "value": "500",
+        "type": "fontWeights"
+      },
+      "semibold": {
+        "value": "600",
+        "type": "fontWeights"
+      },
+      "bold": {
+        "value": "700",
+        "type": "fontWeights"
+      },
+      "black": {
+        "value": "900",
+        "type": "fontWeights",
+        "description": "Usado nos grandes títulos display e no logo."
+      }
     }
   },
-
   "raio": {
-    "botao": { "value": "999px", "type": "borderRadius", "description": "Botões e pílulas totalmente arredondados." },
-    "cartao": { "value": "18px", "type": "borderRadius", "description": "Cartões .gp-card." },
-    "cta": { "value": "28px", "type": "borderRadius", "description": "Bloco grande de chamada para ação." },
-    "favicon": { "value": "22px", "type": "borderRadius", "description": "Cantos arredondados do quadrado do favicon (rx=22 em 100x100)." }
+    "botao": {
+      "value": "999px",
+      "type": "borderRadius",
+      "description": "Botões e pílulas totalmente arredondados."
+    },
+    "cartao": {
+      "value": "18px",
+      "type": "borderRadius",
+      "description": "Cartões .gp-card."
+    },
+    "cta": {
+      "value": "28px",
+      "type": "borderRadius",
+      "description": "Bloco grande de chamada para ação."
+    },
+    "favicon": {
+      "value": "22px",
+      "type": "borderRadius",
+      "description": "Cantos arredondados do quadrado do favicon (rx=22 em 100x100)."
+    }
   }
 }

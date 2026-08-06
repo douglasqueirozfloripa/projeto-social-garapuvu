@@ -14,6 +14,14 @@ import heroBg from "./assets/garapuvu-hero.jpg";
 // Redes sociais do projeto e do instrutor.
 const INSTAGRAM_URL = "https://www.instagram.com/projetogarapuvu/";
 const LINKEDIN_URL = "https://br.linkedin.com/in/douglas-adriano-queiroz-ctfl-680b1978";
+const GITHUB_URL = "https://github.com/douglasqueirozfloripa/projeto-social-garapuvu";
+
+// Vídeo de apresentação do projeto, exibido ao lado do texto no topo da página.
+// É só o ID do vídeo — o trecho final da URL do YouTube.
+// https://youtu.be/9oAqu7JxWo8  →  "9oAqu7JxWo8"
+// Deixe "" para tirar o vídeo do ar: com a string vazia o bloco não é renderizado
+// e o topo volta a ocupar a largura toda.
+const YOUTUBE_ID = "9oAqu7JxWo8";
 
 // Contato via WhatsApp — formato internacional: 55 (Brasil) + 48 (DDD) + número.
 const WHATSAPP_NUMBER = "5548999886724";
@@ -38,21 +46,92 @@ function scrollToSection(id, eventName) {
   }
 }
 
+// ─── Tema ────────────────────────────────────────────────────────────────
+// A paleta virou variáveis CSS (ver THEME_CSS abaixo) para o site inteiro poder
+// alternar entre escuro e claro sem re-renderizar nada: o React só troca o
+// atributo `data-theme` no <html> e o navegador resolve o resto.
+//
+// Os nomes aqui são SEMÂNTICOS (o que a cor faz), não literais (que cor é).
+// Antes, `ink` acumulava três papéis diferentes — texto, fundo das faixas
+// escuras e texto sobre o dourado — que no modo escuro precisam divergir.
 const COLORS = {
-  ink: "#0E1F38",        // azul-marinho profundo (do material)
-  inkSoft: "#1B3357",
-  bloom: "#F2B705",      // amarelo-ouro da floração do garapuvu
-  bloomDeep: "#E08A00",  // âmbar
-  bark: "#5B4636",       // casca / tronco
-  paper: "#FBF7EE",      // papel quente
-  paperDim: "#F0E9DA",
-  leaf: "#3E6B4F",       // verde folha
-  mist: "#92A4BE",
+  // Superfícies e texto — mudam com o tema.
+  page: "var(--gp-page)",           // fundo geral da página
+  surface: "var(--gp-surface)",     // fundo dos cartões
+  surfaceAlt: "var(--gp-surface-alt)", // blocos de aviso
+  border: "var(--gp-border)",       // bordas e divisórias
+  text: "var(--gp-text)",           // texto principal sobre a página
+  textSoft: "var(--gp-text-soft)",  // parágrafos de apoio
+  muted: "var(--gp-muted)",         // legendas e textos discretos
+  branch: "var(--gp-branch)",       // traço do galho desenhado (Branch)
+  leaf: "var(--gp-leaf)",           // verde-folha (marcos concluídos)
+  bloom: "var(--gp-bloom)",         // ouro da floração — ação e destaque
+  bloomDeep: "var(--gp-bloom-deep)", // âmbar de TEXTO — números, legendas e títulos secundários
+  bloomWarm: "var(--gp-bloom-warm)", // âmbar DECORATIVO — gradiente do CTA e miolo da flor
+
+  // Faixas escuras (hero, currículo, rodapé) e o dourado são âncoras da marca:
+  // ficam escuras/douradas nos DOIS temas, então estas cores não variam.
+  band: "var(--gp-band)",           // fundo das faixas escuras
+  bandRgb: "var(--gp-band-rgb)",    // mesma cor em canal, para gradientes com alfa
+  onBand: "#FBF7EE",                // texto sobre as faixas escuras
+  onBandBody: "#C9D4E4",            // parágrafo sobre faixa escura
+  onBandCaption: "#9FB0C6",         // legenda sobre faixa escura
+  onBandFooter: "#8DA0BA",          // texto do rodapé
+  onBloom: "#0E1F38",               // texto sobre o dourado (botões, CTA)
+  mist: "#92A4BE",                  // texto discreto sobre faixa escura
 };
 
+// Onde a preferência de tema fica guardada no navegador.
+const THEME_KEY = "gp_theme";
+
+// Escuro é o padrão: é o `:root`. O claro entra só quando a pessoa troca no
+// botão do topo, que grava `data-theme="light"` no <html>.
+const THEME_CSS = `
+  :root {
+    --gp-page: #0A1728;
+    --gp-surface: #16304F;
+    --gp-surface-alt: #1B3A5E;
+    --gp-border: #22405F;
+    --gp-text: #EAF1FA;
+    --gp-text-soft: #C2D2E6;
+    --gp-muted: #93A9C4;
+    --gp-branch: #C08A4A;
+    --gp-leaf: #6FBF8B;
+    --gp-bloom: #F2B705;
+    --gp-bloom-deep: #F0A020;
+    --gp-bloom-warm: #E08A00;
+    /* Faixas um tom ACIMA do fundo: no escuro, é o contraste entre elas e a
+       página que mantém o ritmo de seções que o tema claro faz com bege x azul. */
+    --gp-band: #102944;
+    --gp-band-rgb: 16, 41, 68;
+    --gp-card-shadow: 0 10px 30px rgba(0,0,0,.28);
+  }
+
+  :root[data-theme="light"] {
+    --gp-page: #FBF7EE;
+    --gp-surface: #FFFFFF;
+    --gp-surface-alt: #F0E9DA;
+    --gp-border: #F0E9DA;
+    --gp-text: #0E1F38;
+    --gp-text-soft: #1B3357;
+    --gp-muted: #5B4636;
+    --gp-branch: #5B4636;
+    --gp-leaf: #3E6B4F;
+    --gp-bloom: #F2B705;
+    --gp-bloom-deep: #A85F00;
+    --gp-bloom-warm: #E08A00;
+    --gp-band: #0E1F38;
+    --gp-band-rgb: 14, 31, 56;
+    --gp-card-shadow: none;
+  }
+`;
+
+// `n` é o rótulo exibido ("Módulo 01", "Módulo Bônus"); `slug` é o que vai para o
+// Analytics — o GA4 só aceita nomes de evento com letras, números e underscore.
 const MODULES = [
   {
     n: "01",
+    slug: "01",
     title: "Fundamentos de Testes de Software",
     tag: "CTFL · Certified Tester Foundation Level",
     lessons: [
@@ -70,6 +149,7 @@ const MODULES = [
   },
   {
     n: "02",
+    slug: "02",
     title: "Prática em Testes de Software",
     tag: "Mão na massa: do primeiro caso de teste à publicação de um app",
     lessons: [
@@ -87,6 +167,7 @@ const MODULES = [
   },
   {
     n: "03",
+    slug: "03",
     title: "Inteligência Artificial e Cursor IDE",
     tag: "O módulo mais moderno: desenvolver e testar com apoio de IA",
     lessons: [
@@ -98,17 +179,43 @@ const MODULES = [
       "Projeto prático: IA + Testes ponta a ponta",
     ],
   },
+  {
+    n: "04",
+    slug: "04",
+    title: "Data Science e Testes",
+    tag: "Dados, Python e pytest — testar além da interface",
+    lessons: [
+      "Introdução a Data Science e testes",
+      "Testes com Python e pytest",
+      "Qualidade e validação de dados",
+      "Automação: unit, API e interface",
+      "Desafio final de Data Science (Churn)",
+    ],
+  },
+  {
+    n: "Bônus",
+    slug: "bonus",
+    title: "Mercado de Trabalho",
+    tag: "O que o mercado cobra no dia a dia de QA",
+    lessons: [
+      "SQL e validação de dados",
+      "Ferramentas de mercado",
+      "Testes mobile",
+      "Abertura e documentação de bugs",
+      "Segurança de software",
+    ],
+  },
 ];
 
 const STATS = [
-  { value: "100+", label: "horas de curso" },
-  { value: "26", label: "aulas" },
+  { value: "140+", label: "horas de curso" },
+  { value: "36", label: "aulas" },
   { value: "6", label: "anos de projeto" },
   { value: "2", label: "países atendidos" },
 ];
 
 const HOWITWORKS = [
-  ["Encontros", "Quartas-feiras, das 19h às 21h"],
+  ["Encontros", "Quartas-feiras, das 18h às 20h"],
   ["Plataforma", "Aulas remotas via Google Meet"],
   ["Inscrição", "Basta ter um e-mail e um computador com internet"],
   ["Suporte", "Professores disponíveis durante a semana"],
@@ -125,18 +232,32 @@ const OBJECTIVES = [
   ["Impacto social", "Abrir portas da tecnologia para pessoas de qualquer origem ou país."],
 ];
 
+// Marcos da turma que começou em junho de 2026. `done: true` marca o que já foi
+// entregue — a seção mostra ✓ verde nesses e → dourado no que ainda vem pela frente.
 const MILESTONES = [
   {
-    period: "1º Semestre",
-    items: ["Abrir novas turmas (5–20 alunos cada)", "Ampliar alcance internacional", "Parcerias com empresas de tecnologia"],
+    period: "Junho 2026 — Início",
+    items: [
+      { t: "Primeira turma do ano em aula", done: true },
+      { t: "Módulo de IA consolidado", done: true },
+      { t: "Encontros remotos, uma noite por semana", done: true },
+    ],
   },
   {
-    period: "Meio do ano",
-    items: ["Formar 30 pessoas até junho", "Integrar empresas ao projeto", "Consolidar o módulo de IA"],
+    period: "Dezembro 2026",
+    items: [
+      { t: "Formar 30 pessoas até o fim do ano" },
+      { t: "Consolidar o conteúdo do Módulo 4 — Data Science e Testes" },
+      { t: "Integrar empresas parceiras ao projeto" },
+    ],
   },
   {
-    period: "2º Semestre",
-    items: ["Formar 50 pessoas até dezembro", "Programa de mentoria", "Evento de formatura presencial"],
+    period: "Julho 2027",
+    items: [
+      { t: "Formar 50 pessoas" },
+      { t: "Programa de mentoria" },
+      { t: "Evento de formatura presencial" },
+    ],
   },
 ];
 
@@ -182,9 +303,9 @@ function Branch({ blooms = 5, flip = false }) {
   return (
     <svg viewBox="0 0 200 80" width="100%" height="100%" aria-hidden="true"
       style={{ transform: flip ? "scaleX(-1)" : "none", overflow: "visible" }}>
-      <path d="M5 70 Q 70 60 110 35 T 195 12" fill="none" stroke={COLORS.bark} strokeWidth="3" strokeLinecap="round" />
-      <path d="M60 62 Q 80 50 70 38" fill="none" stroke={COLORS.bark} strokeWidth="2" strokeLinecap="round" />
-      <path d="M130 28 Q 150 30 150 16" fill="none" stroke={COLORS.bark} strokeWidth="2" strokeLinecap="round" />
+      <path d="M5 70 Q 70 60 110 35 T 195 12" fill="none" stroke={COLORS.branch} strokeWidth="3" strokeLinecap="round" />
+      <path d="M60 62 Q 80 50 70 38" fill="none" stroke={COLORS.branch} strokeWidth="2" strokeLinecap="round" />
+      <path d="M130 28 Q 150 30 150 16" fill="none" stroke={COLORS.branch} strokeWidth="2" strokeLinecap="round" />
       {Array.from({ length: blooms }).map((_, i) => {
         const t = i / (blooms - 1);
         const x = 5 + t * 190;
@@ -195,7 +316,7 @@ function Branch({ blooms = 5, flip = false }) {
               <ellipse key={a} cx="0" cy="-5" rx="2.4" ry="5"
                 fill={COLORS.bloom} transform={`rotate(${a})`} opacity="0.95" />
             ))}
-            <circle r="2.2" fill={COLORS.bloomDeep} />
+            <circle r="2.2" fill={COLORS.bloomWarm} />
           </g>
         );
       })}
@@ -225,7 +346,7 @@ function VisitorCount() {
         boxShadow: "inset 0 0 0 1px rgba(255,255,255,.14)",
         fontSize: 12.5,
         fontWeight: 600,
-        color: COLORS.paper,
+        color: COLORS.onBand,
         lineHeight: 1,
         whiteSpace: "nowrap",
       }}
@@ -262,6 +383,16 @@ function SocialLinks() {
         </svg>
       ),
     },
+    {
+      href: GITHUB_URL,
+      label: "Repositório do Projeto Garapuvu no GitHub",
+      event: "social_github",
+      icon: (
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+          <path d="M12 1.5a10.5 10.5 0 0 0-3.32 20.47c.53.1.72-.23.72-.5v-1.8c-2.92.63-3.54-1.4-3.54-1.4-.48-1.22-1.17-1.55-1.17-1.55-.95-.65.07-.64.07-.64 1.06.08 1.61 1.09 1.61 1.09.94 1.6 2.46 1.14 3.06.87.1-.68.37-1.14.67-1.4-2.33-.27-4.78-1.17-4.78-5.19 0-1.15.41-2.09 1.08-2.82-.11-.27-.47-1.34.1-2.79 0 0 .88-.28 2.88 1.08a9.9 9.9 0 0 1 5.24 0c2-1.36 2.88-1.08 2.88-1.08.57 1.45.21 2.52.1 2.79.67.73 1.08 1.67 1.08 2.82 0 4.03-2.46 4.92-4.8 5.18.38.33.71.97.71 1.96v2.9c0 .28.19.61.73.5A10.5 10.5 0 0 0 12 1.5z" />
+        </svg>
+      ),
+    },
   ];
 
   return (
@@ -282,13 +413,13 @@ function SocialLinks() {
             width: 42,
             height: 42,
             borderRadius: 999,
-            color: COLORS.paper,
+            color: COLORS.onBand,
             background: "rgba(255,255,255,.07)",
             boxShadow: "inset 0 0 0 1px rgba(255,255,255,.16)",
             transition: "color .2s, background .2s, transform .15s",
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.color = COLORS.ink; e.currentTarget.style.background = COLORS.bloom; e.currentTarget.style.transform = "translateY(-2px)"; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = COLORS.paper; e.currentTarget.style.background = "rgba(255,255,255,.07)"; e.currentTarget.style.transform = "none"; }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = COLORS.onBloom; e.currentTarget.style.background = COLORS.bloom; e.currentTarget.style.transform = "translateY(-2px)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = COLORS.onBand; e.currentTarget.style.background = "rgba(255,255,255,.07)"; e.currentTarget.style.transform = "none"; }}
         >
           {l.icon}
         </a>
@@ -297,14 +428,153 @@ function SocialLinks() {
   );
 }
 
-export default function GarapuvuLanding() {
-  const [openModule, setOpenModule] = useState(0);
+// Vídeo de apresentação exibido ao lado do texto no topo da página.
+// Sem YOUTUBE_ID preenchido não renderiza nada — veja a constante no topo do arquivo.
+function HeroVideo() {
+  const tracked = useRef(false);
+
+  if (!YOUTUBE_ID) return null;
+
+  // O iframe não avisa quando a pessoa dá play (isso exigiria carregar a IFrame API
+  // do YouTube). Registramos o primeiro clique sobre o player como aproximação.
+  const handleFirstClick = () => {
+    if (tracked.current) return;
+    tracked.current = true;
+    track("hero_video");
+  };
 
   return (
-    <div style={{ background: COLORS.paper, color: COLORS.ink, minHeight: "100vh", fontFamily: "'Inter', system-ui, sans-serif" }}>
+    <Reveal
+      delay={0.12}
+      onClick={handleFirstClick}
+      style={{
+        width: "100%",
+        aspectRatio: "16 / 9",
+        borderRadius: 18,
+        overflow: "hidden",
+        background: "rgba(0,0,0,.35)",
+        boxShadow: "inset 0 0 0 1px rgba(255,255,255,.16), 0 18px 44px rgba(0,0,0,.32)",
+      }}
+    >
+      <iframe
+        // Domínio sem cookies de rastreio do YouTube — mais amigável à LGPD.
+        src={`https://www.youtube-nocookie.com/embed/${YOUTUBE_ID}`}
+        title="Vídeo de apresentação do Projeto Social Garapuvu"
+        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        loading="lazy"
+        referrerPolicy="strict-origin-when-cross-origin"
+        style={{ width: "100%", height: "100%", border: "none", display: "block" }}
+      />
+    </Reveal>
+  );
+}
+
+// Lê a preferência salva. Sem nada gravado, o padrão é o escuro — quem quiser
+// claro troca no botão e a escolha fica valendo nas próximas visitas.
+function temaInicial() {
+  if (typeof window === "undefined") return "dark";
+  try {
+    const salvo = window.localStorage.getItem(THEME_KEY);
+    if (salvo === "light" || salvo === "dark") return salvo;
+  } catch {
+    /* localStorage bloqueado (modo privado) — segue no padrão. */
+  }
+  return "dark";
+}
+
+// Botão do topo que alterna entre os temas. Mostra o ícone e o NOME do modo
+// para onde o clique leva — sol/“Dia” quando está escuro, lua/“Noturno” quando
+// está claro — para não deixar dúvida sobre o que o botão faz.
+function ThemeToggle({ theme, onToggle }) {
+  const escuro = theme === "dark";
+  const destino = escuro ? "Dia" : "Noturno";
+  const rotulo = escuro ? "Mudar para o tema claro (dia)" : "Mudar para o tema escuro (noturno)";
+
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      aria-label={rotulo}
+      title={rotulo}
+      aria-pressed={!escuro}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 7,
+        height: 38,
+        padding: "0 14px 0 12px",
+        borderRadius: 999,
+        border: "none",
+        cursor: "pointer",
+        fontFamily: "inherit",
+        fontSize: 12,
+        fontWeight: 700,
+        letterSpacing: "0.12em",
+        textTransform: "uppercase",
+        whiteSpace: "nowrap",
+        color: COLORS.onBand,
+        background: "rgba(255,255,255,.08)",
+        boxShadow: "inset 0 0 0 1px rgba(255,255,255,.16)",
+        transition: "color .2s, background .2s",
+      }}
+      onMouseEnter={(e) => { e.currentTarget.style.color = COLORS.onBloom; e.currentTarget.style.background = COLORS.bloom; }}
+      onMouseLeave={(e) => { e.currentTarget.style.color = COLORS.onBand; e.currentTarget.style.background = "rgba(255,255,255,.08)"; }}
+    >
+      {escuro ? (
+        // Sol — clicar leva ao tema claro.
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.2" />
+          <path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4" />
+        </svg>
+      ) : (
+        // Lua — clicar leva ao tema escuro.
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+          <path d="M21 14.2a8.6 8.6 0 0 1-11.2-11 8.8 8.8 0 1 0 11.2 11z" />
+        </svg>
+      )}
+      <span aria-hidden="true">{destino}</span>
+    </button>
+  );
+}
+
+export default function GarapuvuLanding() {
+  const [openModule, setOpenModule] = useState(0);
+  const [theme, setTheme] = useState(temaInicial);
+
+  // O tema vive no <html>, não neste componente: assim as variáveis CSS valem
+  // para a página toda (inclusive a cor de fundo atrás do conteúdo, no bounce
+  // do scroll) e a barra do navegador no celular acompanha.
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    document.documentElement.dataset.theme = theme;
+    document.querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", theme === "dark" ? "#0A1728" : "#0E1F38");
+    try {
+      window.localStorage.setItem(THEME_KEY, theme);
+    } catch {
+      /* ignora — a troca vale para esta sessão mesmo sem poder salvar. */
+    }
+  }, [theme]);
+
+  const alternarTema = () => {
+    const proximo = theme === "dark" ? "light" : "dark";
+    setTheme(proximo);
+    track("tema_" + proximo);
+  };
+
+  return (
+    <div style={{ background: COLORS.page, color: COLORS.text, minHeight: "100vh", fontFamily: "'Inter', system-ui, sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&display=swap');
+        ${THEME_CSS}
         * { box-sizing: border-box; }
+        html, body { background: ${COLORS.page}; }
+        /* Suaviza a troca de tema, mas respeita quem pediu menos animação. */
+        @media (prefers-reduced-motion: no-preference) {
+          body, .gp-card, .gp-modtab { transition: background-color .25s ease, color .25s ease, border-color .25s ease; }
+        }
         html, body { margin: 0; overflow-x: hidden; max-width: 100%; }
         img, video { max-width: 100%; height: auto; }
         .gp-wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
@@ -313,21 +583,23 @@ export default function GarapuvuLanding() {
         .gp-btn { cursor: pointer; border: none; font-family: inherit; font-weight: 700;
           border-radius: 999px; padding: 15px 30px; font-size: 15px; transition: transform .15s, box-shadow .15s; }
         .gp-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(240,138,0,.35); }
-        .gp-btn:focus-visible { outline: 3px solid ${COLORS.ink}; outline-offset: 3px; }
+        .gp-btn:focus-visible { outline: 3px solid ${COLORS.bloom}; outline-offset: 3px; }
         .gp-lesson { display: grid; grid-template-columns: 34px 1fr; gap: 14px; align-items: start;
-          padding: 11px 0; border-bottom: 1px solid ${COLORS.paperDim}; }
+          padding: 11px 0; border-bottom: 1px solid ${COLORS.border}; }
         .gp-lesson:last-child { border-bottom: none; }
         .gp-num { font-family: 'Fraunces', serif; font-weight: 600; color: ${COLORS.bloomDeep}; font-size: 15px; padding-top: 1px; }
         .gp-modtab { cursor: pointer; text-align: left; width: 100%; background: none; border: none;
           font-family: inherit; padding: 18px 20px; border-radius: 16px; transition: background .2s, color .2s; }
         .gp-modtab:focus-visible { outline: 3px solid ${COLORS.bloom}; outline-offset: 2px; }
-        .gp-card { background: #fff; border: 1px solid ${COLORS.paperDim}; border-radius: 18px; }
+        .gp-card { background: ${COLORS.surface}; border: 1px solid ${COLORS.border};
+          border-radius: 18px; box-shadow: var(--gp-card-shadow); }
         a.gp-link { color: ${COLORS.bloomDeep}; }
         .gp-grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
         .gp-row2 { display: grid; grid-template-columns: 150px 1fr; gap: 16px; }
 
         /* ── Tablet ── */
         @media (max-width: 920px) {
+          .gp-herolayout { grid-template-columns: 1fr !important; gap: 36px !important; }
           .gp-grid3 { grid-template-columns: 1fr 1fr !important; }
           .gp-modlayout { grid-template-columns: 1fr !important; }
           .gp-modtabs { flex-direction: row !important; overflow-x: auto; padding-bottom: 6px; }
@@ -354,7 +626,7 @@ export default function GarapuvuLanding() {
       `}</style>
 
       {/* HERO */}
-      <header style={{ background: COLORS.ink, color: COLORS.paper, position: "relative", overflow: "hidden" }}>
+      <header style={{ background: COLORS.band, color: COLORS.onBand, position: "relative", overflow: "hidden" }}>
         {/* Imagem de fundo (garapuvu florido) — espelhada para jogar as flores
             para a direita, longe do texto à esquerda. */}
         <div style={{ position: "absolute", inset: 0,
@@ -365,9 +637,9 @@ export default function GarapuvuLanding() {
         {/* Overlay escuro: forte à esquerda (texto legível) e suave à direita
             (deixa as flores aparecerem), com leve escurecida geral. */}
         <div style={{ position: "absolute", inset: 0,
-          background: `linear-gradient(90deg, ${COLORS.ink} 0%, rgba(14,31,56,.82) 38%, rgba(14,31,56,.45) 70%, rgba(14,31,56,.2) 100%)` }} />
+          background: `linear-gradient(90deg, ${COLORS.band} 0%, rgba(${COLORS.bandRgb},.82) 38%, rgba(${COLORS.bandRgb},.45) 70%, rgba(${COLORS.bandRgb},.2) 100%)` }} />
         <div style={{ position: "absolute", inset: 0,
-          background: `linear-gradient(to top, ${COLORS.ink} 0%, transparent 28%)` }} />
+          background: `linear-gradient(to top, ${COLORS.band} 0%, transparent 28%)` }} />
         <div className="gp-wrap" style={{ position: "relative", paddingTop: 40, paddingBottom: 64 }}>
           <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 70, gap: 12, flexWrap: "wrap" }}>
             <span style={{ display: "inline-flex", alignItems: "center", gap: 12 }}>
@@ -376,41 +648,60 @@ export default function GarapuvuLanding() {
               </span>
               <VisitorCount />
             </span>
-            <span className="gp-eyebrow" style={{ color: COLORS.mist }}>Turma 2026</span>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 14 }}>
+              <span className="gp-eyebrow" style={{ color: COLORS.mist }}>Turma 2026</span>
+              <ThemeToggle theme={theme} onToggle={alternarTema} />
+            </span>
           </nav>
 
-          <Reveal as="p" className="gp-eyebrow" style={{ color: COLORS.bloom, marginBottom: 22 }}>
-            ● Projeto Social · 100% gratuito · remoto
-          </Reveal>
+          {/* Texto à esquerda; o vídeo (quando publicado) entra na coluna da direita.
+              Sem YOUTUBE_ID o grid vira coluna única e o topo fica como antes. */}
+          <div
+            className="gp-herolayout"
+            style={{
+              display: "grid",
+              gridTemplateColumns: YOUTUBE_ID ? "1fr 420px" : "1fr",
+              gap: 48,
+              alignItems: "center",
+            }}
+          >
+            <div>
+              <Reveal as="p" className="gp-eyebrow" style={{ color: COLORS.bloom, marginBottom: 22 }}>
+                ● Projeto Social · 100% gratuito · remoto
+              </Reveal>
 
-          <Reveal delay={0.05}>
-            <h1 className="gp-display gp-hero-h1" style={{ fontSize: "clamp(2.4rem, 8vw, 4.75rem)", fontWeight: 900, margin: 0, maxWidth: 880 }}>
-              Aprender tecnologia de graça, de{" "}
-              <span style={{ color: COLORS.bloom, fontStyle: "italic" }}>qualquer lugar</span> do mundo.
-            </h1>
-          </Reveal>
+              <Reveal delay={0.05}>
+                <h1 className="gp-display gp-hero-h1" style={{ fontSize: "clamp(2.4rem, 8vw, 4.75rem)", fontWeight: 900, margin: 0, maxWidth: 880 }}>
+                  Aprender tecnologia de graça, de{" "}
+                  <span style={{ color: COLORS.bloom, fontStyle: "italic" }}>qualquer lugar</span> do mundo.
+                </h1>
+              </Reveal>
 
-          <Reveal delay={0.12}>
-            <p style={{ fontSize: 19, lineHeight: 1.6, color: "#C9D4E4", maxWidth: 620, marginTop: 26 }}>
-              Desde 2020, o Garapuvu ensina lógica de programação, desenvolvimento e
-              testes de software — e, agora, Inteligência Artificial aplicada. De
-              Florianópolis a outros estados do Brasil, e até outros países.
-            </p>
-          </Reveal>
+              <Reveal delay={0.12}>
+                <p style={{ fontSize: 19, lineHeight: 1.6, color: COLORS.onBandBody, maxWidth: 620, marginTop: 26 }}>
+                  Desde 2020, o Garapuvu ensina lógica de programação, desenvolvimento e
+                  testes de software — e, agora, Inteligência Artificial e Data Science
+                  aplicados. De Florianópolis a outros estados do Brasil, e até outros países.
+                </p>
+              </Reveal>
 
-          <Reveal delay={0.18} style={{ display: "flex", gap: 14, flexWrap: "wrap", marginTop: 34 }}>
-            <button className="gp-btn" onClick={() => openWhatsApp("hero_inscrever")}
-              style={{ background: COLORS.bloom, color: COLORS.ink, cursor: "pointer" }}>
-              Quero participar →
-            </button>
-            <button className="gp-btn" onClick={() => scrollToSection("conteudo", "hero_conteudo")}
-              style={{ background: "transparent", color: COLORS.paper, boxShadow: "inset 0 0 0 1.5px rgba(255,255,255,.3)", cursor: "pointer" }}>
-              Ver o conteúdo
-            </button>
-          </Reveal>
+              <Reveal delay={0.18} style={{ display: "flex", gap: 14, flexWrap: "wrap", marginTop: 34 }}>
+                <button className="gp-btn" onClick={() => openWhatsApp("hero_inscrever")}
+                  style={{ background: COLORS.bloom, color: COLORS.onBloom, cursor: "pointer" }}>
+                  Quero participar →
+                </button>
+                <button className="gp-btn" onClick={() => scrollToSection("conteudo", "hero_conteudo")}
+                  style={{ background: "transparent", color: COLORS.onBand, boxShadow: "inset 0 0 0 1.5px rgba(255,255,255,.3)", cursor: "pointer" }}>
+                  Ver o conteúdo
+                </button>
+              </Reveal>
 
-          <div style={{ height: 70, marginTop: 36, maxWidth: 520 }}>
-            <Branch blooms={6} />
+              <div style={{ height: 70, marginTop: 36, maxWidth: 520 }}>
+                <Branch blooms={6} />
+              </div>
+            </div>
+
+            <HeroVideo />
           </div>
         </div>
       </header>
@@ -422,7 +713,7 @@ export default function GarapuvuLanding() {
             <Reveal key={s.label} delay={i * 0.06} className="gp-card"
               style={{ padding: "26px 20px", textAlign: "center" }}>
               <div className="gp-display" style={{ fontSize: "clamp(2rem, 6vw, 2.625rem)", fontWeight: 900, color: COLORS.bloomDeep }}>{s.value}</div>
-              <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: COLORS.bark, marginTop: 4 }}>
+              <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: COLORS.muted, marginTop: 4 }}>
                 {s.label}
               </div>
             </Reveal>
@@ -439,28 +730,29 @@ export default function GarapuvuLanding() {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 56px" }} className="gp-grid2">
           {HOWITWORKS.map(([k, v], i) => (
             <Reveal key={k} delay={i * 0.05} className="gp-row2"
-              style={{ padding: "16px 0", borderTop: `1px solid ${COLORS.paperDim}` }}>
+              style={{ padding: "16px 0", borderTop: `1px solid ${COLORS.border}` }}>
               <span style={{ fontWeight: 700, color: COLORS.bloomDeep }}>{k}</span>
-              <span style={{ color: COLORS.inkSoft }}>{v}</span>
+              <span style={{ color: COLORS.textSoft }}>{v}</span>
             </Reveal>
           ))}
         </div>
         <Reveal className="gp-card" delay={0.1}
-          style={{ marginTop: 28, padding: "18px 22px", background: COLORS.paperDim, borderColor: "transparent", fontSize: 14.5, color: COLORS.bark }}>
-          <strong style={{ color: COLORS.ink }}>Importante:</strong> participantes a partir de 16 anos são bem-vindos
+          style={{ marginTop: 28, padding: "18px 22px", background: COLORS.surfaceAlt, borderColor: "transparent", fontSize: 14.5, color: COLORS.muted }}>
+          <strong style={{ color: COLORS.text }}>Importante:</strong> participantes a partir de 16 anos são bem-vindos
           mediante autorização dos pais ou responsáveis. Qualquer nacionalidade pode participar.
         </Reveal>
       </section>
 
       {/* CURRÍCULO — assinatura: módulos como ramos */}
-      <section id="conteudo" style={{ background: COLORS.ink, color: COLORS.paper, marginTop: 70, scrollMarginTop: 24 }}>
+      <section id="conteudo" style={{ background: COLORS.band, color: COLORS.onBand, marginTop: 70, scrollMarginTop: 24 }}>
         <div className="gp-wrap" style={{ paddingTop: 80, paddingBottom: 80 }}>
           <Reveal as="p" className="gp-eyebrow" style={{ color: COLORS.bloom }}>Planejamento do curso 2026</Reveal>
           <Reveal as="h2" delay={0.05} className="gp-display" style={{ fontSize: "clamp(1.9rem, 5.4vw, 2.625rem)", fontWeight: 900, margin: "10px 0 8px" }}>
-            Três módulos, do fundamento à <span style={{ color: COLORS.bloom, fontStyle: "italic" }}>Inteligência Artificial</span>.
+            Cinco módulos, do fundamento à <span style={{ color: COLORS.bloom, fontStyle: "italic" }}>Inteligência Artificial</span> e aos dados.
           </Reveal>
-          <p style={{ color: "#9FB0C6", marginBottom: 40, maxWidth: 560 }}>
-            26 aulas que crescem como os ramos do garapuvu — da raiz dos fundamentos até a floração com IA.
+          <p style={{ color: COLORS.onBandCaption, marginBottom: 40, maxWidth: 560 }}>
+            36 aulas que crescem como os ramos do garapuvu — da raiz dos fundamentos
+            até a floração com IA e Data Science.
           </p>
 
           <div className="gp-modlayout" style={{ display: "grid", gridTemplateColumns: "320px 1fr", gap: 40, alignItems: "start" }}>
@@ -469,9 +761,9 @@ export default function GarapuvuLanding() {
               {MODULES.map((m, i) => {
                 const active = i === openModule;
                 return (
-                  <button key={m.n} className="gp-modtab" onClick={() => { setOpenModule(i); track("modulo_" + m.n); }}
+                  <button key={m.n} className="gp-modtab" onClick={() => { setOpenModule(i); track("modulo_" + m.slug); }}
                     aria-pressed={active}
-                    style={{ background: active ? COLORS.bloom : "rgba(255,255,255,.05)", color: active ? COLORS.ink : COLORS.paper, minWidth: 240 }}>
+                    style={{ background: active ? COLORS.bloom : "rgba(255,255,255,.05)", color: active ? COLORS.onBloom : COLORS.onBand, minWidth: 240 }}>
                     <div className="gp-display" style={{ fontSize: 13, fontWeight: 600, opacity: 0.7 }}>Módulo {m.n}</div>
                     <div className="gp-display" style={{ fontSize: 21, fontWeight: 900, lineHeight: 1.1, marginTop: 4 }}>{m.title}</div>
                   </button>
@@ -480,8 +772,8 @@ export default function GarapuvuLanding() {
             </div>
 
             {/* lessons */}
-            <div className="gp-card" style={{ padding: "30px 32px", background: "#fff", color: COLORS.ink }}>
-              <p style={{ fontSize: 14, color: COLORS.bark, fontStyle: "italic", margin: "0 0 18px" }}>
+            <div className="gp-card" style={{ padding: "30px 32px", background: COLORS.surface, color: COLORS.text }}>
+              <p style={{ fontSize: 14, color: COLORS.muted, fontStyle: "italic", margin: "0 0 18px" }}>
                 {MODULES[openModule].tag}
               </p>
               <div>
@@ -508,7 +800,7 @@ export default function GarapuvuLanding() {
             <Reveal key={t} delay={(i % 3) * 0.06} className="gp-card" style={{ padding: "24px 22px" }}>
               <div style={{ width: 28, height: 4, borderRadius: 4, background: COLORS.bloom, marginBottom: 14 }} />
               <h3 style={{ fontSize: 18, fontWeight: 700, margin: "0 0 8px" }}>{t}</h3>
-              <p style={{ fontSize: 14.5, lineHeight: 1.55, color: COLORS.inkSoft, margin: 0 }}>{d}</p>
+              <p style={{ fontSize: 14.5, lineHeight: 1.55, color: COLORS.textSoft, margin: 0 }}>{d}</p>
             </Reveal>
           ))}
         </div>
@@ -516,7 +808,7 @@ export default function GarapuvuLanding() {
 
       {/* MARCOS */}
       <section className="gp-wrap" style={{ paddingTop: 70, paddingBottom: 40 }}>
-        <Reveal as="p" className="gp-eyebrow" style={{ color: COLORS.bloomDeep }}>Marcos 2026</Reveal>
+        <Reveal as="p" className="gp-eyebrow" style={{ color: COLORS.bloomDeep }}>Marcos 2026 – 2027</Reveal>
         <Reveal as="h2" delay={0.05} className="gp-display" style={{ fontSize: "clamp(1.9rem, 5.2vw, 2.5rem)", fontWeight: 900, margin: "10px 0 40px" }}>
           O ano, ramo a ramo
         </Reveal>
@@ -527,9 +819,17 @@ export default function GarapuvuLanding() {
                 {m.period}
               </div>
               {m.items.map((it) => (
-                <div key={it} style={{ display: "flex", gap: 10, padding: "8px 0", fontSize: 14.5, color: COLORS.inkSoft }}>
-                  <span style={{ color: COLORS.bloom, fontWeight: 700 }}>→</span>
-                  <span>{it}</span>
+                <div key={it.t} style={{ display: "flex", gap: 10, padding: "8px 0", fontSize: 14.5, color: COLORS.textSoft }}>
+                  <span
+                    aria-hidden="true"
+                    style={{ color: it.done ? COLORS.leaf : COLORS.bloom, fontWeight: 700 }}
+                  >
+                    {it.done ? "✓" : "→"}
+                  </span>
+                  <span>
+                    {it.t}
+                    {it.done && <span style={{ position: "absolute", left: -9999 }}> (concluído)</span>}
+                  </span>
                 </div>
               ))}
             </Reveal>
@@ -539,8 +839,8 @@ export default function GarapuvuLanding() {
 
       {/* CTA */}
       <section className="gp-wrap" style={{ paddingTop: 50, paddingBottom: 90 }}>
-        <Reveal style={{ background: `linear-gradient(120deg, ${COLORS.bloomDeep}, ${COLORS.bloom})`,
-          borderRadius: 28, padding: "56px 40px", textAlign: "center", color: COLORS.ink, position: "relative", overflow: "hidden" }}>
+        <Reveal style={{ background: `linear-gradient(120deg, ${COLORS.bloomWarm}, ${COLORS.bloom})`,
+          borderRadius: 28, padding: "56px 40px", textAlign: "center", color: COLORS.onBloom, position: "relative", overflow: "hidden" }}>
           <div style={{ position: "absolute", right: 10, top: 10, width: 180, height: 90, opacity: 0.85 }}>
             <Branch blooms={5} flip />
           </div>
@@ -552,15 +852,15 @@ export default function GarapuvuLanding() {
             e-mail e um computador com internet.
           </p>
           <button className="gp-btn" onClick={() => openWhatsApp("cta_inscrever")}
-            style={{ background: COLORS.ink, color: COLORS.bloom, position: "relative", cursor: "pointer" }}>
+            style={{ background: COLORS.onBloom, color: COLORS.bloom, position: "relative", cursor: "pointer" }}>
             Saiba mais e participe →
           </button>
         </Reveal>
       </section>
 
       {/* FOOTER */}
-      <footer style={{ background: COLORS.ink, color: "#8DA0BA", textAlign: "center", padding: "34px 24px", fontSize: 14 }}>
-        <div className="gp-display" style={{ color: COLORS.paper, fontWeight: 900, fontSize: 18, marginBottom: 6 }}>
+      <footer style={{ background: COLORS.band, color: COLORS.onBandFooter, textAlign: "center", padding: "34px 24px", fontSize: 14 }}>
+        <div className="gp-display" style={{ color: COLORS.onBand, fontWeight: 900, fontSize: 18, marginBottom: 6 }}>
           Garapuvu<span style={{ color: COLORS.bloom }}>.</span>
         </div>
         <SocialLinks />
