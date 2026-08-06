@@ -15,6 +15,7 @@ import heroBg from "./assets/garapuvu-hero.jpg";
 const INSTAGRAM_URL = "https://www.instagram.com/projetogarapuvu/";
 const LINKEDIN_URL = "https://br.linkedin.com/in/douglas-adriano-queiroz-ctfl-680b1978";
 const GITHUB_URL = "https://github.com/douglasqueirozfloripa/projeto-social-garapuvu";
+const YOUTUBE_URL = "https://www.youtube.com/@ProjetoGarapuvuFloripa";
 
 // Vídeo de apresentação do projeto, exibido ao lado do texto no topo da página.
 // É só o ID do vídeo — o trecho final da URL do YouTube.
@@ -22,6 +23,90 @@ const GITHUB_URL = "https://github.com/douglasqueirozfloripa/projeto-social-gara
 // Deixe "" para tirar o vídeo do ar: com a string vazia o bloco não é renderizado
 // e o topo volta a ocupar a largura toda.
 const YOUTUBE_ID = "9oAqu7JxWo8";
+
+// ─── Encontros gravados ──────────────────────────────────────────────────
+// Playlist "Trilha de Testes e Desenvolvimento de Software com apoio da IA",
+// no canal do projeto. Os vídeos ficam aqui só pelo ID — o trecho final da URL:
+// https://youtu.be/j0xPg0aR4Hg  →  "j0xPg0aR4Hg"
+//
+// Para publicar o próximo encontro, acrescente um objeto no FIM da lista. A
+// seção se ajusta sozinha (numeração, contagem e total de horas saem daqui).
+const PLAYLIST_ID = "PLcGnsisXdbAc";
+const PLAYLIST_URL = `https://www.youtube.com/playlist?list=${PLAYLIST_ID}`;
+
+const ENCONTROS = [
+  {
+    id: "j0xPg0aR4Hg",
+    title: "Guia de Estudos, Fundamentos de Testes e preparação do ambiente",
+    aulas: "Aulas 00 · 0.1 · 01",
+    minutos: 63,
+    resumo:
+      "Abertura da trilha: o guia de estudos e os links do projeto, a preparação do ambiente de desenvolvimento no Windows e no macOS e a primeira aula de teoria — o que é testar, por que testar, os sete princípios e o processo de teste do CTFL 4.0.",
+    topics: ["Guia de estudos", "Preparação do ambiente", "Princípios de teste", "CTFL 4.0"],
+  },
+  {
+    id: "ka4T2ZY4Z4I",
+    title: "Modelos ágeis, Teste Estático e análise de código",
+    aulas: "Aulas 02 · 03",
+    minutos: 62,
+    resumo:
+      "Onde o teste entra no ciclo de desenvolvimento: modelos sequenciais e iterativos, o Manifesto Ágil, DevOps e pipelines de CI/CD. Na segunda metade, teste estático — revisões, inspeções e análise de código — e por que achar o defeito no documento custa menos que achar no software rodando.",
+    topics: ["Modelos de desenvolvimento", "Ágil e DevOps", "CI/CD", "Teste estático", "Revisões"],
+  },
+  {
+    id: "4TVc45X4Bxg",
+    title: "Meu primeiro app com IA — FreeLancer360 (backend + frontend)",
+    aulas: "Prática · Módulos 2 e 3",
+    minutos: 72,
+    resumo:
+      "Mão na massa do começo ao fim: o FreeLancer360 construído do zero — backend e frontend — escrevendo o aplicativo por prompts de IA dentro do Visual Studio Code. É o encontro que mostra o fluxo completo: descrever o requisito, gerar o código, rodar, testar e ajustar.",
+    topics: ["Meu primeiro app", "Prompts com IA", "Backend", "Frontend", "FreeLancer360"],
+  },
+  {
+    id: "ozcOjpgV9uY",
+    title: "Níveis e tipos de teste + técnicas de caixa preta e branca",
+    aulas: "Aulas 04 · 05",
+    minutos: 90,
+    resumo:
+      "Os quatro níveis de teste — componente, integração, sistema e aceitação — e os tipos: funcional, não funcional, de confirmação e de regressão. Depois, as técnicas aplicadas: partição de equivalência, valor limite, tabela de decisão e transição de estados; cobertura de comandos e decisões; e teste baseado em experiência.",
+    topics: ["Níveis de teste", "Tipos de teste", "Caixa preta", "Caixa branca", "Baseado em experiência"],
+  },
+  {
+    id: "AK0daIca7Rs",
+    title: "Segurança e boas práticas — projeto Catch Request",
+    aulas: "Prática · Módulo Bônus",
+    minutos: 88,
+    resumo:
+      "Quatro ferramentas rodando sobre o código real do projeto Catch Request: ESLint para qualidade de código, SonarQube para análise estática, OWASP ZAP para varredura de vulnerabilidades e Lighthouse para performance e boas práticas web.",
+    topics: ["Segurança", "ESLint", "SonarQube", "OWASP ZAP", "Lighthouse", "Catch Request"],
+  },
+  {
+    id: "9PoCda7gA5A",
+    title: "Quality Gate no Sonar + testes de design (acessibilidade e UX/UI)",
+    aulas: "Aula 06 · Prática",
+    minutos: 70,
+    resumo:
+      "Fechando o ciclo do Sonar com o Quality Gate: quando a esteira barra o código e o que fazer com a dívida técnica. Na sequência, os testes de design — acessibilidade, usabilidade e avaliação de UX/UI, o tipo de teste que olha para a pessoa que usa o software.",
+    topics: ["Quality Gate", "SonarQube", "Acessibilidade", "Usabilidade", "UX/UI"],
+  },
+  {
+    id: "NghZVfJEY28",
+    title: "Gerenciamento e estimativa de testes + rastreabilidade",
+    aulas: "Aulas 07 · 11",
+    minutos: 112,
+    resumo:
+      "O encontro mais longo da trilha. Gerenciamento de teste: planejamento, estratégia, estimativas, riscos e monitoramento do progresso. Na parte prática, testes funcionais e a matriz de rastreabilidade, ligando requisito → caso de teste → defeito com os exemplos do próprio projeto.",
+    topics: ["Planejamento", "Estimativas", "Riscos", "Testes funcionais", "Rastreabilidade"],
+  },
+];
+
+// "63" → "1h03"; "47" → "47min". Usado nos cartões e no total da seção.
+function formatarDuracao(minutos) {
+  if (minutos < 60) return `${minutos}min`;
+  const h = Math.floor(minutos / 60);
+  const m = minutos % 60;
+  return m === 0 ? `${h}h` : `${h}h${String(m).padStart(2, "0")}`;
+}
 
 // Contato via WhatsApp — formato internacional: 55 (Brasil) + 48 (DDD) + número.
 const WHATSAPP_NUMBER = "5548999886724";
@@ -374,6 +459,16 @@ function SocialLinks() {
       ),
     },
     {
+      href: YOUTUBE_URL,
+      label: "Canal do Projeto Garapuvu no YouTube",
+      event: "social_youtube",
+      icon: (
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+          <path d="M21.6 7.2c-.23-1.7-.94-2.36-2.62-2.5C16.9 4.5 14.6 4.4 12 4.4s-4.9.1-6.98.3c-1.68.14-2.4.8-2.62 2.5C2.2 8.4 2.1 10 2.1 12s.1 3.6.3 4.8c.22 1.7.94 2.36 2.62 2.5 2.08.2 4.38.3 6.98.3s4.9-.1 6.98-.3c1.68-.14 2.4-.8 2.62-2.5.2-1.2.3-2.8.3-4.8s-.1-3.6-.3-4.8zM10 15.5v-7l6 3.5-6 3.5z" />
+        </svg>
+      ),
+    },
+    {
       href: LINKEDIN_URL,
       label: "LinkedIn de Douglas Adriano Queiroz",
       event: "social_linkedin",
@@ -467,6 +562,211 @@ function HeroVideo() {
         style={{ width: "100%", height: "100%", border: "none", display: "block" }}
       />
     </Reveal>
+  );
+}
+
+// ─── Seção "Encontros gravados" ──────────────────────────────────────────
+// A ideia é a pessoa assistir sem sair da landing: um player fixo à esquerda e
+// a lista de encontros à direita. Clicar num item troca o vídeo do player (com
+// autoplay) em vez de abrir o YouTube — por isso o `key` no iframe, que força a
+// remontagem quando o ID muda.
+function EncontrosSection() {
+  const [atual, setAtual] = useState(0);
+  // Só damos autoplay depois do primeiro clique: no carregamento da página o
+  // player fica parado, esperando a pessoa decidir.
+  const [autoplay, setAutoplay] = useState(false);
+  const playerRef = useRef(null);
+
+  const encontro = ENCONTROS[atual];
+  const totalMinutos = ENCONTROS.reduce((soma, e) => soma + e.minutos, 0);
+
+  const escolher = (i) => {
+    if (i === atual) return;
+    setAtual(i);
+    setAutoplay(true);
+    track("encontro_" + String(i + 1).padStart(2, "0"));
+    // No celular a lista fica embaixo do player: sem este scroll a pessoa
+    // clicaria e não veria o vídeo trocar.
+    if (typeof window !== "undefined" && window.innerWidth <= 920) {
+      playerRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
+
+  const src =
+    `https://www.youtube-nocookie.com/embed/${encontro.id}` +
+    `?rel=0&modestbranding=1${autoplay ? "&autoplay=1" : ""}`;
+
+  return (
+    <section id="encontros" className="gp-wrap" style={{ paddingTop: 90, paddingBottom: 40, scrollMarginTop: 24 }}>
+      <Reveal as="p" className="gp-eyebrow" style={{ color: COLORS.bloomDeep }}>
+        Encontros gravados
+      </Reveal>
+      <Reveal as="h2" delay={0.05} className="gp-display"
+        style={{ fontSize: "clamp(1.9rem, 5.2vw, 2.5rem)", fontWeight: 900, margin: "10px 0 12px" }}>
+        Perdeu uma aula? Assista aqui mesmo.
+      </Reveal>
+      <Reveal as="p" delay={0.08}
+        style={{ color: COLORS.textSoft, maxWidth: 640, margin: "0 0 34px", fontSize: 16.5, lineHeight: 1.6 }}>
+        {ENCONTROS.length} encontros já publicados — {formatarDuracao(totalMinutos)} de aula, com
+        teoria do CTFL e prática em projetos reais. Escolha um na lista e o vídeo
+        abre nesta página.
+      </Reveal>
+
+      <div className="gp-encontros" style={{ display: "grid", gridTemplateColumns: "1fr 380px", gap: 28, alignItems: "start" }}>
+        {/* ── Player + resumo do encontro selecionado ── */}
+        <div ref={playerRef}>
+          <div style={{
+            width: "100%",
+            aspectRatio: "16 / 9",
+            borderRadius: 18,
+            overflow: "hidden",
+            background: "#000",
+            boxShadow: "0 18px 44px rgba(0,0,0,.28)",
+          }}>
+            <iframe
+              key={encontro.id}
+              src={src}
+              title={`Encontro ${atual + 1} — ${encontro.title}`}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="strict-origin-when-cross-origin"
+              style={{ width: "100%", height: "100%", border: "none", display: "block" }}
+            />
+          </div>
+
+          <div className="gp-card" style={{ padding: "24px 26px", marginTop: 18 }}>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap", fontSize: 12.5, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: COLORS.bloomDeep }}>
+              <span>Encontro {String(atual + 1).padStart(2, "0")}</span>
+              <span style={{ color: COLORS.muted, fontWeight: 600 }}>{encontro.aulas}</span>
+              <span style={{ color: COLORS.muted, fontWeight: 600 }}>· {formatarDuracao(encontro.minutos)}</span>
+            </div>
+
+            <h3 className="gp-display" style={{ fontSize: "clamp(1.25rem, 3.4vw, 1.6rem)", fontWeight: 900, margin: "10px 0 12px", lineHeight: 1.15 }}>
+              {encontro.title}
+            </h3>
+
+            <p style={{ fontSize: 15.5, lineHeight: 1.65, color: COLORS.textSoft, margin: 0 }}>
+              {encontro.resumo}
+            </p>
+
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 18 }}>
+              {encontro.topics.map((t) => (
+                <span key={t} style={{
+                  fontSize: 12.5,
+                  fontWeight: 600,
+                  padding: "5px 12px",
+                  borderRadius: 999,
+                  color: COLORS.bloomDeep,
+                  background: COLORS.surfaceAlt,
+                }}>
+                  {t}
+                </span>
+              ))}
+            </div>
+
+            <a
+              href={`https://www.youtube.com/watch?v=${encontro.id}&list=${PLAYLIST_ID}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="gp-link"
+              onClick={() => track("encontro_youtube")}
+              style={{ display: "inline-block", marginTop: 18, fontSize: 14, fontWeight: 700, textDecoration: "none" }}
+            >
+              Abrir no YouTube ↗
+            </a>
+          </div>
+        </div>
+
+        {/* ── Lista das trilhas disponíveis ── */}
+        <div>
+          {/* A altura acompanha a coluna do player (vídeo + cartão do resumo).
+              Com os 7 encontros de hoje tudo cabe sem rolar; a partir do oitavo a
+              lista ganha rolagem própria em vez de esticar a seção. */}
+          <div className="gp-playlist" style={{ display: "flex", flexDirection: "column", gap: 8, maxHeight: 700, overflowY: "auto", paddingRight: 4 }}>
+            {ENCONTROS.map((e, i) => {
+              const ativo = i === atual;
+              return (
+                <button
+                  key={e.id}
+                  type="button"
+                  onClick={() => escolher(i)}
+                  aria-current={ativo ? "true" : undefined}
+                  className="gp-epitem"
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "38px 1fr",
+                    gap: 12,
+                    alignItems: "start",
+                    textAlign: "left",
+                    width: "100%",
+                    cursor: "pointer",
+                    border: `1px solid ${ativo ? "transparent" : COLORS.border}`,
+                    borderRadius: 14,
+                    padding: "13px 15px",
+                    fontFamily: "inherit",
+                    background: ativo ? COLORS.bloom : COLORS.surface,
+                    color: ativo ? COLORS.onBloom : COLORS.text,
+                    transition: "background .2s, border-color .2s, transform .15s",
+                  }}
+                >
+                  <span className="gp-display" style={{ fontSize: 17, fontWeight: 900, opacity: ativo ? 0.85 : 0.55, paddingTop: 1 }}>
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span>
+                    <span style={{ display: "block", fontSize: 14.5, fontWeight: 600, lineHeight: 1.35 }}>
+                      {e.title}
+                    </span>
+                    <span style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 6,
+                      marginTop: 6,
+                      fontSize: 12,
+                      fontWeight: 600,
+                      color: ativo ? COLORS.onBloom : COLORS.muted,
+                      opacity: ativo ? 0.8 : 1,
+                    }}>
+                      <span aria-hidden="true">{ativo ? "▶" : "▷"}</span>
+                      {formatarDuracao(e.minutos)}
+                      <span aria-hidden="true">·</span>
+                      {e.aulas}
+                    </span>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          <a
+            href={PLAYLIST_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => track("playlist_youtube")}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 9,
+              marginTop: 12,
+              padding: "13px 18px",
+              borderRadius: 14,
+              fontSize: 14,
+              fontWeight: 700,
+              textDecoration: "none",
+              color: COLORS.text,
+              border: `1px solid ${COLORS.border}`,
+              background: COLORS.surface,
+            }}
+          >
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+              <path d="M21.6 7.2c-.23-1.7-.94-2.36-2.62-2.5C16.9 4.5 14.6 4.4 12 4.4s-4.9.1-6.98.3c-1.68.14-2.4.8-2.62 2.5C2.2 8.4 2.1 10 2.1 12s.1 3.6.3 4.8c.22 1.7.94 2.36 2.62 2.5 2.08.2 4.38.3 6.98.3s4.9-.1 6.98-.3c1.68-.14 2.4-.8 2.62-2.5.2-1.2.3-2.8.3-4.8s-.1-3.6-.3-4.8zM10 15.5v-7l6 3.5-6 3.5z" />
+            </svg>
+            Ver a playlist completa no YouTube
+          </a>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -597,9 +897,24 @@ export default function GarapuvuLanding() {
         .gp-grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
         .gp-row2 { display: grid; grid-template-columns: 150px 1fr; gap: 16px; }
 
+        /* Lista de encontros: hover só onde há mouse, para o toque no celular
+           não deixar o item "grudado" no estado de hover. */
+        @media (hover: hover) {
+          .gp-epitem:hover { border-color: ${COLORS.bloom} !important; transform: translateY(-2px); }
+        }
+        .gp-epitem:focus-visible { outline: 3px solid ${COLORS.bloom}; outline-offset: 2px; }
+        .gp-playlist { scrollbar-width: thin; scrollbar-color: ${COLORS.border} transparent; }
+        .gp-playlist::-webkit-scrollbar { width: 8px; }
+        .gp-playlist::-webkit-scrollbar-thumb { background: ${COLORS.border}; border-radius: 999px; }
+        .gp-playlist::-webkit-scrollbar-track { background: transparent; }
+
         /* ── Tablet ── */
         @media (max-width: 920px) {
           .gp-herolayout { grid-template-columns: 1fr !important; gap: 36px !important; }
+          /* Player em cima, lista embaixo — e a lista deixa de rolar sozinha,
+             para não criar uma segunda rolagem dentro da página. */
+          .gp-encontros { grid-template-columns: 1fr !important; }
+          .gp-playlist { max-height: none !important; }
           .gp-grid3 { grid-template-columns: 1fr 1fr !important; }
           .gp-modlayout { grid-template-columns: 1fr !important; }
           .gp-modtabs { flex-direction: row !important; overflow-x: auto; padding-bottom: 6px; }
@@ -690,7 +1005,11 @@ export default function GarapuvuLanding() {
                   style={{ background: COLORS.bloom, color: COLORS.onBloom, cursor: "pointer" }}>
                   Quero participar →
                 </button>
-                <button className="gp-btn" onClick={() => scrollToSection("conteudo", "hero_conteudo")}
+                <button type="button" className="gp-btn" onClick={() => scrollToSection("encontros", "hero_encontros")}
+                  style={{ background: "rgba(255,255,255,.1)", color: COLORS.onBand, boxShadow: "inset 0 0 0 1.5px rgba(255,255,255,.3)", cursor: "pointer" }}>
+                  ▶ Assistir as aulas
+                </button>
+                <button type="button" className="gp-btn" onClick={() => scrollToSection("conteudo", "hero_conteudo")}
                   style={{ background: "transparent", color: COLORS.onBand, boxShadow: "inset 0 0 0 1.5px rgba(255,255,255,.3)", cursor: "pointer" }}>
                   Ver o conteúdo
                 </button>
@@ -788,6 +1107,9 @@ export default function GarapuvuLanding() {
           </div>
         </div>
       </section>
+
+      {/* ENCONTROS GRAVADOS */}
+      <EncontrosSection />
 
       {/* OBJETIVOS */}
       <section className="gp-wrap" style={{ paddingTop: 90, paddingBottom: 30 }}>
