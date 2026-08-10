@@ -1,0 +1,13 @@
+node_modules/
+coverage/
+.env
+dist/
+test-results/
+relatorios/
+playwright-report/
+# Vercel: .vercel/ guarda o vínculo com o projeto; .env.local traz um token OIDC
+.vercel
+.env*
+# ...mas o exemplo de variáveis é documentação e deve ficar no repositório:
+!.env.example
+!**/.env.example

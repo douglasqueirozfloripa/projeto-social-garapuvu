@@ -1,0 +1,23 @@
+# Arquivos que NÃO vão para o deploy (não são usados pelo site nem pela API).
+# Deixa o build mais leve e evita que a Vercel tente instalar/rodar o que não é
+# do app — como o projeto de performance (k6), que roda só na máquina/CI.
+performance-k6/
+demo/
+docs/
+.playwright-mcp/
+.github/
+Makefile
+
+# Testes e relatórios (rodam localmente e no CI, não na Vercel)
+frontend/e2e/
+frontend/relatorios/
+frontend/coverage/
+frontend/test-results/
+frontend/playwright.config.js
+frontend/md2pdf.mjs
+backend/coverage/
+**/*.test.js
+**/*.test.jsx
+
+# Lixo de sistema
+**/.DS_Store
