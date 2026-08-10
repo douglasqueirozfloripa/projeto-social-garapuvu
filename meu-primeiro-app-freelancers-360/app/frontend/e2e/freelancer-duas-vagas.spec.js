@@ -10,6 +10,7 @@
 // Pré (sem webServer): backend em :3001 e frontend em :5173 no ar.
 // TAGs: @interface @e2e  → rodar só E2E: playwright test --grep @e2e
 import { test, expect } from "@playwright/test";
+import { recarregarEmProjetos } from "./apoio.js";
 
 const BASE = "http://localhost:5173";
 
@@ -24,6 +25,8 @@ async function cadastrar(page, { nome, papel, email, telefone, endereco }) {
   await page.getByTestId("input-senha").fill("1234");
   await page.getByTestId("enviar-auth").click();
   await expect(page.getByTestId("nav-projetos")).toBeVisible();
+  // Pós-login o app abre no PAINEL (Início); este teste é do módulo Projetos.
+  await page.getByTestId("nav-projetos").click();
 }
 
 async function publicar(page, cardFn, { titulo, descricao }) {
@@ -36,7 +39,7 @@ async function publicar(page, cardFn, { titulo, descricao }) {
 
 // Contratante: recarrega, seleciona o freelancer entre os candidatos e fecha o acordo.
 async function selecionarEIniciar(page, cardFn, freelancerNome) {
-  await page.reload();
+  await recarregarEmProjetos(page);
   await cardFn().getByTestId("ver-candidatos").click();
   await page.getByTestId("candidato").filter({ hasText: freelancerNome }).getByRole("button", { name: "Selecionar" }).click();
   await expect(cardFn()).toContainText("Em aprovação");
@@ -46,7 +49,7 @@ async function selecionarEIniciar(page, cardFn, freelancerNome) {
 
 // Contratante: recarrega, conclui e avalia o freelancer com 5 estrelas.
 async function concluir(page, cardFn) {
-  await page.reload();
+  await recarregarEmProjetos(page);
   await cardFn().getByTestId("concluir-projeto").click();
   await page.getByTestId("estrela-5").click();
   await page.getByTestId("enviar-avaliacao").click();
@@ -98,7 +101,7 @@ test(
     await selecionarEIniciar(contratanteB, cardB_C, freelaNome);
 
     // 5) O freelancer, selecionado nas DUAS, entrega cada trabalho e envia feedback (avaliação 360)
-    await freelancer.reload();
+    await recarregarEmProjetos(freelancer);
     await cardA_F().getByTestId("finalizar-trabalho").click();
     await freelancer.getByTestId("estrela-5").click();
     await freelancer.getByTestId("enviar-avaliacao").click();

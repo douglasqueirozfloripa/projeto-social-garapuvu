@@ -23,6 +23,17 @@ vi.mock("./pages/Auth.jsx", () => ({
     </div>
   ),
 }));
+// O painel inicial é mockado com um botão que dispara aoNavegar: dá para testar
+// a navegação DE dentro do painel sem depender da tela real dele (que tem os
+// próprios testes em pages/Dashboard.test.jsx).
+vi.mock("./pages/Dashboard.jsx", () => ({
+  default: ({ aoNavegar }) => (
+    <div>
+      dashboard-mock
+      <button onClick={() => aoNavegar("perfil")}>atalho-para-perfil</button>
+    </div>
+  ),
+}));
 vi.mock("./pages/Projetos.jsx", () => ({ default: () => <div>projetos-mock</div> }));
 vi.mock("./pages/Perfil.jsx", () => ({ default: () => <div>perfil-mock</div> }));
 // api.js mockado: o logout avisa o servidor (api.logout) antes de limpar a sessão.
@@ -102,10 +113,84 @@ describe("@interface App (auth + logout)", () => {
   it("alterna entre as abas Projetos e Meu perfil", async () => {
     localStorage.setItem(CHAVE, JSON.stringify({ id: 3, nome: "Carla", papel: "freelancer" }));
     render(<App />);
+    await userEvent.click(screen.getByTestId("nav-projetos"));
     expect(screen.getByText("projetos-mock")).toBeInTheDocument();
     await userEvent.click(screen.getByTestId("nav-perfil"));
     expect(screen.getByText("perfil-mock")).toBeInTheDocument();
     await userEvent.click(screen.getByTestId("nav-projetos"));
     expect(screen.getByText("projetos-mock")).toBeInTheDocument();
+  });
+});
+
+// A casca logada: qual tela abre primeiro e os recursos de acessibilidade que
+// valem para TODAS as páginas (skip link, <main> nomeado, aviso de seção).
+describe("@interface App (painel inicial e acessibilidade da casca)", () => {
+  const entrar = (user = { id: 3, nome: "Carla", papel: "freelancer" }) => {
+    localStorage.setItem(CHAVE, JSON.stringify(user));
+    render(<App />);
+  };
+
+  it("abre no PAINEL depois do login (não mais em Projetos)", async () => {
+    render(<App />);
+    await userEvent.click(screen.getByText("ir-login"));
+    await userEvent.click(screen.getByText("fazer-login"));
+
+    expect(screen.getByText("dashboard-mock")).toBeInTheDocument();
+    expect(screen.queryByText("projetos-mock")).not.toBeInTheDocument();
+  });
+
+  it("marca Início como página atual ao entrar", () => {
+    entrar();
+    expect(screen.getByTestId("nav-inicio")).toHaveAttribute("aria-current", "page");
+    expect(screen.getByTestId("nav-projetos")).not.toHaveAttribute("aria-current");
+  });
+
+  it("move o aria-current ao navegar", async () => {
+    entrar();
+    await userEvent.click(screen.getByTestId("nav-projetos"));
+
+    expect(screen.getByTestId("nav-projetos")).toHaveAttribute("aria-current", "page");
+    expect(screen.getByTestId("nav-inicio")).not.toHaveAttribute("aria-current");
+  });
+
+  it("os atalhos do painel navegam entre os módulos", async () => {
+    entrar();
+    await userEvent.click(screen.getByText("atalho-para-perfil"));
+    expect(screen.getByText("perfil-mock")).toBeInTheDocument();
+  });
+
+  it("oferece 'Pular para o conteúdo' apontando para o <main>", () => {
+    entrar();
+    const link = screen.getByRole("link", { name: "Pular para o conteúdo" });
+    expect(link).toHaveAttribute("href", "#conteudo");
+    // O destino precisa existir e poder receber foco por programa (tabindex=-1).
+    const main = screen.getByRole("main");
+    expect(main).toHaveAttribute("id", "conteudo");
+    expect(main).toHaveAttribute("tabindex", "-1");
+  });
+
+  it("é o PRIMEIRO elemento a receber foco (antes do menu)", async () => {
+    entrar();
+    await userEvent.tab();
+    expect(screen.getByRole("link", { name: "Pular para o conteúdo" })).toHaveFocus();
+  });
+
+  it("anuncia a seção atual para quem usa leitor de tela", async () => {
+    entrar();
+    expect(screen.getByTestId("aviso-secao")).toHaveTextContent("Seção atual: Início");
+
+    await userEvent.click(screen.getByTestId("nav-projetos"));
+    expect(screen.getByTestId("aviso-secao")).toHaveTextContent("Seção atual: Projetos");
+  });
+
+  it("volta para o painel ao entrar de novo depois de sair de outra aba", async () => {
+    entrar({ id: 4, nome: "Dan", papel: "contratante" });
+    await userEvent.click(screen.getByTestId("nav-projetos"));
+    await userEvent.click(screen.getByTestId("btn-sair"));   // volta à Landing
+    await userEvent.click(screen.getByText("ir-login"));
+    await userEvent.click(screen.getByText("fazer-login"));
+
+    // A sessão nova começa do zero, no painel — e não na aba antiga.
+    expect(screen.getByText("dashboard-mock")).toBeInTheDocument();
   });
 });

@@ -10,6 +10,7 @@
 // Pré (sem webServer): backend em :3001 e frontend em :5173 no ar.
 // TAGs: @interface @e2e  → rodar só E2E: playwright test --grep @e2e
 import { test, expect } from "@playwright/test";
+import { recarregarEmProjetos } from "./apoio.js";
 
 const BASE = "http://localhost:5173";
 
@@ -24,6 +25,8 @@ async function cadastrar(page, { nome, papel, email, telefone, endereco }) {
   await page.getByTestId("input-senha").fill("1234");
   await page.getByTestId("enviar-auth").click();
   await expect(page.getByTestId("nav-projetos")).toBeVisible();
+  // Pós-login o app abre no PAINEL (Início); este teste é do módulo Projetos.
+  await page.getByTestId("nav-projetos").click();
 }
 
 test(
@@ -66,7 +69,7 @@ test(
     await expect(cardBruno()).toContainText("Candidatura enviada");
 
     // 3) Contratante recarrega e abre "Ver candidatos": deve haver DUAS candidatas
-    await contratante.reload();
+    await recarregarEmProjetos(contratante);
     await expect(cardC()).toContainText("Ver candidatos (2)");
     await cardC().getByTestId("ver-candidatos").click();
     await expect(contratante.getByTestId("candidato")).toHaveCount(2);
@@ -80,7 +83,7 @@ test(
     await expect(candidato("Ana Dev")).toHaveCount(0);
 
     // CENÁRIO A — a candidata removida, com a vaga ainda aberta, volta a poder se candidatar
-    await ana.reload();
+    await recarregarEmProjetos(ana);
     await expect(cardAna().getByTestId("candidatar")).toBeVisible();
 
     // 5) Contratante SELECIONA o Bruno → projeto vai para "Em aprovação"
@@ -89,11 +92,11 @@ test(
 
     // CENÁRIO B — como a vaga saiu de "Publicado", some da lista da freelancer não escolhida
     // (o freelancer só enxerga projetos abertos ou aqueles em que ele foi selecionado).
-    await ana.reload();
+    await recarregarEmProjetos(ana);
     await expect(cardAna()).toHaveCount(0);
 
     // CENÁRIO C — o selecionado vê a confirmação de que foi escolhido
-    await bruno.reload();
+    await recarregarEmProjetos(bruno);
     await expect(cardBruno()).toContainText("Você foi selecionado");
 
     // 6) Contratante FECHA O ACORDO (WhatsApp) → Em andamento
@@ -101,14 +104,14 @@ test(
     await expect(cardC()).toContainText("Em andamento");
 
     // 7) Bruno FINALIZA o trabalho e envia FEEDBACK (avaliação 360) ao contratante
-    await bruno.reload();
+    await recarregarEmProjetos(bruno);
     await cardBruno().getByTestId("finalizar-trabalho").click();
     await bruno.getByTestId("estrela-5").click();
     await bruno.getByTestId("enviar-avaliacao").click();
     await expect(cardBruno()).toContainText("Feedback enviado");
 
     // 8) Contratante CONCLUI avaliando o freelancer → Concluído
-    await contratante.reload();
+    await recarregarEmProjetos(contratante);
     await cardC().getByTestId("concluir-projeto").click();
     await contratante.getByTestId("estrela-5").click();
     await contratante.getByTestId("enviar-avaliacao").click();

@@ -7,6 +7,7 @@
 // Pré (sem webServer): backend em :3001 e frontend em :5173 rodando.
 // TAGs: @interface @e2e  → rodar só E2E: playwright test --grep @e2e
 import { test, expect } from "@playwright/test";
+import { recarregarEmProjetos } from "./apoio.js";
 
 const BASE = "http://localhost:5173";
 
@@ -21,6 +22,8 @@ async function cadastrar(page, { nome, papel, email, telefone, endereco }) {
   await page.getByTestId("input-senha").fill("1234");
   await page.getByTestId("enviar-auth").click();
   await expect(page.getByTestId("nav-projetos")).toBeVisible();
+  // Pós-login o app abre no PAINEL (Início); este teste é do módulo Projetos.
+  await page.getByTestId("nav-projetos").click();
 }
 
 test(
@@ -51,7 +54,7 @@ test(
     await cardF().getByTestId("candidatar").click();
     await expect(cardF()).toContainText("Candidatura enviada");
 
-    await contratante.reload();
+    await recarregarEmProjetos(contratante);
     await cardC().getByTestId("ver-candidatos").click();
     await contratante.getByTestId("candidato").filter({ hasText: "Rafa Designer" }).getByRole("button", { name: "Selecionar" }).click();
     await expect(cardC()).toContainText("Em aprovação");
@@ -59,7 +62,7 @@ test(
     await expect(cardC()).toContainText("Em andamento");
 
     // 3) Freelancer finaliza e AVALIA o contratante (nota 4 + comentário)
-    await freelancer.reload();
+    await recarregarEmProjetos(freelancer);
     await cardF().getByTestId("finalizar-trabalho").click();
     // sem nota escolhida, o envio fica bloqueado
     await expect(freelancer.getByTestId("enviar-avaliacao")).toBeDisabled();
@@ -70,7 +73,7 @@ test(
     await expect(cardF()).toContainText("Feedback enviado");
 
     // 4) Contratante conclui e AVALIA o freelancer (nota 5 + comentário)
-    await contratante.reload();
+    await recarregarEmProjetos(contratante);
     await cardC().getByTestId("concluir-projeto").click();
     await contratante.getByTestId("input-comentario").fill("Entrega impecável, recomendo!");
     await contratante.getByTestId("estrela-5").click();
