@@ -17,6 +17,9 @@ Objetivo pedagógico: mostrar **como uma ferramenta de performance funciona** e 
 ```
 performance-k6/
 ├── README.md                 ← este arquivo
+├── run.sh                    ← roda o k6 já com o .env carregado (o k6 não lê .env sozinho)
+├── .env / .env.example       ← TEMA do relatório e BASE_URL da API
+├── assets/                   ← SVGs de fundo do relatório (versões clara e escura)
 ├── lib/
 │   ├── helpers.js            ← funções compartilhadas (cadastrar, login, criar projeto...)
 │   ├── report.js             ← gera o RELATÓRIO HTML a partir do resumo do k6
@@ -125,7 +128,7 @@ Observações:
 
 - Em **(b)** e **(d)** o k6 encerra com **status ≠ 0** e o `gate-exigente.js` pode ser **abortado no meio** pelo `abortOnFail` — é o comportamento esperado (mostra o gate barrando o build). O relatório HTML é gerado do mesmo jeito.
 - O `-e TEMA=` vale para **qualquer** script (também `smoke.js`, `load.js`, `spike.js`).
-- Alternativa ao `-e TEMA=joaquina`: usar o `.env` com `k6 run --env-file .env <script>.js` (k6 ≥ 0.47).
+- Alternativa ao `-e TEMA=joaquina`: rodar pelo wrapper `./run.sh <script>.js`, que carrega o `.env`. O k6 **não** lê o `.env` por conta própria (veja a seção "Escolher o tema").
 
 ---
 
@@ -365,6 +368,17 @@ valor obtido ao lado do esperado. Sem essa linha, um threshold `p(99)<1500`
 continua sendo avaliado normalmente (o k6 usa os dados brutos), mas a coluna
 "Obtido" do HTML mostraria *"não coletado"*.
 
+**A coluna "Falhas"** ao lado de "Obtido" traduz a porcentagem em números
+absolutos — `80%` de checks vira `1200 de 6000`, que é o que você leva para a
+conversa com o time. Ela só aparece para métricas do tipo **`rate`**, as únicas
+que contam observação por observação; em `trend` (percentis) e `counter` o resumo
+do k6 não guarda quantas observações estouraram o limite, então mostra `—`.
+
+> Detalhe que engana muita gente: numa `Rate` do k6, `passes` é a contagem de
+> valores `true`. Como em **`http_req_failed`** o `true` significa *"a requisição
+> falhou"*, ali o lado ruim é `passes` — nas outras rates (`checks`, rates suas)
+> o lado ruim é `fails`. O relatório já trata essa inversão.
+
 > **Cuidado ao interpretar uma bateria inteira.** Se **todos** os testes
 > reprovarem de uma vez com **100% de erro** e `p(95) = 0 ms`, o problema quase
 > nunca é a aplicação: é a API que caiu ou não subiu. Confira com
@@ -412,7 +426,7 @@ e coral) — banner, cartões e tabelas seguem a identidade visual, o que fica
 bacana de mostrar em aula. Ele traz, nesta ordem: **veredito do quality gate**
 (APROVADO/REPROVADO no topo), **cartões de KPI** (requisições, req/s, taxa de
 erro, p95, média, checks, VUs de pico, iterações), a **tabela de thresholds**
-com *esperado × obtido*, o **gráfico de distribuição** do tempo de resposta
+com *esperado × obtido × falhas*, o **gráfico de distribuição** do tempo de resposta
 (min → med → p90 → **p95** → max), a **tabela de checks**, as **métricas
 customizadas** separadas das padrão e, por fim, um **glossário "Entendendo cada
 métrica"**: um cartão por métrica com a explicação em português, o *ponto a
@@ -542,9 +556,21 @@ Os "slots" (papéis) que **todo tema preenche**:
 | Grupo | Slots |
 |---|---|
 | Marca | `verde-escuro` (primária forte), `verde` (primária), `lima` (secundária), `lima-claro`, `amarelo` (destaque), `amarelo-claro`, `coral` (ênfase/alerta forte) |
-| Base | `bg` (fundo), `card`, `txt`, `suave` (texto secundário), `linha` (bordas) |
+| Base | `bg` (fundo), `card`, `txt`, `suave` (texto secundário), `linha` (bordas), `titulo` (títulos de seção) |
 | Estado | `ok`/`ok-bg`, `erro`/`erro-bg`, `acento` (gráficos), `alerta` |
 | Fundo | `bg-image` (imagem de fundo da tela) |
+
+### Claro ou escuro: o botão no cabeçalho
+
+O relatório abre seguindo o **modo do sistema operacional**, e o cabeçalho traz
+um botão que cicla entre três estados: **auto** (◐, segue o sistema) → **claro**
+(☀) → **escuro** (☾). A escolha fica salva no navegador (`localStorage`).
+
+Por dentro, o botão só troca o atributo `data-tema` do `<html>`; quem muda as
+cores é o CSS de `lib/tokens.js`, que emite três regras — `:root` (claro como
+base), `@media (prefers-color-scheme: dark)` e `:root[data-tema="escuro"]`. Por
+isso **todo detalhe de cor precisa ser um slot**: um `@media` de modo escuro
+solto no CSS não obedeceria ao botão.
 
 ### Escolher o tema (env)
 
@@ -553,16 +579,34 @@ O relatório lê o tema da variável de ambiente `TEMA`. Já vêm prontos:
 
 ```bash
 k6 run -e TEMA=joaquina load.js          # troca só nesta execução
-k6 run --env-file .env load.js           # lê do arquivo .env (k6 >= 0.47)
 ```
 
 O projeto traz um **`.env`** (já com `TEMA=joaquina` para você testar) e um
 **`.env.example`** documentando as opções. Sem `TEMA`, cai no padrão `garapuvu`.
 
+⚠️ **O k6 não lê o `.env` sozinho.** Ele não tem flag `--env-file`; o que ele faz
+é herdar as variáveis já presentes no ambiente do shell
+(`--include-system-env-vars`, ligado por padrão). Se você só criar o arquivo e
+rodar `k6 run load.js`, o relatório sai no tema padrão (`garapuvu`) — é o sintoma
+clássico de *"editei o `.env` e nada mudou"*.
+
+Duas formas de fazer o `.env` valer:
+
+```bash
+./run.sh load.js                           # (recomendado) o wrapper carrega o .env
+set -a; source .env; set +a; k6 run load.js  # na mão, se preferir
+```
+
+O **`run.sh`** existe só para isso: joga o `.env` no ambiente e repassa tudo para
+o `k6 run`. Variável que você passa na linha continua vencendo o arquivo
+(`TEMA=oceano ./run.sh load.js`), e flags do k6 passam direto
+(`./run.sh -e TEMA=uva load.js`). Ele imprime o tema em uso antes de rodar, para
+você não descobrir o engano só no fim.
+
 ### Criar um tema novo (o aluno no comando)
 
 1. Em `lib/tokens.js`, copie um bloco de **primitivos** (ex.: `garapuvu`) e mude as cores.
-2. Registre em `TEMAS` chamando `montarTema(PRIMITIVOS.seuTema, "Rótulo", "imagemOpcional")`.
+2. Registre em `TEMAS` chamando `montarTema(PRIMITIVOS.seuTema, "Rótulo", "fundoClaroOpcional", "fundoEscuroOpcional")`.
 3. Rode com `-e TEMA=seuTema`. Pronto — o relatório se re-veste sozinho.
 
 Como todos os temas passam pela mesma fábrica `montarTema`, é impossível
@@ -570,16 +614,96 @@ esquecer um slot: o "contrato" de cores é garantido.
 
 ### Imagem de fundo
 
-Cada tema pode ter uma **imagem de fundo** (slot `bg-image`). Geramos duas em
-SVG (leves e pálidas, para não atrapalhar a leitura) em **`assets/`**:
+Cada tema pode ter uma **imagem de fundo** (slot `bg-image`). São SVGs leves e de
+baixo contraste (para não atrapalhar a leitura), em **duas versões** — uma para o
+modo claro e a mesma cena repintada para o escuro:
 
-- `assets/bg-garapuvu.svg` — a garapuvú florida sobre colinas;
-- `assets/bg-joaquina.svg` — sol, mar e dunas da Praia da Joaquina.
+- `assets/bg-garapuvu.svg` / `assets/bg-garapuvu-dark.svg` — a garapuvú florida sobre colinas;
+- `assets/bg-joaquina.svg` / `assets/bg-joaquina-dark.svg` — sol, mar e dunas da Praia da Joaquina.
 
 Elas são embutidas no HTML como *data URI* (o relatório continua **self-contained**,
-abre offline sem depender do arquivo). No modo escuro a imagem é desligada
-(um SVG claro ficaria brilhante demais). Para criar a sua, adicione o SVG em
-`SVG_FUNDO` e passe o nome no `montarTema`.
+abre offline sem depender do arquivo). A versão escura existe porque usar o SVG
+claro no modo escuro ficaria brilhante demais — e deixar `none`, como era antes,
+fazia o fundo **desaparecer** para quem usa o sistema no escuro. Para criar a
+sua, adicione os dois SVGs em `SVG_FUNDO` e passe os nomes no `montarTema`
+(`montarTema(paleta, "Rótulo", "claro", "escuro")`).
+
+---
+
+## 8.4. Do relatório para o código: otimizando o que o teste apontou
+
+Teste de performance que não vira mudança de código é só decoração. Esta seção
+registra o ciclo completo feito neste projeto — **medir → isolar o gargalo →
+corrigir → medir de novo** — porque o método vale mais que o resultado.
+
+### O suspeito errado
+
+A primeira hipótese foi o middleware de log do backend, que serializa o corpo da
+requisição **e** da resposta de toda chamada. Parece caro. Medido:
+
+```
+console.log do middleware: 3.2 µs por requisição
+```
+
+**3 microssegundos.** Irrelevante diante de uma resposta de 5 ms. Lição:
+otimizar por intuição é chutar. O log ficou como está.
+
+### O gargalo real: buscas lineares no repositório
+
+O backend guarda tudo em memória, em arrays, e buscava com `find`/`filter` —
+O(n): dobrou o volume, dobrou o tempo. Medindo as funções **isoladas** (sem HTTP
+no meio, para o custo da rede não esconder o da busca):
+
+| Busca | 1 000 usuários | 200 000 usuários |
+|---|---|---|
+| `acharUsuarioPorEmail` (usada no cadastro e no login) | 8 µs | **514 µs** |
+| `acharUsuario(id)` (usada ao criar projeto) | 6.5 µs | **616 µs** |
+
+Pior que linear era o `GET /contratos` — o endpoint mais chamado no `load.js`.
+Para **cada** projeto ele varria as listas inteiras de candidaturas e avaliações:
+trabalho N×(C+A), ou seja **quadrático**:
+
+| Projetos | Montar a resposta (antes) | Depois |
+|---|---|---|
+| 500 | 1.23 ms | 0.51 ms |
+| 2 000 | 12.14 ms | **1.82 ms** |
+| 5 000 | 66.63 ms | **4.92 ms** |
+
+Repare na curva do "antes": 4× mais projetos → **10×** mais tempo. É a assinatura
+de um algoritmo quadrático, e é exatamente o tipo de coisa que passa despercebida
+em ambiente de desenvolvimento (com 10 projetos, tudo é rápido) e explode em
+produção.
+
+### A correção: índices
+
+Em `backend/src/repositorio.js`, cada busca frequente ganhou um **índice** — um
+`Map` que leva da chave direto ao objeto, em O(1). É o mesmo papel que um índice
+cumpre num banco de dados, com o mesmo preço: quem escreve precisa manter o
+índice em sincronia. Os arrays continuam sendo a fonte da verdade (a ordem de
+inserção é o que a API devolve).
+
+Nenhuma rota mudou — a otimização ficou encapsulada no repositório, e os **84
+testes** do backend seguem passando sem alteração. Resultado end-to-end, via HTTP
+de verdade, com 2 000 projetos cadastrados:
+
+```
+ANTES  →  GET /contratos: 18.3 ms/req
+DEPOIS →  GET /contratos:  6.3 ms/req      (2.9× mais rápido)
+```
+
+### O que sobrou (e o próximo passo)
+
+Os 6.3 ms restantes **não** são mais busca: são montar e serializar 2 000 objetos
+em JSON. Índice nenhum resolve isso — a saída seria **paginação** (`GET
+/contratos?pagina=1&tamanho=20`), que muda o contrato da API e o frontend junto.
+Fica como próximo exercício: rode o `load.js`, veja o `p(95)` do endpoint e decida
+se o volume real do projeto justifica a mudança.
+
+> ⚠️ **Os dados vivem em memória.** Depois de alterar o backend, **reinicie a API**
+> (`npm start`) — o processo antigo continua rodando o código antigo, e o teste
+> mediria a versão errada. Reiniciar também zera os dados: a cada bateria de
+> carga o array começa vazio, o que é bom para reprodutibilidade e ruim para
+> enxergar degradação por volume acumulado.
 
 ---
 

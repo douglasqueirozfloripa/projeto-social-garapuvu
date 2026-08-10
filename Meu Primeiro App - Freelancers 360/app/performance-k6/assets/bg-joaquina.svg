@@ -1,13 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
-  <defs>
-    <linearGradient id="s" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#eaf6f8"/><stop offset=".55" stop-color="#f1f6ec"/><stop offset="1" stop-color="#f6ecd6"/>
-    </linearGradient>
-  </defs>
+  <defs><linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eaf6f8"/><stop offset=".5" stop-color="#eef7f1"/><stop offset="1" stop-color="#f6ecd6"/></linearGradient></defs>
   <rect width="1200" height="800" fill="url(#s)"/>
-  <circle cx="1015" cy="165" r="80" fill="#f2cf7e" opacity=".5"/>
-  <path d="M0 430 Q300 390 600 420 T1200 410 V520 H0Z" fill="#7ec9c9" opacity=".45"/>
-  <path d="M0 500 Q300 468 600 500 T1200 490 V560 H0Z" fill="#4fb3bf" opacity=".4"/>
-  <path d="M0 560 Q350 520 700 570 T1200 560 V800 H0Z" fill="#eddaa6" opacity=".6"/>
-  <path d="M0 655 Q350 612 700 662 T1200 650 V800 H0Z" fill="#e2c98a" opacity=".6"/>
+  <circle cx="1010" cy="150" r="150" fill="#f2cf7e" opacity=".14"/>
+  <circle cx="1010" cy="150" r="88" fill="#f2cf7e" opacity=".5"/>
+  <path d="M0 360 Q300 320 600 350 T1200 340 V470 H0Z" fill="#7ec9c9" opacity=".4"/>
+  <path d="M0 440 Q300 405 600 435 T1200 425 V545 H0Z" fill="#4fb3bf" opacity=".38"/>
+  <path d="M0 520 Q300 488 600 515 T1200 508 V605 H0Z" fill="#2f9fb0" opacity=".28"/>
+  <path d="M0 585 Q350 545 700 590 T1200 580 V800 H0Z" fill="#eddaa6" opacity=".6"/>
+  <path d="M0 670 Q350 628 700 675 T1200 665 V800 H0Z" fill="#e2c98a" opacity=".6"/>
+  <g stroke="#4a6b6b" stroke-width="3" fill="none" opacity=".18"><path d="M120 180 q15 -12 30 0 q15 -12 30 0"/><path d="M240 150 q12 -10 24 0 q12 -10 24 0"/></g>
 </svg>

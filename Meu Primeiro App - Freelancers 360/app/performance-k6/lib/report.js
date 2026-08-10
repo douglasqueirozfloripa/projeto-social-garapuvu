@@ -164,6 +164,24 @@ function estatisticaDo(expressao) {
   return m ? m[1] : null;
 }
 
+// Quantas observações caíram no lado RUIM da métrica, em números absolutos
+// ("1200 de 6000" diz muito mais que "80%").
+//
+// Só existe para métricas do tipo `rate` — são as que contam sucesso/falha uma
+// a uma. Em `trend` (percentis) e `counter` o resumo do k6 não guarda quantas
+// observações passaram do limite, então devolvemos null e a coluna mostra "—".
+//
+// PEGADINHA do k6: numa Rate, `passes` é a contagem de valores `true`. Em
+// `http_req_failed` o `true` significa "a requisição FALHOU", então ali o lado
+// ruim é `passes`. Nas outras rates (checks, rates customizadas) o `true` é
+// sucesso e o lado ruim é `fails`.
+function contagemFalhas(nome, metrica) {
+  if (metrica.type !== "rate") return null;
+  const { passes, fails } = metrica.values;
+  if (passes === undefined || fails === undefined) return null;
+  return { ruins: nome === "http_req_failed" ? passes : fails, total: passes + fails };
+}
+
 function coletarThresholds(metrics) {
   const linhas = [];
   for (const [nome, metrica] of Object.entries(metrics)) {
@@ -179,6 +197,7 @@ function coletarThresholds(metrics) {
             : stat
             ? valor(metrica, stat)
             : "—",
+        falhas: contagemFalhas(nome, metrica),
         ok: res.ok !== false,
       });
     }
@@ -227,6 +246,14 @@ function caixaFalhas(gates, checks) {
   </div>`;
 }
 
+// Célula da coluna "Falhas": "1200 de 6000", ou "—" quando a métrica não conta
+// sucesso/falha (o title explica o porquê para quem passar o mouse).
+function celulaFalhas(f) {
+  if (!f) return `<span class="na" title="Métrica de percentil/contagem: o resumo do k6 não informa quantas observações violaram o limite.">—</span>`;
+  if (!f.ruins) return `<span class="suave">0 de ${num(f.total, 0)}</span>`;
+  return `<b>${num(f.ruins, 0)}</b> de ${num(f.total, 0)}`;
+}
+
 function tabelaThresholds(linhas) {
   if (!linhas.length) return `<p class="vazio">Este teste não definiu thresholds.</p>`;
   const trs = linhas
@@ -236,11 +263,12 @@ function tabelaThresholds(linhas) {
       <td>${linkNome(l.metrica)}</td>
       <td><code>${esc(l.esperado)}</code></td>
       <td class="n">${esc(l.obtido)}</td>
+      <td class="n">${celulaFalhas(l.falhas)}</td>
       <td>${l.ok ? "aprovado" : "REPROVADO"}</td>
     </tr>`
     )
     .join("");
-  return `<table><thead><tr><th></th><th>Métrica</th><th>Critério (esperado)</th><th>Obtido</th><th>Resultado</th></tr></thead><tbody>${trs}</tbody></table>`;
+  return `<table><thead><tr><th></th><th>Métrica</th><th>Critério (esperado)</th><th>Obtido</th><th title="Observações no lado ruim da métrica. Só métricas de taxa (rate) guardam essa contagem.">Falhas</th><th>Resultado</th></tr></thead><tbody>${trs}</tbody></table>`;
 }
 
 function tabelaChecks(checks) {
@@ -464,11 +492,16 @@ export function relatorio(data, nome = "k6") {
   /* ===== Design tokens de cor (gerados por lib/tokens.js — tema: ${esc(TEMA)}) ===== */
   ${cssTokens(TEMA)}
   *{box-sizing:border-box}
-  body{margin:0;padding:0 20px 64px;min-height:100vh;color:var(--txt);
-       background-color:var(--bg);background-image:var(--bg-image);
-       background-size:cover;background-position:center top;background-attachment:fixed;background-repeat:no-repeat;
+  body{margin:0;padding:0 20px 64px;min-height:100vh;color:var(--txt);background-color:var(--bg);
        font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-  .wrap{max-width:1040px;margin:0 auto}
+  /* Imagem de fundo em uma CAMADA FIXA própria (body::before), atrás de tudo.
+     É mais robusto que background-attachment:fixed — funciona bem via file://
+     e com data URI. z-index:-1 mantém a imagem atrás do conteúdo. */
+  body::before{content:"";position:fixed;inset:0;z-index:-1;
+       background-image:var(--bg-image);background-size:cover;background-position:center;background-repeat:no-repeat}
+  .wrap{max-width:1040px;margin:0 auto;position:relative;z-index:0}
+  /* vidro fosco: deixa a imagem de fundo aparecer atrás dos cartões sem perder leitura */
+  .painel,.kpi,.item,.grafico,.alerta-box{backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
   /* ===== Banner Garapuvu ===== */
   header{margin:0 -20px 4px;padding:26px 28px;color:#fff;
          background:linear-gradient(135deg,var(--verde-escuro),var(--verde) 70%,var(--lima));
@@ -478,8 +511,16 @@ export function relatorio(data, nome = "k6") {
   .leaf{color:var(--amarelo-claro);font-size:26px;line-height:1}
   h1{font-size:22px;margin:0;color:#fff}
   h1 small{display:block;font-weight:400;font-size:13px;color:#dbead0;margin-top:4px}
-  h2{font-size:16px;margin:34px 0 12px;padding-bottom:6px;border-bottom:2px solid var(--lima-claro);color:var(--verde-escuro)}
-  @media (prefers-color-scheme: dark){ h2{color:var(--lima-claro)} }
+  h2{font-size:16px;margin:34px 0 12px;padding-bottom:6px;border-bottom:2px solid var(--lima-claro);color:var(--titulo)}
+  .acoes{display:flex;align-items:center;gap:10px;margin-left:auto}
+  /* botão de tema: fica sobre o banner verde, então usa branco translúcido */
+  .btn-tema{font:inherit;font-size:13px;font-weight:600;color:#fff;cursor:pointer;
+            display:flex;align-items:center;gap:7px;padding:9px 14px;border-radius:8px;
+            background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.38)}
+  .btn-tema:hover{background:rgba(255,255,255,.24)}
+  .btn-tema:focus-visible{outline:2px solid var(--amarelo-claro);outline-offset:2px}
+  .btn-tema .icone{font-size:15px;line-height:1}
+  @media print{ .btn-tema{display:none} }
   .veredito{font-weight:700;font-size:14px;letter-spacing:.04em;padding:10px 18px;border-radius:8px}
   .veredito.ok{color:#fff;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4)}
   .veredito.falha{color:#fff;background:var(--coral);border:1px solid #fff3}
@@ -525,8 +566,7 @@ export function relatorio(data, nome = "k6") {
   .item{background:var(--card);border:1px solid var(--linha);border-left:4px solid var(--lima);border-radius:10px;padding:14px 16px}
   .item.custom{border-left-color:var(--amarelo)}
   .item-top{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:6px}
-  .item-top b{font-size:14.5px;color:var(--verde-escuro)}
-  @media (prefers-color-scheme: dark){ .item-top b{color:var(--lima-claro)} .h2{color:var(--lima-claro)} }
+  .item-top b{font-size:14.5px;color:var(--titulo)}
   .tag{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;background:rgba(124,179,66,.18);color:var(--verde);padding:2px 7px;border-radius:20px}
   .item.custom .tag{background:rgba(249,168,37,.2);color:var(--coral)}
   .item-val{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:650;font-size:13px;color:var(--txt)}
@@ -551,9 +591,20 @@ export function relatorio(data, nome = "k6") {
   .motivo .escopo{color:var(--suave);font-size:11.5px}
   .motivo-estudo{margin:8px 0 0;font-size:13px;font-style:italic}
   .vazio{color:var(--suave);font-style:italic;padding:4px 0}
+  /* coluna "Falhas": o "—" e o "0 de N" ficam discretos; só o número que
+     importa (falhas > 0) recebe destaque */
+  .na{color:var(--suave);cursor:help} .suave{color:var(--suave)}
   footer{margin-top:40px;color:var(--suave);font-size:12px;text-align:center}
   footer a{margin:0 6px}
 </style>
+<script>
+  /* Aplica o tema salvo ANTES da tela pintar, para não piscar na cor errada.
+     Roda aqui no <head> justamente por isso. */
+  try {
+    var salvo = localStorage.getItem("k6-relatorio-tema");
+    if (salvo === "claro" || salvo === "escuro") document.documentElement.dataset.tema = salvo;
+  } catch (e) { /* file:// sem localStorage — segue com o tema do sistema */ }
+</script>
 </head>
 <body>
 <div class="wrap">
@@ -564,7 +615,12 @@ export function relatorio(data, nome = "k6") {
         <small>FreelaAvalia 360 · Projeto Social Garapuvu · k6 · ${new Date().toLocaleString("pt-BR")} · duração ${duracao(duracaoMs)}</small>
       </h1>
     </div>
-    <div class="veredito ${aprovado ? "ok" : "falha"}">QUALITY GATE: ${aprovado ? "APROVADO" : "REPROVADO"}</div>
+    <div class="acoes">
+      <button type="button" class="btn-tema" id="btn-tema" title="Alternar tema: automático → claro → escuro">
+        <span class="icone" aria-hidden="true">◐</span><span class="rotulo">Tema: auto</span>
+      </button>
+      <div class="veredito ${aprovado ? "ok" : "falha"}">QUALITY GATE: ${aprovado ? "APROVADO" : "REPROVADO"}</div>
+    </div>
   </header>
 
   ${caixaFalhas(gates, checks)}
@@ -599,6 +655,43 @@ export function relatorio(data, nome = "k6") {
     <a href="${REF.fim}" target="_blank" rel="noreferrer">Resumo de fim de teste</a>
   </footer>
 </div>
+<script>
+  /* Botão de tema. Três estados em ciclo:
+       auto   → segue o sistema (prefers-color-scheme), sem atributo nenhum
+       claro  → força claro    (data-tema="claro"  no <html>)
+       escuro → força escuro   (data-tema="escuro" no <html>)
+     Quem faz a cor mudar é o CSS de lib/tokens.js, que tem uma regra para cada
+     caso — aqui só trocamos o atributo. A escolha fica salva no navegador. */
+  (function () {
+    var CHAVE = "k6-relatorio-tema";
+    var CICLO = ["auto", "claro", "escuro"];
+    var FACE = { auto: ["◐", "auto"], claro: ["☀", "claro"], escuro: ["☾", "escuro"] };
+    var btn = document.getElementById("btn-tema");
+    var icone = btn.querySelector(".icone");
+    var rotulo = btn.querySelector(".rotulo");
+
+    function aplicar(modo) {
+      if (modo === "auto") delete document.documentElement.dataset.tema;
+      else document.documentElement.dataset.tema = modo;
+      icone.textContent = FACE[modo][0];
+      rotulo.textContent = "Tema: " + FACE[modo][1];
+      btn.setAttribute("aria-label", "Tema " + FACE[modo][1] + " — clique para alternar");
+    }
+
+    var modo = "auto";
+    try { modo = localStorage.getItem(CHAVE) || "auto"; } catch (e) {}
+    if (CICLO.indexOf(modo) < 0) modo = "auto";
+    aplicar(modo);
+
+    btn.addEventListener("click", function () {
+      modo = CICLO[(CICLO.indexOf(modo) + 1) % CICLO.length];
+      aplicar(modo);
+      // Em file:// alguns navegadores bloqueiam o localStorage: a troca vale
+      // para a sessão, só não é lembrada no próximo abrir.
+      try { localStorage.setItem(CHAVE, modo); } catch (e) {}
+    });
+  })();
+</script>
 </body>
 </html>`;
 
