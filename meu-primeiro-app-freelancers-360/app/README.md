@@ -69,10 +69,17 @@ O deploy sobe **um único site**: o frontend como arquivos estáticos e a API co
 1. Faça o commit/push desta pasta (`api/`, `vercel.json`, `package.json`, `.vercelignore`).
 2. Na Vercel: **Add New → Project** → importe o repositório `projeto-social-garapuvu`.
 3. **Root Directory** (o passo que mais gera erro): aponte para
-   `Meu Primeiro App - Freelancers 360/app` — não a raiz do repositório, senão a Vercel
+   `meu-primeiro-app-freelancers-360/app` — não a raiz do repositório, senão a Vercel
    publica a landing page do curso e não encontra o app.
 4. Framework Preset: **Other** (o `vercel.json` já diz o que buildar). Deploy.
 5. Valide abrindo `https://<seu-projeto>.vercel.app/api/health` → deve responder `{"ok":true}`.
+
+> 🧠 **Por que a pasta se chama `meu-primeiro-app-freelancers-360` e não "Meu Primeiro App…"?**
+> A Vercel monta o nome da função serverless a partir do caminho dela no repositório e
+> **recusa nomes com espaço** (limite de 128 caracteres, sem espaços). Com a pasta antiga o
+> deploy quebrava exatamente no fim, depois de buildar:
+> `A Serverless Function has an invalid name: "'Meu Primeiro App - Freelancers 360/app/api/index.js'"`.
+> Lição: pastas que entram num deploy merecem nome em *kebab-case*, sem espaço nem acento.
 
 > Se o projeto na Vercel já existe e está publicando a coisa errada:
 > **Settings → Build and Deployment → Root Directory**, ajuste o caminho e faça **Redeploy**
@@ -98,7 +105,7 @@ vercel link --yes --project projeto-social-garapuvu-free360
 
 # 2) aponta o Root Directory para esta pasta e deixa o build por conta do vercel.json
 vercel project update projeto-social-garapuvu-free360 \
-  --root-directory "Meu Primeiro App - Freelancers 360/app" \
+  --root-directory "meu-primeiro-app-freelancers-360/app" \
   --framework other
 
 # 3) confere como ficou (Root Directory, preset, versão do Node)
@@ -116,7 +123,7 @@ vercel deploy --prod --project projeto-social-garapuvu-free360    # produção
 ```
 
 > ⚠️ Rodar `vercel` **de dentro de `app/`** falha com
-> `The provided path ".../app/Meu Primeiro App - Freelancers 360/app" does not exist`.
+> `The provided path ".../app/meu-primeiro-app-freelancers-360/app" does not exist`.
 > Não é bug: é o Root Directory sendo somado duas vezes. Ou suba da raiz do repositório,
 > ou use `git push`.
 
