@@ -1,7 +1,0 @@
-node_modules/
-coverage/
-.env
-dist/
-test-results/
-relatorios/
-playwright-report/

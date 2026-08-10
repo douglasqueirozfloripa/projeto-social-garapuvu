@@ -42,7 +42,7 @@ projeto-social-garapuvu/
 ├── Projeto Pratico - App do Curso/        → Aula P0 — apresentação dos apps
 ├── Desafio Final/                         → Enunciado do desafio de automação
 │
-├── Meu Primeiro App - Freelancers 360/    → Projeto full-stack (FreelaAvalia 360)
+├── meu-primeiro-app-freelancers-360/      → Projeto full-stack (FreelaAvalia 360)
 ├── catch-request-garapuvu/                → Ferramenta de captura e análise de requests
 ├── design/                                → Design system + tokens do Figma
 └── syllabus_ctfl_4.0br.pdf                → Syllabus oficial CTFL 4.0 (PT-BR)
@@ -130,7 +130,7 @@ Quatro projetos, cada um cobrindo uma camada diferente da pirâmide de testes.
 | Projeto | Stack | Ferramentas de teste | Onde |
 |---|---|---|---|
 | Landing page Garapuvu | Vite + React + Firebase | — (deploy) | raiz |
-| FreelaAvalia 360 | Node/Express + React | Vitest, Supertest, RTL, Playwright | `Meu Primeiro App - Freelancers 360/app/` |
+| FreelaAvalia 360 | Node/Express + React | Vitest, Supertest, RTL, Playwright | `meu-primeiro-app-freelancers-360/app/` |
 | Catch Request Garapuvu | HTML/JS puro | Playwright, ESLint security, Sonar, gitleaks | `catch-request-garapuvu/` |
 | Desafio Churn | Python | pytest (unit, mock, I/O, performance, carga) | `Modulo 4 .../Desafio Churn - Python/` |
 
@@ -163,7 +163,7 @@ se candidatam, o contratante seleciona vendo a reputação de cada um e, ao fina
 das Aulas 13, 14, 17 e 26.
 
 ```
-Meu Primeiro App - Freelancers 360/app/
+meu-primeiro-app-freelancers-360/app/
 ├── backend/    → API Express (regras.js, repositorio.js, app.js) + Vitest/Supertest
 ├── frontend/   → React + Vite (mobile-first) + RTL + Playwright (e2e/)
 ├── docs/       → Guias de prompts do Copilot (v2 a v7)
@@ -172,7 +172,7 @@ Meu Primeiro App - Freelancers 360/app/
 ```
 
 ```bash
-cd "Meu Primeiro App - Freelancers 360/app"
+cd "meu-primeiro-app-freelancers-360/app"
 make install     # instala backend + frontend
 make dev         # sobe os dois (backend :3001, frontend :5173)
 make test        # unit + integração + componente (Vitest)
@@ -346,7 +346,7 @@ O conjunto dos projetos cobre a pirâmide inteira — útil para escolher onde e
 
 ```bash
 # FreelaAvalia (unit + integração + componente + E2E + cobertura)
-cd "Meu Primeiro App - Freelancers 360/app" && make coverage && make test-e2e
+cd "meu-primeiro-app-freelancers-360/app" && make coverage && make test-e2e
 
 # Catch Request
 cd catch-request-garapuvu && npm run test:coverage
@@ -364,7 +364,7 @@ cd "Modulo 4 - Data Science e Testes/Desafio Churn - Python" && .venv/bin/pytest
 | Desafio Final — QA e Automação de Testes | `Desafio Final/` |
 | Guia do Desafio Churn (Data Science) | `Modulo 4 .../Guia_Desafio_Final_Churn_DataScience.pdf` |
 | Plano de Teste + Matriz de Rastreabilidade | `Modulo 2 .../plano de teste/` |
-| Guias de prompts do Copilot (v2–v7) | `Meu Primeiro App .../app/docs/` |
+| Guias de prompts do Copilot (v2–v7) | `meu-primeiro-app-freelancers-360/app/docs/` |
 | Syllabus CTFL 4.0 (PT-BR) | `syllabus_ctfl_4.0br.pdf` |
 | Apresentação institucional | `Projeto_Social_Garapuvu_2026_-_Clinicorp.pdf` |
 
