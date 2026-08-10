@@ -1,15 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#f5f9ee"/><stop offset="1" stop-color="#e6f1d6"/>
-    </linearGradient>
-  </defs>
+  <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f5f9ee"/><stop offset="1" stop-color="#e7f0d8"/></linearGradient></defs>
   <rect width="1200" height="800" fill="url(#g)"/>
-  <path d="M0 640 Q300 560 600 620 T1200 600 V800 H0Z" fill="#cfe3b4" opacity=".5"/>
-  <path d="M0 705 Q300 645 600 692 T1200 682 V800 H0Z" fill="#b6d68f" opacity=".55"/>
-  <g opacity=".3" fill="#8ec06b">
-    <circle cx="930" cy="205" r="72"/><circle cx="1050" cy="205" r="72"/><circle cx="990" cy="140" r="78"/>
-  </g>
-  <circle cx="990" cy="180" r="60" fill="#f6c945" opacity=".35"/>
-  <rect x="982" y="235" width="16" height="120" rx="6" fill="#9c7a4d" opacity=".35"/>
+  <g fill="#f6c945" opacity=".2"><circle cx="160" cy="210" r="26"/><circle cx="520" cy="150" r="20"/><circle cx="820" cy="250" r="24"/><circle cx="300" cy="430" r="22"/><circle cx="980" cy="470" r="26"/><circle cx="660" cy="370" r="18"/><circle cx="1120" cy="560" r="22"/></g>
+  <g fill="#8ec06b" opacity=".16"><circle cx="230" cy="330" r="30"/><circle cx="430" cy="250" r="26"/><circle cx="900" cy="160" r="28"/><circle cx="1080" cy="330" r="30"/><circle cx="560" cy="470" r="24"/><circle cx="120" cy="560" r="26"/><circle cx="760" cy="540" r="28"/></g>
+  <path d="M0 600 Q300 540 600 590 T1200 575 V800 H0Z" fill="#cfe3b4" opacity=".5"/>
+  <path d="M0 675 Q320 615 640 665 T1200 655 V800 H0Z" fill="#b6d68f" opacity=".55"/>
+  <g opacity=".3" fill="#8ec06b"><circle cx="330" cy="155" r="58"/><circle cx="432" cy="155" r="58"/><circle cx="381" cy="104" r="62"/></g>
+  <circle cx="381" cy="142" r="44" fill="#f6c945" opacity=".4"/>
+  <rect x="373" y="188" width="14" height="92" rx="6" fill="#9c7a4d" opacity=".32"/>
 </svg>

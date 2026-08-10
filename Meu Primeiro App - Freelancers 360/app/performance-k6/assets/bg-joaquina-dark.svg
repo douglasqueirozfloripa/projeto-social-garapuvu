@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+  <defs>
+  <linearGradient id="s" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#0a1c26"/>
+  <stop offset=".5" stop-color="#0d2420"/>
+  <stop offset="1" stop-color="#1b2118"/>
+  </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#s)"/>
+  <circle cx="1010" cy="150" r="150" fill="#f2cf7e" opacity=".07"/>
+  <circle cx="1010" cy="150" r="88" fill="#f2cf7e" opacity=".2"/>
+  <path d="M0 360 Q300 320 600 350 T1200 340 V470 H0Z" fill="#2f9fb0" opacity=".2"/>
+  <path d="M0 440 Q300 405 600 435 T1200 425 V545 H0Z" fill="#2b8d9b" opacity=".22"/>
+  <path d="M0 520 Q300 488 600 515 T1200 508 V605 H0Z" fill="#1f7686" opacity=".24"/>
+  <path d="M0 585 Q350 545 700 590 T1200 580 V800 H0Z" fill="#8a7444" opacity=".3"/>
+  <path d="M0 670 Q350 628 700 675 T1200 665 V800 H0Z" fill="#7a6538" opacity=".35"/>
+  <g stroke="#9fd7d7" stroke-width="3" fill="none" opacity=".14">
+  <path d="M120 180 q15 -12 30 0 q15 -12 30 0"/>
+  <path d="M240 150 q12 -10 24 0 q12 -10 24 0"/>
+  </g>
+</svg>
