@@ -85,6 +85,51 @@ O deploy sobe **um único site**: o frontend como arquivos estáticos e a API co
 > **Settings → Build and Deployment → Root Directory**, ajuste o caminho e faça **Redeploy**
 > (ou use o CLI, abaixo).
 
+### ⚠️ Dois projetos na Vercel para o mesmo repositório (o check vermelho no PR)
+
+Ao abrir o Pull Request aparecem **dois** comentários do bot da Vercel, um deles falhando:
+
+| Project | Deployment |
+|---|---|
+| `projeto-social-garapuvu` | 🔴 Error |
+| `projeto-social-garapuvu-free360` | 🟢 Ready |
+
+Não é o app que está quebrado — são **dois projetos diferentes na Vercel ligados ao mesmo
+repositório do GitHub**. O primeiro foi criado na tentativa inicial de deploy (quando a pasta
+ainda se chamava `Meu Primeiro App - Freelancers 360`); o segundo é o que funciona.
+
+Quando um repositório está conectado a mais de um projeto, **cada push dispara um build em
+todos eles** e cada um vira um *check* no PR. O antigo falha em ~1s, antes mesmo de instalar
+dependências, porque o Root Directory dele aponta para a pasta com espaços que **foi renomeada**:
+
+```
+Cloning github.com/…/projeto-social-garapuvu (Branch: feat/FreeLancer360)
+The specified Root Directory "Meu Primeiro App - Freelancers 360/app" does not exist.
+Please update your Project Settings.
+```
+
+O Root Directory é uma configuração **do projeto na Vercel**, não do repositório: renomear a
+pasta no Git não atualiza o painel. O projeto novo (`…-free360`) já nasceu apontando para
+`meu-primeiro-app-freelancers-360/app`, então builda e publica normalmente.
+
+**Como resolver** (escolha uma):
+
+```bash
+# a) o projeto antigo não serve para nada → remova (o check vermelho desaparece)
+vercel project rm projeto-social-garapuvu
+
+# b) quer manter o projeto antigo → corrija o Root Directory dele
+vercel project update projeto-social-garapuvu \
+  --root-directory "meu-primeiro-app-freelancers-360/app"
+```
+
+Uma terceira via, sem apagar nada: no painel do projeto antigo, **Settings → Git →
+Disconnect** (ou desligar *Comments*/*Checks*), para ele parar de opinar nos PRs.
+
+> 🧠 **Lição:** um repositório pode ter vários projetos na Vercel, e todos comentam no seu PR.
+> Se um deploy falha "sem motivo", olhe **qual projeto** falhou antes de mexer no código —
+> o erro pode estar no painel, não no commit.
+
 ### CLI da Vercel
 
 Instalação (uma vez, global). Sem instalar nada, dá para trocar `vercel` por `npx vercel`:
