@@ -12,6 +12,42 @@ O que testamos é a **API** do FreelaAvalia 360 (o backend em `../backend`), que
 
 Objetivo pedagógico: mostrar **como uma ferramenta de performance funciona** e como transformar requisitos não-funcionais (tempo de resposta, taxa de erro) em critérios automáticos que **aprovam ou reprovam** um build.
 
+### Atenção: este backend NÃO tem banco de dados
+
+⚠️ Leia isto antes de interpretar qualquer número deste projeto.
+
+O backend é **Node.js + Express puro**, e guarda tudo em **arrays na memória do
+processo** (`../backend/src/repositorio.js`). Não há Postgres, MySQL, MongoDB,
+SQLite, Prisma, ORM, nem arquivo de migração — a única dependência de produção do
+backend é o `express`. É uma decisão **didática**, para a aula focar em teste e
+não em infraestrutura.
+
+Três consequências que mudam a leitura dos resultados:
+
+| | Aqui (memória) | Numa app com banco real |
+|---|---|---|
+| **Onde o tempo é gasto** | CPU: parse do JSON, laços em JavaScript, serialização da resposta | normalmente **na query**: I/O de disco/rede, pool de conexões, locks, plano de execução |
+| **Ordem de grandeza** | respostas em **poucos ms** (o `p(95)<500` dos scripts é folgado de propósito) | dezenas a centenas de ms; os mesmos thresholds reprovariam |
+| **Volume de dados** | zera a cada reinício do backend | acumula — e é justamente aí que aparece a degradação por volume |
+
+Portanto:
+
+- **Os números daqui não estimam a performance de uma versão com banco.** Ao
+  plugar um banco de verdade, os thresholds precisam ser **recalibrados** — e
+  gargalos novos vão aparecer (N+1, falta de índice, conexões esgotadas).
+- **Um teste de carga sozinho não enxerga degradação por volume**, porque cada
+  bateria começa com a base vazia. Para investigar isso é preciso **popular a
+  base antes** de medir — foi o que fizemos no experimento da [seção 12](#12-experimento-do-relatório-do-k6-para-a-otimização-do-backend).
+- **"Otimizar a query" neste projeto** significa otimizar as buscas em array do
+  repositório. Não é SQL, mas o raciocínio é o mesmo — inclusive a solução, que
+  foi criar **índices**. É a versão didática do problema real.
+- **Reinicie o backend depois de alterá-lo** (`cd ../backend && npm start`): o
+  processo no ar mantém o código *e* os dados antigos em memória.
+
+> A troca do armazenamento em memória por **persistência real** está listada como
+> próximo passo no `../README.md` do projeto. Quando isso acontecer, esta seção e
+> os thresholds dos scripts precisam ser revisitados.
+
 ### Estrutura
 
 ```
@@ -630,83 +666,6 @@ sua, adicione os dois SVGs em `SVG_FUNDO` e passe os nomes no `montarTema`
 
 ---
 
-## 8.4. Do relatório para o código: otimizando o que o teste apontou
-
-Teste de performance que não vira mudança de código é só decoração. Esta seção
-registra o ciclo completo feito neste projeto — **medir → isolar o gargalo →
-corrigir → medir de novo** — porque o método vale mais que o resultado.
-
-### O suspeito errado
-
-A primeira hipótese foi o middleware de log do backend, que serializa o corpo da
-requisição **e** da resposta de toda chamada. Parece caro. Medido:
-
-```
-console.log do middleware: 3.2 µs por requisição
-```
-
-**3 microssegundos.** Irrelevante diante de uma resposta de 5 ms. Lição:
-otimizar por intuição é chutar. O log ficou como está.
-
-### O gargalo real: buscas lineares no repositório
-
-O backend guarda tudo em memória, em arrays, e buscava com `find`/`filter` —
-O(n): dobrou o volume, dobrou o tempo. Medindo as funções **isoladas** (sem HTTP
-no meio, para o custo da rede não esconder o da busca):
-
-| Busca | 1 000 usuários | 200 000 usuários |
-|---|---|---|
-| `acharUsuarioPorEmail` (usada no cadastro e no login) | 8 µs | **514 µs** |
-| `acharUsuario(id)` (usada ao criar projeto) | 6.5 µs | **616 µs** |
-
-Pior que linear era o `GET /contratos` — o endpoint mais chamado no `load.js`.
-Para **cada** projeto ele varria as listas inteiras de candidaturas e avaliações:
-trabalho N×(C+A), ou seja **quadrático**:
-
-| Projetos | Montar a resposta (antes) | Depois |
-|---|---|---|
-| 500 | 1.23 ms | 0.51 ms |
-| 2 000 | 12.14 ms | **1.82 ms** |
-| 5 000 | 66.63 ms | **4.92 ms** |
-
-Repare na curva do "antes": 4× mais projetos → **10×** mais tempo. É a assinatura
-de um algoritmo quadrático, e é exatamente o tipo de coisa que passa despercebida
-em ambiente de desenvolvimento (com 10 projetos, tudo é rápido) e explode em
-produção.
-
-### A correção: índices
-
-Em `backend/src/repositorio.js`, cada busca frequente ganhou um **índice** — um
-`Map` que leva da chave direto ao objeto, em O(1). É o mesmo papel que um índice
-cumpre num banco de dados, com o mesmo preço: quem escreve precisa manter o
-índice em sincronia. Os arrays continuam sendo a fonte da verdade (a ordem de
-inserção é o que a API devolve).
-
-Nenhuma rota mudou — a otimização ficou encapsulada no repositório, e os **84
-testes** do backend seguem passando sem alteração. Resultado end-to-end, via HTTP
-de verdade, com 2 000 projetos cadastrados:
-
-```
-ANTES  →  GET /contratos: 18.3 ms/req
-DEPOIS →  GET /contratos:  6.3 ms/req      (2.9× mais rápido)
-```
-
-### O que sobrou (e o próximo passo)
-
-Os 6.3 ms restantes **não** são mais busca: são montar e serializar 2 000 objetos
-em JSON. Índice nenhum resolve isso — a saída seria **paginação** (`GET
-/contratos?pagina=1&tamanho=20`), que muda o contrato da API e o frontend junto.
-Fica como próximo exercício: rode o `load.js`, veja o `p(95)` do endpoint e decida
-se o volume real do projeto justifica a mudança.
-
-> ⚠️ **Os dados vivem em memória.** Depois de alterar o backend, **reinicie a API**
-> (`npm start`) — o processo antigo continua rodando o código antigo, e o teste
-> mediria a versão errada. Reiniciar também zera os dados: a cada bateria de
-> carga o array começa vazio, o que é bom para reprodutibilidade e ruim para
-> enxergar degradação por volume acumulado.
-
----
-
 ## 9. Integração com CI (GitHub Actions)
 
 Como o k6 devolve código ≠ 0 quando o gate falha, o CI reprova sozinho:
@@ -766,3 +725,165 @@ A estimativa não é sobre "horas exatas", e sim sobre **tamanho relativo** e al
 ## 11. Ligação com a CTFL
 
 Performance é um **teste não-funcional** (CTFL, Cap. 2), ligado à característica de qualidade **eficiência de desempenho** (ISO 25010: tempo de resposta, uso de recursos, capacidade). O quality gate implementa **critérios de saída** e **avaliação de riscos** (Cap. 1 e 5): o build só passa se cumprir o acordado. Rodar isso no pipeline é **teste contínuo** dentro de CI/CD (Cap. 2).
+
+---
+
+## 12. Experimento: do relatório do k6 para a otimização do backend
+
+> Registro do experimento feito em **10/08/2026**. Teste de performance que não
+> vira mudança de código é só decoração — esta seção documenta o ciclo completo
+> **medir → isolar → corrigir → medir de novo**, e fica aqui como exemplo do
+> método. O que mudou de verdade foi o **backend**
+> (`../backend/src/repositorio.js`); os scripts de carga não foram alterados.
+
+### 12.1. Ponto de partida
+
+Rodando os testes desta pasta, a pergunta natural apareceu: *dá para melhorar as
+consultas do backend?* Como este backend **não tem banco de dados** (veja o aviso
+na [seção 1](#atenção-este-backend-não-tem-banco-de-dados)), "otimizar a query" aqui
+significa otimizar as buscas em array de `repositorio.js` (`find`, `filter`,
+`some`) — o equivalente didático de uma consulta sem índice.
+
+### 12.2. A hipótese errada (e por que isso importa)
+
+O primeiro suspeito foi o middleware de log do `app.js`, que serializa o corpo da
+requisição **e** da resposta em toda chamada. Parece caro. Medindo o custo real
+por requisição:
+
+```
+console.log do middleware: 3.2 µs  (stdout → /dev/null)
+                           5.0 µs  (stdout → arquivo)
+```
+
+**3 microssegundos** diante de respostas de milissegundos: irrelevante. O log
+ficou como está.
+
+> 🧭 **Lição.** Otimizar por intuição é chutar. Se você não mediu, não sabe qual é
+> o gargalo — e a chance de reescrever a parte errada do código é alta.
+
+### 12.3. Como medir sem se enganar
+
+Duas medições diferentes, com propósitos diferentes:
+
+1. **Isolada (sem HTTP)** — chama a função do repositório num laço e divide pelo
+   número de execuções. Serve para *ver a curva*: como o custo cresce quando o
+   volume cresce. Sem rede no meio, nada esconde o custo do algoritmo.
+2. **End-to-end (com HTTP)** — sobe a app numa porta, popula dados e mede o
+   endpoint de verdade. Serve para *dimensionar o impacto real*: quanto daquele
+   custo o usuário sente.
+
+O molde da medição isolada (rode de dentro de `../backend`):
+
+```js
+import * as repo from "./src/repositorio.js";
+
+for (const N of [1000, 10000, 50000, 200000]) {
+  repo.reset();
+  for (let i = 0; i < N; i++)
+    repo.criarUsuario({ nome: "P", email: `u${i}@t.dev`, papel: "freelancer", senha: "1234" });
+
+  const VEZES = 2000;
+  const t0 = process.hrtime.bigint();                       // hrtime: nanossegundos
+  for (let i = 0; i < VEZES; i++) repo.acharUsuarioPorEmail("naoexiste@t.dev");
+  const us = Number(process.hrtime.bigint() - t0) / 1000 / VEZES;
+  console.log(`usuarios=${N}  ${us.toFixed(1)} µs por busca`);
+}
+```
+
+Note o detalhe: buscamos um e-mail que **não existe**. É o pior caso do `find`
+(percorre a lista inteira) e também o caso mais comum na prática — é exatamente o
+que o cadastro faz para checar *"esse e-mail já está em uso?"*.
+
+> Rodando isso **hoje** o resultado sai `0.0 µs` em todos os volumes: a
+> otimização da seção 12.5 já está aplicada, e é assim que se parece uma busca
+> O(1). Para reproduzir os números "antes", recupere a versão anterior do
+> repositório com `git show <commit>:.../repositorio.js`.
+
+### 12.4. O que estava lento
+
+**a) Buscas lineares — O(n).** Dobrou o volume, dobrou o tempo:
+
+| Busca | 1 000 usuários | 200 000 usuários |
+|---|---|---|
+| `acharUsuarioPorEmail` (cadastro e login) | 8 µs | **514 µs** |
+| `acharUsuario(id)` (criação de projeto) | 6.5 µs | **616 µs** |
+
+**b) `GET /contratos` — quadrático.** Este é o endpoint mais chamado no
+`load.js`, e para **cada** projeto da lista ele varria as listas inteiras de
+candidaturas e avaliações — trabalho N×(C+A):
+
+| Projetos | Montar a resposta |
+|---|---|
+| 100 | 0.34 ms |
+| 500 | 1.23 ms |
+| 2 000 | 12.14 ms |
+| 5 000 | **66.63 ms** |
+
+Olhe a curva: **4× mais projetos → 10× mais tempo**. Essa é a assinatura de um
+algoritmo quadrático. E é o tipo de problema que passa batido no dia a dia — com
+os 10 projetos que existem em desenvolvimento, tudo responde na hora.
+
+### 12.5. A correção: índices
+
+Em `../backend/src/repositorio.js`, cada busca frequente ganhou um **índice**: um
+`Map` (ou `Set`) que leva da chave direto ao objeto, em **O(1)**.
+
+| Índice | Chave → valor | Resolve |
+|---|---|---|
+| `usuarioPorEmail` | e-mail → usuário | cadastro, login |
+| `usuarioPorId` | id → usuário | criação de projeto, perfil |
+| `contratoPorId` | id → projeto | todas as rotas `/contratos/:id` |
+| `candidaturasPorContrato` | projeto → candidaturas | `GET /contratos` |
+| `candidaturaExiste` (Set) | `"projeto:freelancer"` | checagem de duplicidade |
+| `avaliacoesPorPara` / `avaliacoesPorContrato` | usuário / projeto → avaliações | reputação, `GET /contratos` |
+| `notificacoesPorPara` | usuário → notificações | `GET /notificacoes/:id` |
+
+É o mesmo papel que um índice cumpre num banco de dados — **e tem o mesmo
+preço**: todo ponto que escreve precisa manter o índice em sincronia, senão o
+atalho passa a mentir. Os arrays continuam sendo a fonte da verdade, para a ordem
+de inserção que a API devolve não mudar.
+
+### 12.6. Resultado
+
+Isolado, o `GET /contratos` deixou de ser quadrático:
+
+| Projetos | Antes | Depois | Ganho |
+|---|---|---|---|
+| 500 | 1.23 ms | 0.51 ms | 2.4× |
+| 2 000 | 12.14 ms | 1.82 ms | 6.7× |
+| 5 000 | 66.63 ms | 4.92 ms | **13.5×** |
+
+E as buscas viraram tempo constante — 514 µs → **~0.05 µs** com 200 mil usuários.
+
+End-to-end, via HTTP real, com 2 000 projetos cadastrados:
+
+```
+ANTES  →  GET /contratos: 18.3 ms/req
+DEPOIS →  GET /contratos:  6.3 ms/req      (2.9× mais rápido)
+```
+
+### 12.7. Como sabemos que não quebrou nada
+
+Otimização que muda comportamento não é otimização, é bug. As três verificações:
+
+- **Nenhuma rota mudou** — a alteração ficou encapsulada no repositório; o
+  `app.js` não foi tocado.
+- **Os 84 testes do backend passam** sem nenhuma adaptação (`cd ../backend && npm test`).
+- **Fluxo conferido por HTTP**, incluindo os caminhos de erro que dependem dos
+  índices: e-mail duplicado → 400, candidatura duplicada → 400, e a retirada de
+  candidatura voltando a lista de `candidatos` para vazia (prova de que o índice
+  é atualizado na remoção, não só na inserção).
+
+### 12.8. O que sobrou
+
+Os 6.3 ms restantes **não são mais busca**: são montar e serializar 2 000 objetos
+em JSON. Índice não resolve isso — a saída seria **paginação**
+(`GET /contratos?pagina=1&tamanho=20`), que muda o contrato da API e exige mexer
+no frontend. Ficou de fora de propósito, como próximo exercício: rode o
+`load.js`, olhe o `p(95)`, e decida se o volume real do projeto justifica.
+
+> ⚠️ **Reinicie a API depois de mexer no backend** (`cd ../backend && npm start`).
+> O processo que já está no ar continua rodando o código antigo em memória, e o
+> k6 mediria a versão errada. Reiniciar também zera os dados — bom para
+> reprodutibilidade, e um limite a considerar: sem volume acumulado, o teste de
+> carga não enxerga degradação por crescimento de base.
