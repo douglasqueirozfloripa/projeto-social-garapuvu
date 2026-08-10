@@ -8,6 +8,7 @@
 // Rodar acompanhando na tela:  npm run e2e:smoke   (headed + slowMo)
 // Pré: backend em :3001 e frontend em :5173 no ar (npm start / npm run dev).
 import { test, expect } from "@playwright/test";
+import { recarregarEmProjetos } from "./apoio.js";
 
 const BASE = "http://localhost:5173";
 
@@ -22,6 +23,8 @@ async function cadastrar(page, { nome, email, papel, telefone, endereco }) {
   await page.getByTestId("input-senha").fill("1234");
   await page.getByTestId("enviar-auth").click();
   await expect(page.getByTestId("nav-projetos")).toBeVisible();
+  // Pós-login o app abre no PAINEL (Início); este teste é do módulo Projetos.
+  await page.getByTestId("nav-projetos").click();
 }
 
 // TAGs: @interface @e2e  → rodar só E2E: playwright test --grep @e2e
@@ -52,7 +55,7 @@ test("fluxo completo: publicar → candidatar → selecionar → andamento → a
   await expect(cardF()).toContainText("Candidatura enviada");
 
   // 3) Contratante vê o candidato (com reputação) e SELECIONA
-  await contratante.reload();
+  await recarregarEmProjetos(contratante);
   await cardC().getByTestId("ver-candidatos").click();
   const candidato = contratante.getByTestId("candidato").filter({ hasText: "Ana Dev" });
   await expect(candidato).toBeVisible();
@@ -64,14 +67,14 @@ test("fluxo completo: publicar → candidatar → selecionar → andamento → a
   await expect(cardC()).toContainText("Em andamento");
 
   // 5) Freelancer FINALIZA o trabalho e envia FEEDBACK (avaliação) ao contratante
-  await freelancer.reload();
+  await recarregarEmProjetos(freelancer);
   await cardF().getByTestId("finalizar-trabalho").click();
   await freelancer.getByTestId("estrela-5").click();
   await freelancer.getByTestId("enviar-avaliacao").click();
   await expect(cardF()).toContainText("Feedback enviado");
 
   // 6) Contratante CONCLUI avaliando o freelancer → Concluído
-  await contratante.reload();
+  await recarregarEmProjetos(contratante);
   await cardC().getByTestId("concluir-projeto").click();
   await contratante.getByTestId("estrela-5").click();
   await contratante.getByTestId("enviar-avaliacao").click();

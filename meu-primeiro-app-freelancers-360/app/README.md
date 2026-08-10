@@ -5,8 +5,8 @@ freelancers **se candidatam**, o contratante **seleciona** um candidato (vendo a
 e, ao final do trabalho, **os dois se avaliam** (nota de 1 a 5 + comentário).
 Projeto do **Projeto Social Garapuvu 2026** — construído com apoio do GitHub Copilot.
 
-> **Status de validação:** backend com **23 testes** (Vitest + Supertest) passando;
-> frontend com testes de componente (RTL) e **E2E de fluxo completo** (Playwright).
+> **Status de validação:** **84 testes** no backend (Vitest + Supertest), **147** no frontend
+> (unitário + componente com RTL) e **12 E2E** de jornada completa (Playwright) — todos passando.
 
 ## Tecnologias
 - **Backend:** Node.js + Express (dados em memória, para fins didáticos)
@@ -17,10 +17,13 @@ Projeto do **Projeto Social Garapuvu 2026** — construído com apoio do GitHub 
 ## Estrutura
 ```
 backend/   → API Express (regras.js, repositorio.js, app.js, server.js) + testes
-frontend/  → React + Vite (components/, pages/, api.js) + testes + e2e/
+frontend/  → React + Vite (components/, pages/, api.js, modulos.js, painel.js) + testes + e2e/
 api/       → adaptador que expõe a API do backend como função serverless na Vercel
 vercel.json→ configuração de build/rotas do deploy
 ```
+
+Pós-login a navegação é: **Início (painel)** · Projetos · Meu perfil · Flags — pelo menu do topo
+(gaveta ☰ no celular) ou pelos atalhos do próprio painel. Ver *Painel inicial e menu*, abaixo.
 
 ## Como rodar
 
@@ -221,6 +224,86 @@ Publicado ──(contratante seleciona candidato)──▶ Em aprovação
 - **Regras do MVP:** projetos em andamento **não podem ser editados nem reabertos** — para mudar,
   publique um novo projeto. Editar/Excluir só ficam disponíveis enquanto o projeto está *Publicado*.
 
+## Painel inicial e menu (acessibilidade)
+
+Depois do login o app abre no **Painel (Início)** — antes ele caía direto em *Projetos*.
+O painel responde três perguntas, nesta ordem:
+
+1. **"como estou?"** → cinco cartões de resumo, calculados **conforme o papel**
+   (contratante vê *projetos publicados / candidaturas recebidas*; freelancer vê
+   *vagas abertas / minhas candidaturas*), mais a reputação 360.
+2. **"o que faço agora?"** → o cartão **Próximo passo**, que mostra *uma* ação recomendada
+   e um botão que leva direto a ela. A prioridade é: o que trava outra pessoa vem primeiro
+   (ex.: "o freelancer entregou, conclua e avalie" ganha de "candidatos esperando escolha").
+3. **"onde fica cada coisa?"** → um cartão por módulo (Projetos, Meu perfil, Flags).
+
+### Menu: gaveta no celular, barra no desktop
+Abaixo de 700px o menu vive numa **gaveta** que abre no botão ☰; acima disso a **mesma
+marcação** vira barra horizontal — só o CSS muda. Menu duplicado no HTML seria lido duas
+vezes pelo leitor de tela.
+
+### O que foi feito de acessibilidade (e por quê)
+
+| Recurso | Por que existe |
+|---|---|
+| Link **"Pular para o conteúdo"** (1º Tab) | Salta o menu inteiro em vez de tabular por todos os itens em cada página (WCAG 2.4.1) |
+| `<nav aria-label="Menu principal">` | Dá nome à região; quem usa leitor de tela navega direto até ela |
+| Módulos em `<ul>`/`<li>` | O leitor anuncia "lista com 4 itens" — a pessoa sabe o tamanho antes de percorrer |
+| `aria-current="page"` no item ativo | Anuncia "página atual". **É também o seletor do CSS** — se o atributo faltar, o destaque some e o bug fica visível |
+| `aria-expanded` + `aria-controls` no ☰ | Informam que o botão abre/fecha algo, e qual elemento |
+| **Esc** fecha a gaveta e devolve o foco ao ☰ | Não deixa o teclado preso nem o foco perdido (WCAG 2.1.2) |
+| Abrir leva o foco ao 1º item; escolher fecha e devolve | Quem usa teclado não precisa tatear atrás do menu |
+| Setas ↑↓←→ circulam pelos itens | Navegação esperada dentro de um menu |
+| `<main id="conteudo" tabIndex={-1}>` | Destino do skip link (o tabindex negativo permite foco por programa sem entrar na ordem do Tab) |
+| `<output>` anunciando "Seção atual: X" | A troca de aba não recarrega a página; sem isso, quem não vê a mudança não sabe que ela aconteceu |
+| Anel de foco só no teclado (`:focus-visible`) | Verde-escuro no claro, amarelo no cabeçalho escuro — 3:1 de contraste, sem poluir o clique de mouse |
+| Emojis com `aria-hidden="true"` | Senão o leitor anuncia "casa Início" |
+| `prefers-reduced-motion` | Desliga as transições para quem pediu isso no sistema (WCAG 2.3.3) |
+| Alvos de toque ≥ 44px | Botões confortáveis no celular |
+
+> ⚠️ **Menu não é modal.** A gaveta **não prende o foco** (sem *focus trap*), e isso é
+> intencional: o padrão ARIA (APG) pede armadilha de foco em `dialog`/`aria-modal`, mas em
+> **menu de navegação** o esperado é justamente conseguir sair com Tab.
+
+> 🧠 **Contraste corrigido de bônus:** o selo *Em andamento* usava `#8A6D00` sobre `#FFF3CC`
+> = **4,17:1**, abaixo do mínimo AA de 4,5:1 para texto normal. Virou `#7D6200` (**5,3:1**),
+> mesmo tom de mostarda.
+
+### Ícones: Lucide em SVG inline
+Os ícones vêm do **[Lucide](https://lucide.dev)** (licença **ISC** — livre, inclusive comercial),
+com os traços copiados para `src/components/Icone.jsx` em vez de instalar `lucide-react`:
+são poucos, então o app não ganha dependência nem peso no build da Vercel, e funciona sem rede.
+
+Duas decisões fazem esses ícones "se comportarem":
+
+| Decisão | Efeito |
+|---|---|
+| `stroke="currentColor"` | O ícone **herda a cor do texto**: sai **branco** no cabeçalho escuro e nas caixinhas verdes, e **verde-escuro** no item ativo do menu (fundo branco). Uma cor fixa branca desapareceria ali |
+| `aria-hidden="true"` + `focusable="false"` | Ícone é decoração: o nome do botão vem do texto ("Projetos"), nunca do desenho — o leitor de tela não anuncia ruído |
+
+Mapa: `home` → Início · `clipboard-list` → Projetos · `user` → Meu perfil · `flag` → Flags ·
+`menu`/`x` → gaveta · `lightbulb` → próximo passo · `arrow-right` → seta dos cartões.
+
+> Seguem sendo emoji de propósito: o **✿ da marca** (identidade do Garapuvu, também na Landing),
+> o **👋** da saudação (expressão, não um controle) e as **★ estrelas** da nota — que são um
+> widget de avaliação com semântica própria em `Estrelas.jsx`, não um ícone de navegação.
+
+### Onde mexer
+```
+src/modulos.js                    → catálogo dos módulos (menu e painel leem os DOIS daqui)
+src/painel.js                     → cálculos do resumo e do próximo passo (funções puras)
+src/pages/Dashboard.jsx           → a tela do painel
+src/components/MenuPrincipal.jsx  → cabeçalho + menu/gaveta
+src/components/Icone.jsx          → os ícones (Lucide inline)
+```
+Adicionar um módulo novo é acrescentar **um item em `modulos.js`**: o menu e os atalhos do
+painel acompanham sozinhos (sem risco de os dois discordarem).
+
+> 💡 **Recarregar a página (F5) reabre no painel**, igual ao login — o app não tem rotas de
+> URL, então não há endereço para "voltar". É por isso que o helper
+> `e2e/apoio.js → recarregarEmProjetos()` existe: os testes de fluxo recarregam para ver o
+> que a outra pessoa fez na API e precisam entrar em *Projetos* de novo.
+
 ## Endpoints da API
 | Método | Rota | Descrição |
 |--------|------|-----------|
@@ -240,15 +323,32 @@ Publicado ──(contratante seleciona candidato)──▶ Em aprovação
 | GET | `/avaliacoes/usuario/:id` | Avaliações recebidas por um usuário |
 
 ## Pirâmide de testes neste projeto
-- **Unitário (base):** `backend/src/regras.test.js` — validação de nota, média, e-mail e `podeAvaliar`.
+- **Unitário (base):**
+  - `backend/src/regras.test.js` — validação de nota, média, e-mail e `podeAvaliar`.
+  - `frontend/src/painel.test.js` — os números do painel e a **prioridade do próximo passo**.
+    São funções puras: dá para cobrir todo caso de borda sem renderizar tela nem subir a API.
 - **Integração (meio):** `backend/src/app.test.js` — CRUD de projetos, fluxo de recrutamento e avaliação 360 (Supertest).
-- **Componente:** `frontend/src/components/Estrelas.test.jsx` (React Testing Library).
+- **Componente (RTL):**
+  - `frontend/src/components/Estrelas.test.jsx` — nota por estrelas.
+  - `frontend/src/components/Icone.test.jsx` — o contrato do ícone: sempre decorativo (`aria-hidden`).
+  - `frontend/src/components/MenuPrincipal.test.jsx` — **acessibilidade do menu**: nome da região,
+    `aria-current`, `aria-expanded`, Esc devolvendo o foco, setas do teclado.
+  - `frontend/src/pages/Dashboard.test.jsx` — números por papel, próximo passo, atalhos e o caso
+    **"API fora do ar"** (o erro tira os números, **não** a navegação).
+  - `frontend/src/App.test.jsx` — sessão, logout e a casca acessível (skip link, `<main>`, aviso de seção).
 - **E2E (topo):**
+  - `frontend/e2e/painel-menu.spec.js` — o painel refletindo uma candidatura **real** (2 navegadores),
+    atalhos dos módulos, teclado no desktop e a **gaveta ☰ em viewport de celular** (390×844).
   - `frontend/e2e/projeto-crud.spec.js` — CRUD de projeto pela interface (criar/ler/editar/excluir).
   - `frontend/e2e/fluxo-completo.spec.js` — **smoke test** do fluxo completo com **dois atores**
     (contratante + freelancer em janelas separadas). Rode com `npm run e2e:smoke`.
-  - `frontend/e2e/avaliacao.spec.js` — `test.skip` (fluxo antigo; a avaliação 360 hoje é coberta
-    pela integração e pelo smoke test).
+  - `frontend/e2e/selecao-candidatos.spec.js`, `freelancer-duas-vagas.spec.js`, `logout.spec.js`.
+  - `frontend/e2e/apoio.js` — helpers compartilhados (ver a nota do F5 acima).
+
+> 🧠 **Por que testar o menu no nível de COMPONENTE, e não só no E2E?** Porque as consultas do
+> Testing Library (`getByRole`, `toHaveAccessibleName`) enxergam a tela como um leitor de tela.
+> Se um teste desses só passa com `getByTestId`, é sinal de que **falta semântica** no HTML —
+> o teste vira um detector de acessibilidade, não só de regressão.
 
 ## Próximos passos (além do MVP)
 - **Persistência real** (banco de dados) no lugar do armazenamento em memória.

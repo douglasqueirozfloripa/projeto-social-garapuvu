@@ -22,6 +22,8 @@ test("contratante faz o CRUD completo de um projeto pela interface", { tag: ["@i
   await page.getByTestId("input-senha").fill("1234");
   await page.getByTestId("enviar-auth").click();
   await expect(page.getByTestId("nav-projetos")).toBeVisible();
+  // Pós-login o app abre no PAINEL (Início); este teste é do módulo Projetos.
+  await page.getByTestId("nav-projetos").click();
 
   // ---- CREATE ----
   await page.getByTestId("novo-projeto").click();
