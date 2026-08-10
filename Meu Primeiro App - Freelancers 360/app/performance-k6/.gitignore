@@ -1,0 +1,4 @@
+# Relatórios são artefatos de execução, não código-fonte.
+# A pasta é versionada (via .gitkeep) porque o k6 não cria diretórios sozinho.
+reports/*
+!reports/.gitkeep
