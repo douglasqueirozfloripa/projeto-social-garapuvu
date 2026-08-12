@@ -111,7 +111,7 @@ Duas observações para ler o número com honestidade:
 
 Os testes de evidência usam um **webm real de 5 segundos** (`tests/fixtures/gravacao-5s.webm`), não um arquivo fake: com bytes inválidos o player abre em `0:00` e nunca dá play, então o teste passaria sem provar nada. Os testes checam `duration > 4s` e que o `currentTime` avança depois do `play()`.
 
-Para regerar o arquivo (usa o Chromium do Playwright, **sem ffmpeg**):
+Para regerar o arquivo (usa o Chromium do Playwright, **sem ffmpeg**): 
 
 ```bash
 npm run fixtures:video
