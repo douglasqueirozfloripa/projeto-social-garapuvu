@@ -1,0 +1,559 @@
+/*
+ * styles.css — Identidade visual do Projeto Social Garapuvu
+ *
+ * Paleta oficial:
+ *   Verde escuro  #14401A   Verde  #2E7D32   Verde claro #9CCC65
+ *   Amarelo       #FBC02D   Laranja #EF6C00
+ *   Tintas claras #F1F8E9 / #FFF8E1   Card escuro #10331A
+ */
+
+:root {
+  --verde-escuro: #14401A;
+  --verde: #2E7D32;
+  --verde-claro: #9CCC65;
+  --amarelo: #FBC02D;
+  --laranja: #EF6C00;
+  --card-escuro: #10331A;
+  --tinta-verde: #F1F8E9;
+  --tinta-amarela: #FFF8E1;
+  --vermelho: #C62828;
+  --texto: #1B2A1D;
+  --borda: #DCE8D9;
+  --sombra: 0 2px 10px rgba(20, 64, 26, 0.12);
+  --raio: 14px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
+  background: var(--tinta-verde);
+  color: var(--texto);
+  line-height: 1.5;
+}
+
+/* ---------- Cabeçalho ---------- */
+header {
+  background: linear-gradient(135deg, var(--verde-escuro), var(--verde));
+  color: #fff;
+  padding: 22px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+header .subtitulo {
+  margin: 2px 0 0;
+  font-size: 0.85rem;
+  color: var(--verde-claro);
+}
+
+.badge-so {
+  background: var(--amarelo);
+  color: var(--verde-escuro);
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+
+.badge-offline {
+  background: var(--laranja);
+  color: #fff;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  display: none;
+}
+
+.badge-offline.visivel {
+  display: inline-block;
+}
+
+/* ---------- Layout ---------- */
+main {
+  max-width: 1180px;
+  margin: 28px auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: minmax(340px, 460px) 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cartao {
+  background: #fff;
+  border-radius: var(--raio);
+  box-shadow: var(--sombra);
+  padding: 22px;
+  border-top: 5px solid var(--verde);
+}
+
+.cartao h2 {
+  margin: 0 0 14px;
+  color: var(--verde-escuro);
+  font-size: 1.15rem;
+}
+
+/* ---------- Formulário ---------- */
+label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--verde-escuro);
+  margin: 12px 0 4px;
+}
+
+input[type='text'],
+textarea,
+select {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1.5px solid var(--borda);
+  border-radius: 8px;
+  font: inherit;
+  font-size: 0.92rem;
+  background: #fff;
+  color: var(--texto);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--verde);
+  box-shadow: 0 0 0 3px rgba(156, 204, 101, 0.35);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 74px;
+}
+
+.linha-dupla {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.dica {
+  font-size: 0.75rem;
+  color: #5b6e5d;
+  margin: 3px 0 0;
+}
+
+/* ---------- Botões ---------- */
+button {
+  font: inherit;
+  border: none;
+  border-radius: 9px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: transform 0.08s ease, filter 0.15s ease;
+}
+
+button:hover {
+  filter: brightness(1.07);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+.btn-primario {
+  background: var(--amarelo);
+  color: var(--verde-escuro);
+  padding: 12px 18px;
+  width: 100%;
+  font-size: 1rem;
+  margin-top: 16px;
+}
+
+.btn-secundario {
+  background: var(--verde);
+  color: #fff;
+  padding: 9px 14px;
+  font-size: 0.85rem;
+}
+
+.btn-contorno {
+  background: #fff;
+  color: var(--verde);
+  border: 1.5px solid var(--verde);
+  padding: 8px 14px;
+  font-size: 0.85rem;
+}
+
+.btn-perigo {
+  background: transparent;
+  color: var(--vermelho);
+  border: 1.5px solid var(--vermelho);
+  padding: 5px 10px;
+  font-size: 0.78rem;
+}
+
+/* ---------- Área do cenário BDD ---------- */
+.area-bdd {
+  background: var(--tinta-verde);
+  border: 1.5px dashed var(--verde-claro);
+  border-radius: 10px;
+  padding: 14px;
+  margin-top: 16px;
+}
+
+.area-bdd h3 {
+  margin: 0 0 8px;
+  font-size: 0.9rem;
+  color: var(--verde-escuro);
+}
+
+.area-bdd .botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.area-bdd label {
+  margin-top: 10px;
+}
+
+#bdd {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  min-height: 170px;
+  /* pre-wrap: preserva a indentação do Gherkin sem exigir rolagem horizontal */
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+/* BDD dentro do cartão de um bug registrado */
+.bdd-bug {
+  margin: 8px 0 0;
+  font-size: 0.8rem;
+}
+
+.bdd-bug summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--verde-escuro);
+}
+
+.bdd-bug pre {
+  margin: 8px 0 0;
+  padding: 10px;
+  background: var(--tinta-verde);
+  border-radius: 8px;
+  border: 1px solid var(--borda);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.76rem;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+
+/* ---------- Área de captura ---------- */
+.area-captura {
+  background: var(--tinta-amarela);
+  border: 1.5px dashed var(--amarelo);
+  border-radius: 10px;
+  padding: 14px;
+  margin-top: 16px;
+}
+
+.area-captura h3 {
+  margin: 0 0 8px;
+  font-size: 0.9rem;
+  color: var(--verde-escuro);
+}
+
+.area-captura .botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.preview-evidencia {
+  margin-top: 10px;
+  display: none;
+}
+
+.preview-evidencia.visivel {
+  display: block;
+}
+
+.preview-evidencia img,
+.preview-evidencia video {
+  max-width: 100%;
+  border-radius: 8px;
+  border: 2px solid var(--verde-claro);
+  display: block;
+}
+
+.preview-evidencia video {
+  width: 100%;
+  max-height: 320px;
+  background: #000;
+}
+
+/* Elementos com [hidden] precisam vencer o display:block acima */
+.preview-evidencia [hidden] {
+  display: none;
+}
+
+/* Realce enquanto o arquivo está sendo arrastado sobre a área */
+.area-captura.arrastando {
+  border-color: var(--verde);
+  border-style: solid;
+  background: var(--tinta-verde);
+  box-shadow: 0 0 0 3px rgba(156, 204, 101, 0.4);
+}
+
+.dica-arrastar {
+  margin-top: 10px;
+}
+
+/* ---------- Lista de bugs ---------- */
+.filtros {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.filtros select {
+  width: auto;
+  min-width: 150px;
+}
+
+.contador {
+  margin-left: auto;
+  align-self: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--verde);
+}
+
+.lista-vazia {
+  text-align: center;
+  color: #7b8a7c;
+  padding: 30px 10px;
+  font-size: 0.95rem;
+}
+
+.bug {
+  border: 1.5px solid var(--borda);
+  border-left: 6px solid var(--verde-claro);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  background: #fff;
+}
+
+.bug[data-severidade='alta'] {
+  border-left-color: var(--laranja);
+}
+
+.bug[data-severidade='critica'] {
+  border-left-color: var(--vermelho);
+}
+
+.bug[data-severidade='media'] {
+  border-left-color: var(--amarelo);
+}
+
+.bug .topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.bug h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--verde-escuro);
+}
+
+.bug .id {
+  color: #7b8a7c;
+  font-weight: 400;
+  font-size: 0.8rem;
+}
+
+.etiquetas {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 8px 0;
+}
+
+.etiqueta {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+.etiqueta.severidade-baixa { background: var(--tinta-verde); color: var(--verde); }
+.etiqueta.severidade-media { background: var(--tinta-amarela); color: #9c7500; }
+.etiqueta.severidade-alta { background: #FFE9D6; color: var(--laranja); }
+.etiqueta.severidade-critica { background: #FDE3E3; color: var(--vermelho); }
+.etiqueta.prioridade { background: var(--tinta-verde); color: var(--verde-escuro); }
+.etiqueta.ambiente { background: #EEF3EE; color: #4a5d4c; text-transform: none; }
+
+.bug .detalhes {
+  font-size: 0.85rem;
+  margin: 6px 0;
+  /* pré-requisitos e passos são digitados em várias linhas: preserva as quebras */
+  white-space: pre-line;
+}
+
+.bug .detalhes strong {
+  color: var(--verde-escuro);
+}
+
+.bug .rodape {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.bug .rodape select {
+  width: auto;
+  font-size: 0.8rem;
+  padding: 5px 8px;
+}
+
+.bug .evidencia-mini {
+  max-width: 130px;
+  border-radius: 6px;
+  border: 1.5px solid var(--verde-claro);
+  display: block;
+  margin-top: 8px;
+}
+
+.bug .evidencia-video {
+  width: 100%;
+  max-width: 420px;
+  max-height: 260px;
+  border-radius: 6px;
+  border: 1.5px solid var(--verde-claro);
+  display: block;
+  margin-top: 8px;
+  background: #000;
+}
+
+/* ---------- Modal de instruções nativas ---------- */
+.modal-fundo {
+  position: fixed;
+  inset: 0;
+  background: rgba(16, 51, 26, 0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 50;
+}
+
+.modal-fundo.visivel {
+  display: flex;
+}
+
+.modal {
+  background: #fff;
+  border-radius: var(--raio);
+  max-width: 480px;
+  width: 100%;
+  padding: 24px;
+  border-top: 6px solid var(--amarelo);
+}
+
+.modal h3 {
+  margin: 0 0 4px;
+  color: var(--verde-escuro);
+}
+
+.modal .atalho {
+  display: inline-block;
+  background: var(--card-escuro);
+  color: var(--verde-claro);
+  font-family: 'SF Mono', Consolas, monospace;
+  font-size: 1.05rem;
+  padding: 8px 16px;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+.modal ol {
+  padding-left: 20px;
+  font-size: 0.9rem;
+}
+
+.modal ol li {
+  margin-bottom: 6px;
+}
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(24px);
+  background: var(--verde-escuro);
+  color: #fff;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: var(--sombra);
+  z-index: 60;
+  max-width: 90vw;
+
+  /* Escondido de verdade: só translate deixava uma faixa da pílula na tela */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform 0.25s ease, opacity 0.25s ease, visibility 0.25s;
+}
+
+.toast.visivel {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+.toast.erro {
+  background: var(--vermelho);
+}
+
+/* ---------- Rodapé ---------- */
+footer {
+  text-align: center;
+  padding: 18px;
+  font-size: 0.8rem;
+  color: #5b6e5d;
+}
