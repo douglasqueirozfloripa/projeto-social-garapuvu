@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Favicon oficial do Projeto Social Garapuvu: a flor do garapuvu -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="apple-touch-icon" href="favicon.svg" />
+  <meta name="theme-color" content="#0E1F38" />
+  <title>Bug Report Garapuvu — Abertura e Documentação de Bugs</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header>
+    <div>
+      <h1>🌳🐛 Bug Report Garapuvu</h1>
+      <p class="subtitulo">Aula B4 — Abertura e Documentação de Bugs · Projeto Social Garapuvu</p>
+    </div>
+    <div>
+      <span class="badge-so" id="badge-so" data-testid="badge-so">detectando SO…</span>
+      <span class="badge-offline" id="badge-offline" data-testid="badge-offline">📴 modo offline (localStorage)</span>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ FORMULÁRIO DE ABERTURA ============ -->
+    <section class="cartao">
+      <h2>📝 Abrir novo bug</h2>
+      <form id="form-bug" data-testid="form-bug" novalidate>
+        <label for="titulo">Título *</label>
+        <input type="text" id="titulo" name="titulo" data-testid="campo-titulo"
+               placeholder="Ex.: Botão de login não responde no Safari" />
+        <p class="dica">Resuma o problema em uma frase clara (mín. 5 caracteres).</p>
+
+        <label for="prerequisitos">Pré-requisitos para simulação</label>
+        <textarea id="prerequisitos" name="prerequisitos" data-testid="campo-prerequisitos"
+                  placeholder="Ex.: Feature flag 'novo-checkout' ativa&#10;Usuário com permissão de Administrador&#10;Configuração do sistema: cobrança automática habilitada&#10;Clínica cadastrada com 2 profissionais"></textarea>
+        <p class="dica">
+          O que precisa estar configurado <em>antes</em> de reproduzir: configurações do sistema,
+          feature flags ativas, permissões do usuário, dados de massa, integrações, etc.
+          Uma condição por linha.
+        </p>
+
+        <label for="passos">Passos para reproduzir *</label>
+        <textarea id="passos" name="passos" data-testid="campo-passos"
+                  placeholder="1. Acesse a página inicial&#10;2. Clique em 'Entrar'&#10;3. Observe que…"></textarea>
+
+        <label for="esperado">Resultado esperado *</label>
+        <input type="text" id="esperado" name="esperado" data-testid="campo-esperado"
+               placeholder="O que deveria acontecer" />
+
+        <label for="obtido">Resultado obtido *</label>
+        <input type="text" id="obtido" name="obtido" data-testid="campo-obtido"
+               placeholder="O que aconteceu de fato" />
+
+        <div class="linha-dupla">
+          <div>
+            <label for="severidade">Severidade *</label>
+            <select id="severidade" name="severidade" data-testid="campo-severidade">
+              <option value="baixa">Baixa</option>
+              <option value="media" selected>Média</option>
+              <option value="alta">Alta</option>
+              <option value="critica">Crítica</option>
+            </select>
+          </div>
+          <div>
+            <label for="prioridade">Prioridade *</label>
+            <select id="prioridade" name="prioridade" data-testid="campo-prioridade">
+              <option value="baixa">Baixa</option>
+              <option value="media" selected>Média</option>
+              <option value="alta">Alta</option>
+            </select>
+          </div>
+        </div>
+
+        <label for="ambiente">Ambiente (preenchido automaticamente)</label>
+        <input type="text" id="ambiente" name="ambiente" data-testid="campo-ambiente" />
+        <p class="dica">SO + navegador detectados. Você pode complementar (ex.: versão do app).</p>
+
+        <!-- ============ CAPTURA DE EVIDÊNCIA ============ -->
+        <div class="area-captura" id="area-captura" data-testid="area-captura">
+          <h3>📎 Evidência (screenshot ou gravação)</h3>
+          <div class="botoes">
+            <button type="button" class="btn-secundario" id="btn-captura-nativa"
+                    data-testid="btn-captura-nativa"></button>
+            <button type="button" class="btn-contorno" id="btn-screenshot"
+                    data-testid="btn-screenshot">📸 Screenshot pelo navegador</button>
+            <button type="button" class="btn-contorno" id="btn-gravar"
+                    data-testid="btn-gravar">🎥 Gravar tela pelo navegador</button>
+            <button type="button" class="btn-contorno" id="btn-anexar"
+                    data-testid="btn-anexar">📁 Anexar arquivo</button>
+          </div>
+          <input type="file" id="arquivo-evidencia" data-testid="arquivo-evidencia"
+                 aria-label="Anexar arquivo de evidência (imagem ou vídeo)"
+                 accept="image/*,video/*,.webm,.mp4,.mov,.png,.jpg,.jpeg,.gif" hidden />
+          <p class="dica dica-arrastar" id="dica-arrastar">
+            Ou <strong>arraste o arquivo aqui</strong> — imagem ou vídeo (.webm, .mp4, .mov),
+            até 3 MB para ficar anexado no bug.
+          </p>
+          <div class="preview-evidencia" id="preview-evidencia" data-testid="preview-evidencia">
+            <img id="img-evidencia" alt="Evidência capturada" />
+            <video id="video-evidencia" data-testid="video-evidencia" controls playsinline
+                   preload="metadata"></video>
+            <p class="dica" id="info-evidencia" data-testid="info-evidencia"></p>
+            <button type="button" class="btn-perigo" id="btn-remover-evidencia">Remover evidência</button>
+          </div>
+        </div>
+
+        <!-- ============ CENÁRIO BDD ============ -->
+        <div class="area-bdd">
+          <h3>🥒 Cenário BDD (Gherkin)</h3>
+          <div class="botoes">
+            <button type="button" class="btn-secundario" id="btn-gerar-bdd"
+                    data-testid="btn-gerar-bdd">✨ Gerar BDD a partir do passo a passo</button>
+            <button type="button" class="btn-contorno" id="btn-copiar-bdd"
+                    data-testid="btn-copiar-bdd">📋 Copiar</button>
+          </div>
+          <label for="bdd">Cenário gerado (pode editar à mão)</label>
+          <textarea id="bdd" name="bdd" data-testid="campo-bdd" spellcheck="false"
+                    placeholder="Preencha os pré-requisitos, os passos e os resultados, depois clique em “Gerar BDD”."></textarea>
+          <p class="dica">
+            Pré-requisitos viram <strong>Dado que</strong>, os passos viram <strong>Quando</strong>
+            e o resultado esperado vira <strong>Então</strong>. Gerar de novo sobrescreve o texto.
+          </p>
+        </div>
+
+        <button type="submit" class="btn-primario" data-testid="btn-abrir-bug">🐛 Abrir bug</button>
+      </form>
+    </section>
+
+    <!-- ============ LISTA DE BUGS ============ -->
+    <section class="cartao">
+      <h2>📋 Bugs registrados</h2>
+      <div class="filtros">
+        <select id="filtro-status" data-testid="filtro-status" aria-label="Filtrar por status">
+          <option value="todos">Todos os status</option>
+          <option value="aberto">Aberto</option>
+          <option value="em_analise">Em análise</option>
+          <option value="corrigido">Corrigido</option>
+          <option value="fechado">Fechado</option>
+        </select>
+        <select id="filtro-severidade" data-testid="filtro-severidade" aria-label="Filtrar por severidade">
+          <option value="todas">Todas as severidades</option>
+          <option value="baixa">Baixa</option>
+          <option value="media">Média</option>
+          <option value="alta">Alta</option>
+          <option value="critica">Crítica</option>
+        </select>
+        <span class="contador" id="contador" data-testid="contador">0 bugs</span>
+        <button type="button" class="btn-contorno" id="btn-exportar-csv"
+                data-testid="btn-exportar-csv">⬇️ Exportar CSV</button>
+      </div>
+      <p class="dica">
+        O CSV exporta os bugs guardados no localStorage, respeitando os filtros acima.
+        Separador <code>;</code> e UTF-8 com BOM — abre direto no Excel pt-BR.
+      </p>
+      <div id="lista-bugs" data-testid="lista-bugs">
+        <p class="lista-vazia">Nenhum bug registrado ainda. Que tal abrir o primeiro? 🎉</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ MODAL: APP NATIVO DE CAPTURA ============ -->
+  <div class="modal-fundo" id="modal-captura" data-testid="modal-captura">
+    <div class="modal">
+      <h3 id="modal-titulo"></h3>
+      <span class="atalho" id="modal-atalho" data-testid="modal-atalho"></span>
+      <ol id="modal-instrucoes"></ol>
+      <button type="button" class="btn-secundario" id="btn-fechar-modal"
+              data-testid="btn-fechar-modal">Entendi!</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" data-testid="toast"></div>
+
+  <footer>
+    Projeto Social Garapuvu · Curso de QA 2026 · feito com 💚 e 💛
+  </footer>
+
+  <script src="js/validators.js"></script>
+  <script src="js/bdd.js"></script>
+  <script src="js/csv.js"></script>
+  <script src="js/os-detect.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/capture.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
