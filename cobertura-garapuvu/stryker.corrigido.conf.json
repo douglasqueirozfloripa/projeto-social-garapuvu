@@ -1,0 +1,19 @@
+{
+  "packageManager": "npm",
+  "reporters": ["clear-text", "progress", "html"],
+  "testRunner": "jest",
+  "coverageAnalysis": "perTest",
+  "mutate": ["src/corrigido/*.js"],
+  "jest": {
+    "projectType": "custom",
+    "config": {
+      "testEnvironment": "node",
+      "testMatch": [
+        "<rootDir>/tests/realidade/**/*.test.js",
+        "<rootDir>/tests/robustez/**/*.test.js"
+      ]
+    }
+  },
+  "htmlReporter": { "fileName": "reports/mutacao-corrigido/index.html" },
+  "thresholds": { "high": 90, "low": 75, "break": null }
+}
