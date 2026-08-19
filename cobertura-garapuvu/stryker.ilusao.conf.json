@@ -1,0 +1,16 @@
+{
+  "packageManager": "npm",
+  "reporters": ["clear-text", "progress", "html"],
+  "testRunner": "jest",
+  "coverageAnalysis": "perTest",
+  "mutate": ["src/*.js"],
+  "jest": {
+    "projectType": "custom",
+    "config": {
+      "testEnvironment": "node",
+      "testMatch": ["<rootDir>/tests/ilusao/**/*.test.js"]
+    }
+  },
+  "htmlReporter": { "fileName": "reports/mutacao-ilusao/index.html" },
+  "thresholds": { "high": 80, "low": 60, "break": null }
+}
