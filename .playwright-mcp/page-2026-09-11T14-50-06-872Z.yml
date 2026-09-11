@@ -1,0 +1,280 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e8]:
+      - navigation [ref=e9]:
+        - generic [ref=e10]: Garapuvu.
+        - generic [ref=e12]:
+          - generic [ref=e13]: Turma 2026
+          - button "Mudar para o tema claro (dia)" [ref=e14] [cursor=pointer]:
+            - generic [aria-hidden] [ref=e18]: Dia
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - paragraph [ref=e21]: ● Projeto Social · 100% gratuito · remoto
+          - heading "Aprender tecnologia de graça, de qualquer lugar do mundo." [level=1] [ref=e23]
+          - paragraph [ref=e25]: Desde 2020, o Garapuvu ensina lógica de programação, desenvolvimento e testes de software — e, agora, Inteligência Artificial e Data Science aplicados. De Florianópolis a outros estados do Brasil, e até outros países.
+          - generic [ref=e26]:
+            - button "Quero participar →" [ref=e27] [cursor=pointer]
+            - button "▶ Assistir as aulas" [ref=e28] [cursor=pointer]
+            - button "Ver o conteúdo" [ref=e29] [cursor=pointer]
+        - iframe [ref=e78]
+  - generic [ref=e80]:
+    - generic [ref=e81]:
+      - generic [ref=e82]: 140+
+      - generic [ref=e83]: horas de curso
+    - generic [ref=e84]:
+      - generic [ref=e85]: "36"
+      - generic [ref=e86]: aulas
+    - generic [ref=e87]:
+      - generic [ref=e88]: "6"
+      - generic [ref=e89]: anos de projeto
+    - generic [ref=e90]:
+      - generic [ref=e91]: "2"
+      - generic [ref=e92]: países atendidos
+  - generic [ref=e93]:
+    - paragraph [ref=e94]: Como funciona
+    - heading "Um encontro por semana. O ano inteiro com você." [level=2] [ref=e95]
+    - generic [ref=e96]:
+      - generic [ref=e97]:
+        - generic [ref=e98]: Encontros
+        - generic [ref=e99]: Quartas-feiras, das 18h às 20h
+      - generic [ref=e100]:
+        - generic [ref=e101]: Plataforma
+        - generic [ref=e102]: Aulas remotas via Google Meet
+      - generic [ref=e103]:
+        - generic [ref=e104]: Inscrição
+        - generic [ref=e105]: Basta ter um e-mail e um computador com internet
+      - generic [ref=e106]:
+        - generic [ref=e107]: Suporte
+        - generic [ref=e108]: Professores disponíveis durante a semana
+      - generic [ref=e109]:
+        - generic [ref=e110]: Origem
+        - generic [ref=e111]: Florianópolis, Santa Catarina — e agora em todo o Brasil
+      - generic [ref=e112]:
+        - generic [ref=e113]: Idade mínima
+        - generic [ref=e114]: 16 anos (com autorização dos pais)
+    - generic [ref=e115]:
+      - strong [ref=e116]: "Importante:"
+      - text: participantes a partir de 16 anos são bem-vindos mediante autorização dos pais ou responsáveis. Qualquer nacionalidade pode participar.
+  - generic [ref=e118]:
+    - paragraph [ref=e119]: Planejamento do curso 2026
+    - heading "Cinco módulos, do fundamento à Inteligência Artificial e aos dados." [level=2] [ref=e120]
+    - paragraph [ref=e121]: 36 aulas que crescem como os ramos do garapuvu — da raiz dos fundamentos até a floração com IA e Data Science.
+    - generic [ref=e122]:
+      - generic [ref=e123]:
+        - button "Módulo 01 Fundamentos de Testes de Software" [pressed] [ref=e124] [cursor=pointer]:
+          - generic [ref=e125]: Módulo 01
+          - generic [ref=e126]: Fundamentos de Testes de Software
+        - button "Módulo 02 Prática em Testes de Software" [ref=e127] [cursor=pointer]:
+          - generic [ref=e128]: Módulo 02
+          - generic [ref=e129]: Prática em Testes de Software
+        - button "Módulo 03 Inteligência Artificial e Cursor IDE" [ref=e130] [cursor=pointer]:
+          - generic [ref=e131]: Módulo 03
+          - generic [ref=e132]: Inteligência Artificial e Cursor IDE
+        - button "Módulo 04 Data Science e Testes" [ref=e133] [cursor=pointer]:
+          - generic [ref=e134]: Módulo 04
+          - generic [ref=e135]: Data Science e Testes
+        - button "Módulo Bônus Mercado de Trabalho" [ref=e136] [cursor=pointer]:
+          - generic [ref=e137]: Módulo Bônus
+          - generic [ref=e138]: Mercado de Trabalho
+      - generic [ref=e139]:
+        - paragraph [ref=e140]: CTFL · Certified Tester Foundation Level
+        - generic [ref=e141]:
+          - generic [ref=e142]:
+            - generic [ref=e143]: "01"
+            - generic [ref=e144]: Fundamentos, riscos e estratégias de teste
+          - generic [ref=e145]:
+            - generic [ref=e146]: "02"
+            - generic [ref=e147]: Modelos de desenvolvimento, ágil, DevOps e CI/CD
+          - generic [ref=e148]:
+            - generic [ref=e149]: "03"
+            - generic [ref=e150]: Teste estático, revisões e análise de código
+          - generic [ref=e151]:
+            - generic [ref=e152]: "04"
+            - generic [ref=e153]: Níveis e tipos de testes
+          - generic [ref=e154]:
+            - generic [ref=e155]: "05"
+            - generic [ref=e156]: Técnicas de caixa preta, branca e por experiência
+          - generic [ref=e157]:
+            - generic [ref=e158]: "06"
+            - generic [ref=e159]: "Testes de design: acessibilidade, usabilidade e UX/UI"
+          - generic [ref=e160]:
+            - generic [ref=e161]: "07"
+            - generic [ref=e162]: Gerenciamento, planejamento e estimativas de teste
+          - generic [ref=e163]:
+            - generic [ref=e164]: "08"
+            - generic [ref=e165]: Ferramentas, performance e Planning Poker
+          - generic [ref=e166]:
+            - generic [ref=e167]: "09"
+            - generic [ref=e168]: Pirâmide de testes, métricas e KPIs de qualidade
+          - generic [ref=e169]:
+            - generic [ref=e170]: "10"
+            - generic [ref=e171]: Scrum e Kanban
+  - generic [ref=e172]:
+    - paragraph [ref=e173]: Encontros gravados
+    - heading "Perdeu uma aula? Assista aqui mesmo." [level=2] [ref=e174]
+    - paragraph [ref=e175]: 7 encontros já publicados — 9h17 de aula, com teoria do CTFL e prática em projetos reais. Escolha um na lista e o vídeo abre nesta página.
+    - generic [ref=e176]:
+      - generic [ref=e177]:
+        - iframe [ref=e179]
+        - generic [ref=e180]:
+          - generic [ref=e181]:
+            - generic [ref=e182]: Encontro 01
+            - generic [ref=e183]: Aulas 00 · 0.1 · 01
+            - generic [ref=e184]: · 1h03
+          - heading "Guia de Estudos, Fundamentos de Testes e preparação do ambiente" [level=3] [ref=e185]
+          - paragraph [ref=e186]: "Abertura da trilha: o guia de estudos e os links do projeto, a preparação do ambiente de desenvolvimento no Windows e no macOS e a primeira aula de teoria — o que é testar, por que testar, os sete princípios e o processo de teste do CTFL 4.0."
+          - generic [ref=e187]:
+            - generic [ref=e188]: Guia de estudos
+            - generic [ref=e189]: Preparação do ambiente
+            - generic [ref=e190]: Princípios de teste
+            - generic [ref=e191]: CTFL 4.0
+          - link "Abrir no YouTube ↗" [ref=e192] [cursor=pointer]:
+            - /url: https://www.youtube.com/watch?v=j0xPg0aR4Hg&list=PLcGnsisXdbAc
+      - generic [ref=e193]:
+        - generic [ref=e194]:
+          - button "01 Guia de Estudos, Fundamentos de Testes e preparação do ambiente 1h03 Aulas 00 · 0.1 · 01" [ref=e195] [cursor=pointer]:
+            - generic [ref=e196]: "01"
+            - generic [ref=e197]:
+              - generic [ref=e198]: Guia de Estudos, Fundamentos de Testes e preparação do ambiente
+              - generic [ref=e199]:
+                - generic [aria-hidden] [ref=e200]: ▶
+                - text: 1h03
+                - generic [aria-hidden] [ref=e201]: ·
+                - text: Aulas 00 · 0.1 · 01
+          - button "02 Modelos ágeis, Teste Estático e análise de código 1h02 Aulas 02 · 03" [ref=e202] [cursor=pointer]:
+            - generic [ref=e203]: "02"
+            - generic [ref=e204]:
+              - generic [ref=e205]: Modelos ágeis, Teste Estático e análise de código
+              - generic [ref=e206]:
+                - generic [aria-hidden] [ref=e207]: ▷
+                - text: 1h02
+                - generic [aria-hidden] [ref=e208]: ·
+                - text: Aulas 02 · 03
+          - button "03 Meu primeiro app com IA — FreeLancer360 (backend + frontend) 1h12 Prática · Módulos 2 e 3" [ref=e209] [cursor=pointer]:
+            - generic [ref=e210]: "03"
+            - generic [ref=e211]:
+              - generic [ref=e212]: Meu primeiro app com IA — FreeLancer360 (backend + frontend)
+              - generic [ref=e213]:
+                - generic [aria-hidden] [ref=e214]: ▷
+                - text: 1h12
+                - generic [aria-hidden] [ref=e215]: ·
+                - text: Prática · Módulos 2 e 3
+          - button "04 Níveis e tipos de teste + técnicas de caixa preta e branca 1h30 Aulas 04 · 05" [ref=e216] [cursor=pointer]:
+            - generic [ref=e217]: "04"
+            - generic [ref=e218]:
+              - generic [ref=e219]: Níveis e tipos de teste + técnicas de caixa preta e branca
+              - generic [ref=e220]:
+                - generic [aria-hidden] [ref=e221]: ▷
+                - text: 1h30
+                - generic [aria-hidden] [ref=e222]: ·
+                - text: Aulas 04 · 05
+          - button "05 Segurança e boas práticas — projeto Catch Request 1h28 Prática · Módulo Bônus" [ref=e223] [cursor=pointer]:
+            - generic [ref=e224]: "05"
+            - generic [ref=e225]:
+              - generic [ref=e226]: Segurança e boas práticas — projeto Catch Request
+              - generic [ref=e227]:
+                - generic [aria-hidden] [ref=e228]: ▷
+                - text: 1h28
+                - generic [aria-hidden] [ref=e229]: ·
+                - text: Prática · Módulo Bônus
+          - button "06 Quality Gate no Sonar + testes de design (acessibilidade e UX/UI) 1h10 Aula 06 · Prática" [ref=e230] [cursor=pointer]:
+            - generic [ref=e231]: "06"
+            - generic [ref=e232]:
+              - generic [ref=e233]: Quality Gate no Sonar + testes de design (acessibilidade e UX/UI)
+              - generic [ref=e234]:
+                - generic [aria-hidden] [ref=e235]: ▷
+                - text: 1h10
+                - generic [aria-hidden] [ref=e236]: ·
+                - text: Aula 06 · Prática
+          - button "07 Gerenciamento e estimativa de testes + rastreabilidade 1h52 Aulas 07 · 11" [ref=e237] [cursor=pointer]:
+            - generic [ref=e238]: "07"
+            - generic [ref=e239]:
+              - generic [ref=e240]: Gerenciamento e estimativa de testes + rastreabilidade
+              - generic [ref=e241]:
+                - generic [aria-hidden] [ref=e242]: ▷
+                - text: 1h52
+                - generic [aria-hidden] [ref=e243]: ·
+                - text: Aulas 07 · 11
+        - link "Ver a playlist completa no YouTube" [ref=e244] [cursor=pointer]:
+          - /url: https://www.youtube.com/playlist?list=PLcGnsisXdbAc
+  - generic [ref=e247]:
+    - paragraph [ref=e248]: Objetivos
+    - heading "Por que o Garapuvu existe" [level=2] [ref=e249]
+    - generic [ref=e250]:
+      - generic [ref=e251]:
+        - heading "Capacitação" [level=3] [ref=e253]
+        - paragraph [ref=e254]: Capacitar profissionais que atuam ou desejam atuar na área de tecnologia.
+      - generic [ref=e255]:
+        - heading "Integração" [level=3] [ref=e257]
+        - paragraph [ref=e258]: Integrar profissionais e mentores no processo de tutoria.
+      - generic [ref=e259]:
+        - heading "Conexão com o mercado" [level=3] [ref=e261]
+        - paragraph [ref=e262]: Aproximar empresas do projeto, criando um banco de profissionais capacitados.
+      - generic [ref=e263]:
+        - heading "Desenvolvimento nacional" [level=3] [ref=e265]
+        - paragraph [ref=e266]: Ajudar no desenvolvimento tecnológico e sustentável do Brasil.
+      - generic [ref=e267]:
+        - heading "Multiplicação" [level=3] [ref=e269]
+        - paragraph [ref=e270]: Disseminar conhecimento e formar novos tutores e professores.
+      - generic [ref=e271]:
+        - heading "Impacto social" [level=3] [ref=e273]
+        - paragraph [ref=e274]: Abrir portas da tecnologia para pessoas de qualquer origem ou país.
+  - generic [ref=e275]:
+    - paragraph [ref=e276]: Marcos 2026 – 2027
+    - heading "O ano, ramo a ramo" [level=2] [ref=e277]
+    - generic [ref=e278]:
+      - generic [ref=e279]:
+        - generic [ref=e280]: Junho 2026 — Início
+        - generic [ref=e281]:
+          - generic [aria-hidden] [ref=e282]: ✓
+          - generic [ref=e283]:
+            - text: Primeira turma do ano em aula
+            - generic [ref=e284]: (concluído)
+        - generic [ref=e285]:
+          - generic [aria-hidden] [ref=e286]: ✓
+          - generic [ref=e287]:
+            - text: Módulo de IA consolidado
+            - generic [ref=e288]: (concluído)
+        - generic [ref=e289]:
+          - generic [aria-hidden] [ref=e290]: ✓
+          - generic [ref=e291]:
+            - text: Encontros remotos, uma noite por semana
+            - generic [ref=e292]: (concluído)
+      - generic [ref=e293]:
+        - generic [ref=e294]: Dezembro 2026
+        - generic [ref=e295]:
+          - generic [aria-hidden] [ref=e296]: →
+          - generic [ref=e297]: Formar 30 pessoas até o fim do ano
+        - generic [ref=e298]:
+          - generic [aria-hidden] [ref=e299]: →
+          - generic [ref=e300]: Consolidar o conteúdo do Módulo 4 — Data Science e Testes
+        - generic [ref=e301]:
+          - generic [aria-hidden] [ref=e302]: →
+          - generic [ref=e303]: Integrar empresas parceiras ao projeto
+      - generic [ref=e304]:
+        - generic [ref=e305]: Julho 2027
+        - generic [ref=e306]:
+          - generic [aria-hidden] [ref=e307]: →
+          - generic [ref=e308]: Formar 50 pessoas
+        - generic [ref=e309]:
+          - generic [aria-hidden] [ref=e310]: →
+          - generic [ref=e311]: Programa de mentoria
+        - generic [ref=e312]:
+          - generic [aria-hidden] [ref=e313]: →
+          - generic [ref=e314]: Evento de formatura presencial
+  - generic [ref=e316]:
+    - heading "Quer fazer parte do projeto?" [level=2] [ref=e357]
+    - paragraph [ref=e358]: Conheça o conteúdo das aulas e inscreva-se na próxima turma. Basta um e-mail e um computador com internet.
+    - button "Saiba mais e participe →" [ref=e359] [cursor=pointer]
+  - contentinfo [ref=e360]:
+    - generic [ref=e361]: Garapuvu.
+    - generic [ref=e362]:
+      - link "Instagram do Projeto Garapuvu" [ref=e363] [cursor=pointer]:
+        - /url: https://www.instagram.com/projetogarapuvu/
+      - link "Canal do Projeto Garapuvu no YouTube" [ref=e368] [cursor=pointer]:
+        - /url: https://www.youtube.com/@ProjetoGarapuvuFloripa
+      - link "LinkedIn de Douglas Adriano Queiroz" [ref=e371] [cursor=pointer]:
+        - /url: https://br.linkedin.com/in/douglas-adriano-queiroz-ctfl-680b1978
+      - link "Repositório do Projeto Garapuvu no GitHub" [ref=e374] [cursor=pointer]:
+        - /url: https://github.com/douglasqueirozfloripa/projeto-social-garapuvu
+    - text: "Projeto Social Garapuvu 2026 · Instrutor: Douglas Adriano QueirozFeito para a comunidade de tecnologia — de Florianópolis para o mundo."

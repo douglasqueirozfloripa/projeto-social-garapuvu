@@ -31,7 +31,6 @@ construídos ao longo da trilha, cada um servindo de laboratório para um tipo d
 projeto-social-garapuvu/
 ├── src/  index.html  vite.config.js       → Landing page do projeto (Vite + React + Firebase)
 ├── firebase.json  firestore.rules         → Hosting + Firestore (contador de visitantes)
-├── dataconnect/                           → Schema e queries do Firebase Data Connect
 │
 ├── Modulo 0 - Introdução/                 → Boas-vindas, preparação de ambiente, guia de estudos
 ├── Modulo 1 - Fundamentos CTFL/           → Aulas 01–10 (teoria CTFL 4.0)
