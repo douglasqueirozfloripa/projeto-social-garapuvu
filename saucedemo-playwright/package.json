@@ -1,0 +1,19 @@
+{
+  "name": "saucedemo-playwright",
+  "version": "1.0.0",
+  "description": "Testes de interface implementados no E-commerce Fake",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:ui": " npx playwright test --ui",
+    "test:parallel": "npx playwright test --workers=4",
+    "test:debug": "npx playwright test saucedemo-playwright/tests/example.spec.js --debug",
+    "test:report": "npx playwright show-report"
+  },
+  "author": "Instrutor Douglas",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^26.6.2"
+  }
+}

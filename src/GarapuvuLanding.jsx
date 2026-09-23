@@ -108,6 +108,38 @@ function formatarDuracao(minutos) {
   return m === 0 ? `${h}h` : `${h}h${String(m).padStart(2, "0")}`;
 }
 
+// "63" → "1 hora e 3 minutos". É o que o leitor de tela fala no lugar de "1h03",
+// que o NVDA leria letra por letra.
+function duracaoPorExtenso(minutos) {
+  const h = Math.floor(minutos / 60);
+  const m = minutos % 60;
+  const partes = [];
+  if (h) partes.push(`${h} ${h === 1 ? "hora" : "horas"}`);
+  if (m) partes.push(`${m} ${m === 1 ? "minuto" : "minutos"}`);
+  return partes.join(" e ");
+}
+
+// Duração visível abreviada ("1h03") + versão por extenso só para leitor de tela.
+function Duracao({ minutos }) {
+  return (
+    <>
+      <span aria-hidden="true">{formatarDuracao(minutos)}</span>
+      <span className="gp-sr-only">{duracaoPorExtenso(minutos)}</span>
+    </>
+  );
+}
+
+// Aviso lido pelo leitor de tela em todo link que abre outra aba (WCAG 3.2.5).
+function AvisoNovaAba({ texto = "abre em nova aba" }) {
+  return <span className="gp-sr-only"> ({texto})</span>;
+}
+
+// Respeita quem pediu menos animação no sistema: sem rolagem suave.
+function comportamentoDeRolagem() {
+  if (typeof window === "undefined") return "auto";
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+}
+
 // Contato via WhatsApp — formato internacional: 55 (Brasil) + 48 (DDD) + número.
 const WHATSAPP_NUMBER = "5548999886724";
 const WHATSAPP_MESSAGE =
@@ -123,12 +155,15 @@ function openWhatsApp(eventName) {
   }
 }
 
-// Rola suavemente até uma seção da página (pelo id) e registra o evento.
-function scrollToSection(id, eventName) {
+// Leva até uma seção da página e registra o evento. Além de rolar, MOVE O FOCO
+// para o título da seção: sem isso o foco (e o cursor virtual do NVDA) ficava
+// no botão do topo, e a próxima tecla continuava a leitura lá de cima.
+function irParaSecao(event, id, tituloId, eventName) {
+  event.preventDefault();
   track(eventName);
-  if (typeof document !== "undefined") {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
+  if (typeof document === "undefined") return;
+  document.getElementById(id)?.scrollIntoView({ behavior: comportamentoDeRolagem(), block: "start" });
+  document.getElementById(tituloId)?.focus({ preventScroll: true });
 }
 
 // ─── Tema ────────────────────────────────────────────────────────────────
@@ -203,7 +238,7 @@ const THEME_CSS = `
     --gp-branch: #5B4636;
     --gp-leaf: #3E6B4F;
     --gp-bloom: #F2B705;
-    --gp-bloom-deep: #A85F00;
+    --gp-bloom-deep: #8F5000;  /* escurecido de #A85F00: 4,5:1 também sobre o bege das tags */
     --gp-bloom-warm: #E08A00;
     --gp-band: #0E1F38;
     --gp-band-rgb: 14, 31, 56;
@@ -362,14 +397,17 @@ function useReveal() {
     io.observe(el);
     return () => io.disconnect();
   }, []);
-  return [ref, shown];
+  return [ref, shown, setShown];
 }
 
-function Reveal({ children, delay = 0, as: Tag = "div", style, ...rest }) {
-  const [ref, shown] = useReveal();
+function Reveal({ children, delay = 0, as: Tag = "div", style, onFocus, ...rest }) {
+  const [ref, shown, setShown] = useReveal();
   return (
     <Tag
       ref={ref}
+      // Se o foco do teclado chegar antes da animação (Tab rápido, leitor de
+      // tela), revela na hora: nada de foco num elemento ainda invisível.
+      onFocus={(e) => { setShown(true); onFocus?.(e); }}
       style={{
         ...style,
         opacity: shown ? 1 : 0,
@@ -419,8 +457,6 @@ function VisitorCount() {
 
   return (
     <span
-      aria-live="polite"
-      title="Total de pessoas que já visitaram"
       style={{
         display: "inline-flex",
         alignItems: "center",
@@ -491,35 +527,40 @@ function SocialLinks() {
   ];
 
   return (
-    <div style={{ display: "inline-flex", gap: 14, marginBottom: 18 }}>
-      {links.map((l) => (
-        <a
-          key={l.event}
-          href={l.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={l.label}
-          title={l.label}
-          onClick={() => track(l.event)}
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: 42,
-            height: 42,
-            borderRadius: 999,
-            color: COLORS.onBand,
-            background: "rgba(255,255,255,.07)",
-            boxShadow: "inset 0 0 0 1px rgba(255,255,255,.16)",
-            transition: "color .2s, background .2s, transform .15s",
-          }}
-          onMouseEnter={(e) => { e.currentTarget.style.color = COLORS.onBloom; e.currentTarget.style.background = COLORS.bloom; e.currentTarget.style.transform = "translateY(-2px)"; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = COLORS.onBand; e.currentTarget.style.background = "rgba(255,255,255,.07)"; e.currentTarget.style.transform = "none"; }}
-        >
-          {l.icon}
-        </a>
-      ))}
-    </div>
+    <nav aria-label="Redes sociais">
+      <ul role="list" className="gp-list-reset" style={{ display: "inline-flex", gap: 14, marginBottom: 18 }}>
+        {links.map((l) => (
+          <li key={l.event}>
+            <a
+              href={l.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              // O aria-label substitui o conteúdo do link, então o aviso de nova aba
+              // precisa estar nele.
+              aria-label={`${l.label} (abre em nova aba)`}
+              title={l.label}
+              onClick={() => track(l.event)}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 42,
+                height: 42,
+                borderRadius: 999,
+                color: COLORS.onBand,
+                background: "rgba(255,255,255,.07)",
+                boxShadow: "inset 0 0 0 1px rgba(255,255,255,.16)",
+                transition: "color .2s, background .2s, transform .15s",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = COLORS.onBloom; e.currentTarget.style.background = COLORS.bloom; e.currentTarget.style.transform = "translateY(-2px)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = COLORS.onBand; e.currentTarget.style.background = "rgba(255,255,255,.07)"; e.currentTarget.style.transform = "none"; }}
+            >
+              {l.icon}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 }
 
@@ -543,6 +584,8 @@ function HeroVideo() {
       delay={0.12}
       onClick={handleFirstClick}
       style={{
+        gridArea: "video",
+        alignSelf: "center",
         width: "100%",
         aspectRatio: "16 / 9",
         borderRadius: 18,
@@ -576,19 +619,38 @@ function EncontrosSection() {
   // player fica parado, esperando a pessoa decidir.
   const [autoplay, setAutoplay] = useState(false);
   const playerRef = useRef(null);
+  const moldura = useRef(null);
+  // Marca que o player deve receber o foco na próxima renderização. Só depois
+  // de uma escolha na lista — no carregamento da página o foco não é roubado.
+  const focarPlayer = useRef(false);
 
   const encontro = ENCONTROS[atual];
   const totalMinutos = ENCONTROS.reduce((soma, e) => soma + e.minutos, 0);
 
+  // Depois da escolha, o foco vai para a MOLDURA do player, não para o iframe.
+  // O iframe é remontado a cada troca (key) e fica carregando o YouTube; com o
+  // foco dentro dele, o Tab/Shift+Tab se perdia e voltava para o topo da página.
+  // A moldura é estável: o NVDA anuncia o encontro, o Tab entra nos controles
+  // do vídeo e o Shift+Tab volta para o conteúdo anterior da página.
+  useEffect(() => {
+    if (!focarPlayer.current) return;
+    focarPlayer.current = false;
+    moldura.current?.focus({ preventScroll: true });
+  }, [atual]);
+
   const escolher = (i) => {
-    if (i === atual) return;
+    if (i === atual) {
+      moldura.current?.focus();
+      return;
+    }
+    focarPlayer.current = true;
     setAtual(i);
     setAutoplay(true);
     track("encontro_" + String(i + 1).padStart(2, "0"));
     // No celular a lista fica embaixo do player: sem este scroll a pessoa
     // clicaria e não veria o vídeo trocar.
     if (typeof window !== "undefined" && window.innerWidth <= 920) {
-      playerRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      playerRef.current?.scrollIntoView({ behavior: comportamentoDeRolagem(), block: "center" });
     }
   };
 
@@ -597,17 +659,18 @@ function EncontrosSection() {
     `?rel=0&modestbranding=1${autoplay ? "&autoplay=1" : ""}`;
 
   return (
-    <section id="encontros" className="gp-wrap" style={{ paddingTop: 90, paddingBottom: 40, scrollMarginTop: 24 }}>
+    <section id="encontros" aria-labelledby="encontros-titulo" className="gp-wrap" style={{ paddingTop: 90, paddingBottom: 40, scrollMarginTop: 24 }}>
       <Reveal as="p" className="gp-eyebrow" style={{ color: COLORS.bloomDeep }}>
         Encontros gravados
       </Reveal>
-      <Reveal as="h2" delay={0.05} className="gp-display"
+      {/* tabIndex -1: recebe o foco quando a pessoa usa "Assistir as aulas" no topo. */}
+      <Reveal as="h2" id="encontros-titulo" tabIndex={-1} delay={0.05} className="gp-display"
         style={{ fontSize: "clamp(1.9rem, 5.2vw, 2.5rem)", fontWeight: 900, margin: "10px 0 12px" }}>
         Perdeu uma aula? Assista aqui mesmo.
       </Reveal>
       <Reveal as="p" delay={0.08}
         style={{ color: COLORS.textSoft, maxWidth: 640, margin: "0 0 34px", fontSize: 16.5, lineHeight: 1.6 }}>
-        {ENCONTROS.length} encontros já publicados — {formatarDuracao(totalMinutos)} de aula, com
+        {ENCONTROS.length} encontros já publicados — <Duracao minutos={totalMinutos} /> de aula, com
         teoria do CTFL e prática em projetos reais. Escolha um na lista e o vídeo
         abre nesta página.
       </Reveal>
@@ -615,21 +678,43 @@ function EncontrosSection() {
       <div className="gp-encontros" style={{ display: "grid", gridTemplateColumns: "1fr 380px", gap: 28, alignItems: "start" }}>
         {/* ── Player + resumo do encontro selecionado ── */}
         <div ref={playerRef}>
-          <div style={{
-            width: "100%",
-            aspectRatio: "16 / 9",
-            borderRadius: 18,
-            overflow: "hidden",
-            background: "#000",
-            boxShadow: "0 18px 44px rgba(0,0,0,.28)",
-          }}>
+          <div
+            ref={moldura}
+            tabIndex={-1}
+            role="group"
+            aria-label={`Player de vídeo: Encontro ${String(atual + 1).padStart(2, "0")} — ${encontro.title}`}
+            aria-describedby="player-dica"
+            style={{
+              position: "relative",
+              width: "100%",
+              aspectRatio: "16 / 9",
+              borderRadius: 18,
+              overflow: "hidden",
+              background: "#000",
+              boxShadow: "0 18px 44px rgba(0,0,0,.28)",
+            }}>
+            <span id="player-dica" className="gp-sr-only">Tab leva ao atalho para pular o vídeo e, em seguida, aos controles dele.</span>
+            {/* Com o vídeo tocando, o YouTube deixa uns 50 controles no caminho do
+                Tab (o painel "Mais vídeos"). O atalho leva direto ao resumo do
+                encontro. Fica invisível até receber o foco. */}
+            <a
+              href="#encontro-resumo-titulo"
+              className="gp-pular"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById("encontro-resumo-titulo")?.focus();
+              }}
+            >
+              Pular o vídeo
+            </a>
+            {/* Sem loading="lazy": com ele, o NVDA chegava ao quadro antes de o
+                player carregar e não encontrava os controles do vídeo. */}
             <iframe
               key={encontro.id}
               src={src}
-              title={`Encontro ${atual + 1} — ${encontro.title}`}
+              title={`Vídeo do YouTube: Encontro ${String(atual + 1).padStart(2, "0")} — ${encontro.title}`}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
-              loading="lazy"
               referrerPolicy="strict-origin-when-cross-origin"
               style={{ width: "100%", height: "100%", border: "none", display: "block" }}
             />
@@ -639,10 +724,11 @@ function EncontrosSection() {
             <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap", fontSize: 12.5, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: COLORS.bloomDeep }}>
               <span>Encontro {String(atual + 1).padStart(2, "0")}</span>
               <span style={{ color: COLORS.muted, fontWeight: 600 }}>{encontro.aulas}</span>
-              <span style={{ color: COLORS.muted, fontWeight: 600 }}>· {formatarDuracao(encontro.minutos)}</span>
+              <span style={{ color: COLORS.muted, fontWeight: 600 }}><span aria-hidden="true">· </span><Duracao minutos={encontro.minutos} /></span>
             </div>
 
-            <h3 className="gp-display" style={{ fontSize: "clamp(1.25rem, 3.4vw, 1.6rem)", fontWeight: 900, margin: "10px 0 12px", lineHeight: 1.15 }}>
+            {/* tabIndex -1: destino do atalho "Pular o vídeo". */}
+            <h3 id="encontro-resumo-titulo" tabIndex={-1} className="gp-display" style={{ fontSize: "clamp(1.25rem, 3.4vw, 1.6rem)", fontWeight: 900, margin: "10px 0 12px", lineHeight: 1.15 }}>
               {encontro.title}
             </h3>
 
@@ -671,9 +757,11 @@ function EncontrosSection() {
               rel="noopener noreferrer"
               className="gp-link"
               onClick={() => track("encontro_youtube")}
-              style={{ display: "inline-block", marginTop: 18, fontSize: 14, fontWeight: 700, textDecoration: "none" }}
+              // padding vertical: área de toque de pelo menos 24px de altura (WCAG 2.5.8).
+              style={{ display: "inline-block", marginTop: 14, padding: "4px 0", fontSize: 14, fontWeight: 700, textDecoration: "none" }}
             >
-              Abrir no YouTube ↗
+              Abrir no YouTube <span aria-hidden="true">↗</span>
+              <AvisoNovaAba />
             </a>
           </div>
         </div>
@@ -683,60 +771,66 @@ function EncontrosSection() {
           {/* A altura acompanha a coluna do player (vídeo + cartão do resumo).
               Com os 7 encontros de hoje tudo cabe sem rolar; a partir do oitavo a
               lista ganha rolagem própria em vez de esticar a seção. */}
-          <div className="gp-playlist" style={{ display: "flex", flexDirection: "column", gap: 8, maxHeight: 700, overflowY: "auto", paddingRight: 4 }}>
+          <h3 className="gp-sr-only">Escolha um encontro</h3>
+          <ul role="list" className="gp-playlist gp-list-reset" style={{ display: "flex", flexDirection: "column", gap: 8, maxHeight: 700, overflowY: "auto", paddingRight: 4 }}>
             {ENCONTROS.map((e, i) => {
               const ativo = i === atual;
               return (
-                <button
-                  key={e.id}
-                  type="button"
-                  onClick={() => escolher(i)}
-                  aria-current={ativo ? "true" : undefined}
-                  className="gp-epitem"
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "38px 1fr",
-                    gap: 12,
-                    alignItems: "start",
-                    textAlign: "left",
-                    width: "100%",
-                    cursor: "pointer",
-                    border: `1px solid ${ativo ? "transparent" : COLORS.border}`,
-                    borderRadius: 14,
-                    padding: "13px 15px",
-                    fontFamily: "inherit",
-                    background: ativo ? COLORS.bloom : COLORS.surface,
-                    color: ativo ? COLORS.onBloom : COLORS.text,
-                    transition: "background .2s, border-color .2s, transform .15s",
-                  }}
-                >
-                  <span className="gp-display" style={{ fontSize: 17, fontWeight: 900, opacity: ativo ? 0.85 : 0.55, paddingTop: 1 }}>
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span>
-                    <span style={{ display: "block", fontSize: 14.5, fontWeight: 600, lineHeight: 1.35 }}>
-                      {e.title}
+                <li key={e.id}>
+                  <button
+                    type="button"
+                    onClick={() => escolher(i)}
+                    aria-current={ativo ? "true" : undefined}
+                    className="gp-epitem"
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "38px 1fr",
+                      gap: 12,
+                      alignItems: "start",
+                      textAlign: "left",
+                      width: "100%",
+                      cursor: "pointer",
+                      border: `1px solid ${ativo ? "transparent" : COLORS.border}`,
+                      borderRadius: 14,
+                      padding: "13px 15px",
+                      fontFamily: "inherit",
+                      background: ativo ? COLORS.bloom : COLORS.surface,
+                      color: ativo ? COLORS.onBloom : COLORS.text,
+                      transition: "background .2s, border-color .2s, transform .15s",
+                    }}
+                  >
+                    <span className="gp-display" style={{ fontSize: 17, fontWeight: 900, opacity: ativo ? 0.85 : 0.8, paddingTop: 1 }}>
+                      <span className="gp-sr-only">Encontro </span>
+                      {String(i + 1).padStart(2, "0")}
+                      <span className="gp-sr-only">:</span>
                     </span>
-                    <span style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 6,
-                      marginTop: 6,
-                      fontSize: 12,
-                      fontWeight: 600,
-                      color: ativo ? COLORS.onBloom : COLORS.muted,
-                      opacity: ativo ? 0.8 : 1,
-                    }}>
-                      <span aria-hidden="true">{ativo ? "▶" : "▷"}</span>
-                      {formatarDuracao(e.minutos)}
-                      <span aria-hidden="true">·</span>
-                      {e.aulas}
+                    <span>
+                      <span style={{ display: "block", fontSize: 14.5, fontWeight: 600, lineHeight: 1.35 }}>
+                        {e.title}
+                      </span>
+                      <span style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 6,
+                        marginTop: 6,
+                        fontSize: 12,
+                        fontWeight: 600,
+                        color: ativo ? COLORS.onBloom : COLORS.muted,
+                        opacity: ativo ? 0.8 : 1,
+                      }}>
+                        <span aria-hidden="true">{ativo ? "▶" : "▷"}</span>
+                        <span className="gp-sr-only">, </span>
+                        <Duracao minutos={e.minutos} />
+                        <span aria-hidden="true">·</span>
+                        <span className="gp-sr-only">, </span>
+                        {e.aulas}
+                      </span>
                     </span>
-                  </span>
-                </button>
+                  </button>
+                </li>
               );
             })}
-          </div>
+          </ul>
 
           <a
             href={PLAYLIST_URL}
@@ -763,6 +857,7 @@ function EncontrosSection() {
               <path d="M21.6 7.2c-.23-1.7-.94-2.36-2.62-2.5C16.9 4.5 14.6 4.4 12 4.4s-4.9.1-6.98.3c-1.68.14-2.4.8-2.62 2.5C2.2 8.4 2.1 10 2.1 12s.1 3.6.3 4.8c.22 1.7.94 2.36 2.62 2.5 2.08.2 4.38.3 6.98.3s4.9-.1 6.98-.3c1.68-.14 2.4-.8 2.62-2.5.2-1.2.3-2.8.3-4.8s-.1-3.6-.3-4.8zM10 15.5v-7l6 3.5-6 3.5z" />
             </svg>
             Ver a playlist completa no YouTube
+            <AvisoNovaAba />
           </a>
         </div>
       </div>
@@ -797,7 +892,6 @@ function ThemeToggle({ theme, onToggle }) {
       onClick={onToggle}
       aria-label={rotulo}
       title={rotulo}
-      aria-pressed={!escuro}
       style={{
         display: "inline-flex",
         alignItems: "center",
@@ -842,6 +936,32 @@ function ThemeToggle({ theme, onToggle }) {
 export default function GarapuvuLanding() {
   const [openModule, setOpenModule] = useState(0);
   const [theme, setTheme] = useState(temaInicial);
+  // Texto da região ao vivo: o que o leitor de tela anuncia depois de uma ação
+  // que não move o foco (hoje, a troca de tema).
+  const [aviso, setAviso] = useState("");
+  const abasRef = useRef([]);
+
+  const selecionarModulo = (i) => {
+    setOpenModule(i);
+    track("modulo_" + MODULES[i].slug);
+  };
+
+  // Acordeão da WAI-ARIA: Tab passa por todos os módulos e pelo conteúdo do que
+  // estiver aberto; Enter/Espaço abrem um módulo. As setas ↑/↓ (e Home/End) são
+  // um atalho para pular direto entre os botões dos módulos.
+  const navegarModulos = (e, i) => {
+    const n = MODULES.length;
+    let j;
+    switch (e.key) {
+      case "ArrowDown": j = (i + 1) % n; break;
+      case "ArrowUp": j = (i - 1 + n) % n; break;
+      case "Home": j = 0; break;
+      case "End": j = n - 1; break;
+      default: return;
+    }
+    e.preventDefault();
+    abasRef.current[j]?.focus();
+  };
 
   // O tema vive no <html>, não neste componente: assim as variáveis CSS valem
   // para a página toda (inclusive a cor de fundo atrás do conteúdo, no bounce
@@ -861,6 +981,7 @@ export default function GarapuvuLanding() {
   const alternarTema = () => {
     const proximo = theme === "dark" ? "light" : "dark";
     setTheme(proximo);
+    setAviso(proximo === "light" ? "Tema claro ativado" : "Tema escuro ativado");
     track("tema_" + proximo);
   };
 
@@ -888,6 +1009,13 @@ export default function GarapuvuLanding() {
           padding: 11px 0; border-bottom: 1px solid ${COLORS.border}; }
         .gp-lesson:last-child { border-bottom: none; }
         .gp-num { font-family: 'Fraunces', serif; font-weight: 600; color: ${COLORS.bloomDeep}; font-size: 15px; padding-top: 1px; }
+        /* Duas colunas: botões na 1ª (uma linha cada) e o conteúdo aberto na 2ª,
+           ocupando todas as linhas. A última linha (1fr) absorve a altura extra
+           do conteúdo, para os botões não se espaçarem. */
+        .gp-modlayout { display: grid; grid-template-columns: 320px 1fr; column-gap: 40px; row-gap: 10px;
+          grid-template-rows: repeat(${MODULES.length}, auto) 1fr; align-items: start; }
+        .gp-modhead { grid-column: 1; }
+        .gp-modpainel { grid-column: 2; grid-row: 1 / -1; }
         .gp-modtab { cursor: pointer; text-align: left; width: 100%; background: none; border: none;
           font-family: inherit; padding: 18px 20px; border-radius: 16px; transition: background .2s, color .2s; }
         .gp-modtab:focus-visible { outline: 3px solid ${COLORS.bloom}; outline-offset: 2px; }
@@ -903,22 +1031,47 @@ export default function GarapuvuLanding() {
           .gp-epitem:hover { border-color: ${COLORS.bloom} !important; transform: translateY(-2px); }
         }
         .gp-epitem:focus-visible { outline: 3px solid ${COLORS.bloom}; outline-offset: 2px; }
+
+        /* ── Acessibilidade ── */
+        /* Texto só para leitor de tela: some da tela, continua na árvore de acessibilidade. */
+        .gp-sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+          overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }
+        .gp-list-reset { list-style: none; margin: 0; padding: 0; }
+        /* Contorno de foco em TODO elemento focável (links, ícones, tema, player),
+           não só nos botões que já tinham regra própria. */
+        :focus-visible { outline: 3px solid ${COLORS.bloom}; outline-offset: 3px; }
+        /* O player fica num wrapper com overflow hidden: o contorno vai para dentro. */
+        iframe:focus-visible { outline-offset: -3px; }
+        /* No CTA dourado, contorno dourado não apareceria. */
+        .gp-cta :focus-visible { outline-color: ${COLORS.onBloom}; }
+        a.gp-btn { display: inline-block; text-decoration: none; text-align: center; }
+        /* Atalho "Pular o vídeo": fora da tela até receber o foco do teclado. */
+        .gp-pular { position: absolute; left: 12px; top: 12px; z-index: 2; padding: 10px 16px;
+          border-radius: 999px; font-weight: 700; font-size: 14px; text-decoration: none;
+          background: ${COLORS.bloom}; color: ${COLORS.onBloom}; transform: translateY(-200%); }
+        .gp-pular:focus { transform: none; outline-color: ${COLORS.onBand}; }
         .gp-playlist { scrollbar-width: thin; scrollbar-color: ${COLORS.border} transparent; }
         .gp-playlist::-webkit-scrollbar { width: 8px; }
         .gp-playlist::-webkit-scrollbar-thumb { background: ${COLORS.border}; border-radius: 999px; }
         .gp-playlist::-webkit-scrollbar-track { background: transparent; }
 
+        .gp-herolayout { display: grid; grid-template-columns: 1fr; grid-template-areas: "texto" "acoes"; }
+        .gp-herolayout--video { grid-template-columns: 1fr 420px; column-gap: 48px;
+          grid-template-areas: "texto video" "acoes video"; }
+
         /* ── Tablet ── */
         @media (max-width: 920px) {
-          .gp-herolayout { grid-template-columns: 1fr !important; gap: 36px !important; }
+          /* Uma coluna só: texto, vídeo e botões, na mesma ordem do Tab. */
+          .gp-herolayout--video { grid-template-columns: 1fr; row-gap: 32px;
+            grid-template-areas: "texto" "video" "acoes"; }
           /* Player em cima, lista embaixo — e a lista deixa de rolar sozinha,
              para não criar uma segunda rolagem dentro da página. */
           .gp-encontros { grid-template-columns: 1fr !important; }
           .gp-playlist { max-height: none !important; }
           .gp-grid3 { grid-template-columns: 1fr 1fr !important; }
-          .gp-modlayout { grid-template-columns: 1fr !important; }
-          .gp-modtabs { flex-direction: row !important; overflow-x: auto; padding-bottom: 6px; }
-          .gp-modtab { min-width: 220px; }
+          /* Uma coluna: cada módulo com o conteúdo logo abaixo (acordeão). */
+          .gp-modlayout { grid-template-columns: 1fr; grid-template-rows: none; }
+          .gp-modhead, .gp-modpainel { grid-column: 1 !important; grid-row: auto !important; }
         }
 
         /* ── Celular ── */
@@ -928,7 +1081,6 @@ export default function GarapuvuLanding() {
           .gp-grid3 { grid-template-columns: 1fr !important; }
           .gp-stats { grid-template-columns: 1fr 1fr !important; }
           .gp-row2 { grid-template-columns: 1fr !important; gap: 2px !important; padding: 12px 0 !important; }
-          .gp-modtab { min-width: 200px; }
         }
 
         /* ── Celular pequeno ── */
@@ -940,245 +1092,280 @@ export default function GarapuvuLanding() {
         }
       `}</style>
 
-      {/* HERO */}
-      <header style={{ background: COLORS.band, color: COLORS.onBand, position: "relative", overflow: "hidden" }}>
-        {/* Imagem de fundo (garapuvu florido) — espelhada para jogar as flores
-            para a direita, longe do texto à esquerda. */}
-        <div style={{ position: "absolute", inset: 0,
-          backgroundImage: `url(${heroBg})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          transform: "scaleX(-1)" }} />
-        {/* Overlay escuro: forte à esquerda (texto legível) e suave à direita
-            (deixa as flores aparecerem), com leve escurecida geral. */}
-        <div style={{ position: "absolute", inset: 0,
-          background: `linear-gradient(90deg, ${COLORS.band} 0%, rgba(${COLORS.bandRgb},.82) 38%, rgba(${COLORS.bandRgb},.45) 70%, rgba(${COLORS.bandRgb},.2) 100%)` }} />
-        <div style={{ position: "absolute", inset: 0,
-          background: `linear-gradient(to top, ${COLORS.band} 0%, transparent 28%)` }} />
-        <div className="gp-wrap" style={{ position: "relative", paddingTop: 40, paddingBottom: 64 }}>
-          <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 70, gap: 12, flexWrap: "wrap" }}>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 12 }}>
-              <span className="gp-display" style={{ fontWeight: 900, fontSize: 22 }}>
-                Garapuvu<span style={{ color: COLORS.bloom }}>.</span>
-              </span>
-              <VisitorCount />
-            </span>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 14 }}>
-              <span className="gp-eyebrow" style={{ color: COLORS.mist }}>Turma 2026</span>
-              <ThemeToggle theme={theme} onToggle={alternarTema} />
-            </span>
-          </nav>
+      {/* Região ao vivo: anuncia ao leitor de tela ações que não mudam o foco. */}
+      <div className="gp-sr-only" role="status" aria-live="polite">{aviso}</div>
 
-          {/* Texto à esquerda; o vídeo (quando publicado) entra na coluna da direita.
-              Sem YOUTUBE_ID o grid vira coluna única e o topo fica como antes. */}
+      {/* Conteúdo principal (landmark "main"). Começa no topo para o h1 ficar
+          dentro dele — o NVDA chega aqui com a tecla D ou Q. */}
+      <main id="conteudo-principal">
+
+        {/* HERO */}
+        <div style={{ background: COLORS.band, color: COLORS.onBand, position: "relative", overflow: "hidden" }}>
+          {/* Imagem de fundo (garapuvu florido) — espelhada para jogar as flores
+              para a direita, longe do texto à esquerda. Por ser CSS, não tem alt:
+              o role="img" + aria-label dá a ela uma descrição para o leitor de tela. */}
           <div
-            className="gp-herolayout"
-            style={{
-              display: "grid",
-              gridTemplateColumns: YOUTUBE_ID ? "1fr 420px" : "1fr",
-              gap: 48,
-              alignItems: "center",
-            }}
-          >
-            <div>
-              <Reveal as="p" className="gp-eyebrow" style={{ color: COLORS.bloom, marginBottom: 22 }}>
-                ● Projeto Social · 100% gratuito · remoto
-              </Reveal>
-
-              <Reveal delay={0.05}>
-                <h1 className="gp-display gp-hero-h1" style={{ fontSize: "clamp(2.4rem, 8vw, 4.75rem)", fontWeight: 900, margin: 0, maxWidth: 880 }}>
-                  Aprender tecnologia de graça, de{" "}
-                  <span style={{ color: COLORS.bloom, fontStyle: "italic" }}>qualquer lugar</span> do mundo.
-                </h1>
-              </Reveal>
-
-              <Reveal delay={0.12}>
-                <p style={{ fontSize: 19, lineHeight: 1.6, color: COLORS.onBandBody, maxWidth: 620, marginTop: 26 }}>
-                  Desde 2020, o Garapuvu ensina lógica de programação, desenvolvimento e
-                  testes de software — e, agora, Inteligência Artificial e Data Science
-                  aplicados. De Florianópolis a outros estados do Brasil, e até outros países.
-                </p>
-              </Reveal>
-
-              <Reveal delay={0.18} style={{ display: "flex", gap: 14, flexWrap: "wrap", marginTop: 34 }}>
-                <button className="gp-btn" onClick={() => openWhatsApp("hero_inscrever")}
-                  style={{ background: COLORS.bloom, color: COLORS.onBloom, cursor: "pointer" }}>
-                  Quero participar →
-                </button>
-                <button type="button" className="gp-btn" onClick={() => scrollToSection("encontros", "hero_encontros")}
-                  style={{ background: "rgba(255,255,255,.1)", color: COLORS.onBand, boxShadow: "inset 0 0 0 1.5px rgba(255,255,255,.3)", cursor: "pointer" }}>
-                  ▶ Assistir as aulas
-                </button>
-                <button type="button" className="gp-btn" onClick={() => scrollToSection("conteudo", "hero_conteudo")}
-                  style={{ background: "transparent", color: COLORS.onBand, boxShadow: "inset 0 0 0 1.5px rgba(255,255,255,.3)", cursor: "pointer" }}>
-                  Ver o conteúdo
-                </button>
-              </Reveal>
-
-              <div style={{ height: 70, marginTop: 36, maxWidth: 520 }}>
-                <Branch blooms={6} />
-              </div>
+            role="img"
+            aria-label="Árvore de garapuvu florida, com flores amarelas"
+            style={{ position: "absolute", inset: 0,
+              backgroundImage: `url(${heroBg})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              transform: "scaleX(-1)" }} />
+          {/* Overlay escuro: forte à esquerda (texto legível) e suave à direita
+              (deixa as flores aparecerem), com leve escurecida geral. */}
+          <div aria-hidden="true" style={{ position: "absolute", inset: 0,
+            background: `linear-gradient(90deg, ${COLORS.band} 0%, rgba(${COLORS.bandRgb},.82) 38%, rgba(${COLORS.bandRgb},.45) 70%, rgba(${COLORS.bandRgb},.2) 100%)` }} />
+          <div aria-hidden="true" style={{ position: "absolute", inset: 0,
+            background: `linear-gradient(to top, ${COLORS.band} 0%, transparent 28%)` }} />
+          <div className="gp-wrap" style={{ position: "relative", paddingTop: 40, paddingBottom: 64 }}>
+            {/* Barra do topo: marca, visitas e tema. Não é <nav> — não tem links. */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 70, gap: 12, flexWrap: "wrap" }}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 12 }}>
+                <span className="gp-display" style={{ fontWeight: 900, fontSize: 22 }}>
+                  Garapuvu<span style={{ color: COLORS.bloom }}>.</span>
+                </span>
+                <VisitorCount />
+              </span>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 14 }}>
+                <span className="gp-eyebrow" style={{ color: COLORS.mist }}>Turma 2026</span>
+                <ThemeToggle theme={theme} onToggle={alternarTema} />
+              </span>
             </div>
 
-            <HeroVideo />
+            {/* Texto à esquerda; o vídeo (quando publicado) entra na coluna da direita.
+                Sem YOUTUBE_ID o grid vira coluna única e o topo fica como antes.
+
+                Ordem no HTML: texto → vídeo → botões. É ela que define a ordem do
+                Tab e da leitura do NVDA: o vídeo de apresentação vem antes de
+                "Quero participar". As áreas do grid (ver .gp-herolayout no CSS)
+                mantêm o vídeo visualmente na coluna da direita no desktop. */}
+            <div className={"gp-herolayout" + (YOUTUBE_ID ? " gp-herolayout--video" : "")}>
+              <div style={{ gridArea: "texto" }}>
+                <Reveal as="p" className="gp-eyebrow" style={{ color: COLORS.bloom, marginBottom: 22 }}>
+                  <span aria-hidden="true">● </span>Projeto Social · 100% gratuito · remoto
+                </Reveal>
+
+                <Reveal delay={0.05}>
+                  <h1 className="gp-display gp-hero-h1" style={{ fontSize: "clamp(2.4rem, 8vw, 4.75rem)", fontWeight: 900, margin: 0, maxWidth: 880 }}>
+                    Aprender tecnologia de graça, de{" "}
+                    <span style={{ color: COLORS.bloom, fontStyle: "italic" }}>qualquer lugar</span> do mundo.
+                  </h1>
+                </Reveal>
+
+                <Reveal delay={0.12}>
+                  <p style={{ fontSize: 19, lineHeight: 1.6, color: COLORS.onBandBody, maxWidth: 620, marginTop: 26 }}>
+                    Desde 2020, o Garapuvu ensina lógica de programação, desenvolvimento e
+                    testes de software — e, agora, Inteligência Artificial e Data Science
+                    aplicados. De Florianópolis a outros estados do Brasil, e até outros países.
+                  </p>
+                </Reveal>
+              </div>
+
+              <HeroVideo />
+
+              <div style={{ gridArea: "acoes" }}>
+                <Reveal delay={0.18} style={{ display: "flex", gap: 14, flexWrap: "wrap", marginTop: 34 }}>
+                  <button type="button" className="gp-btn" onClick={() => openWhatsApp("hero_inscrever")}
+                    style={{ background: COLORS.bloom, color: COLORS.onBloom, cursor: "pointer" }}>
+                    Quero participar <span aria-hidden="true">→</span>
+                    <AvisoNovaAba texto="abre o WhatsApp em nova aba" />
+                  </button>
+                  {/* Estes dois levam a outra parte da página, então são LINKS (o NVDA
+                      lê "link, na mesma página") — e movem o foco junto com a rolagem. */}
+                  <a href="#encontros" className="gp-btn" onClick={(e) => irParaSecao(e, "encontros", "encontros-titulo", "hero_encontros")}
+                    style={{ background: "rgba(255,255,255,.1)", color: COLORS.onBand, boxShadow: "inset 0 0 0 1.5px rgba(255,255,255,.3)" }}>
+                    <span aria-hidden="true">▶ </span>Assistir as aulas
+                  </a>
+                  <a href="#conteudo" className="gp-btn" onClick={(e) => irParaSecao(e, "conteudo", "conteudo-titulo", "hero_conteudo")}
+                    style={{ background: "transparent", color: COLORS.onBand, boxShadow: "inset 0 0 0 1.5px rgba(255,255,255,.3)" }}>
+                    Ver o conteúdo
+                  </a>
+                </Reveal>
+
+                <div style={{ height: 70, marginTop: 36, maxWidth: 520 }}>
+                  <Branch blooms={6} />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </header>
 
-      {/* STATS */}
-      <section className="gp-wrap" style={{ marginTop: -34, position: "relative", zIndex: 2 }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14 }} className="gp-stats">
-          {STATS.map((s, i) => (
-            <Reveal key={s.label} delay={i * 0.06} className="gp-card"
-              style={{ padding: "26px 20px", textAlign: "center" }}>
-              <div className="gp-display" style={{ fontSize: "clamp(2rem, 6vw, 2.625rem)", fontWeight: 900, color: COLORS.bloomDeep }}>{s.value}</div>
-              <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: COLORS.muted, marginTop: 4 }}>
-                {s.label}
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
+        {/* STATS */}
+        <section aria-label="Números do projeto" className="gp-wrap" style={{ marginTop: -34, position: "relative", zIndex: 2 }}>
+          <ul role="list" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14 }} className="gp-stats gp-list-reset">
+            {STATS.map((s, i) => (
+              <Reveal as="li" key={s.label} delay={i * 0.06} className="gp-card"
+                style={{ padding: "26px 20px", textAlign: "center" }}>
+                <div className="gp-display" style={{ fontSize: "clamp(2rem, 6vw, 2.625rem)", fontWeight: 900, color: COLORS.bloomDeep }}>{s.value}</div>
+                <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: COLORS.muted, marginTop: 4 }}>
+                  {s.label}
+                </div>
+              </Reveal>
+            ))}
+          </ul>
+        </section>
 
-      {/* COMO FUNCIONA */}
-      <section className="gp-wrap" style={{ paddingTop: 90, paddingBottom: 30 }}>
-        <Reveal as="p" className="gp-eyebrow" style={{ color: COLORS.bloomDeep }}>Como funciona</Reveal>
-        <Reveal as="h2" delay={0.05} className="gp-display" style={{ fontSize: "clamp(1.9rem, 5.2vw, 2.5rem)", fontWeight: 900, margin: "10px 0 36px" }}>
-          Um encontro por semana. O ano inteiro com você.
-        </Reveal>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 56px" }} className="gp-grid2">
-          {HOWITWORKS.map(([k, v], i) => (
-            <Reveal key={k} delay={i * 0.05} className="gp-row2"
-              style={{ padding: "16px 0", borderTop: `1px solid ${COLORS.border}` }}>
-              <span style={{ fontWeight: 700, color: COLORS.bloomDeep }}>{k}</span>
-              <span style={{ color: COLORS.textSoft }}>{v}</span>
-            </Reveal>
-          ))}
-        </div>
-        <Reveal className="gp-card" delay={0.1}
-          style={{ marginTop: 28, padding: "18px 22px", background: COLORS.surfaceAlt, borderColor: "transparent", fontSize: 14.5, color: COLORS.muted }}>
-          <strong style={{ color: COLORS.text }}>Importante:</strong> participantes a partir de 16 anos são bem-vindos
-          mediante autorização dos pais ou responsáveis. Qualquer nacionalidade pode participar.
-        </Reveal>
-      </section>
-
-      {/* CURRÍCULO — assinatura: módulos como ramos */}
-      <section id="conteudo" style={{ background: COLORS.band, color: COLORS.onBand, marginTop: 70, scrollMarginTop: 24 }}>
-        <div className="gp-wrap" style={{ paddingTop: 80, paddingBottom: 80 }}>
-          <Reveal as="p" className="gp-eyebrow" style={{ color: COLORS.bloom }}>Planejamento do curso 2026</Reveal>
-          <Reveal as="h2" delay={0.05} className="gp-display" style={{ fontSize: "clamp(1.9rem, 5.4vw, 2.625rem)", fontWeight: 900, margin: "10px 0 8px" }}>
-            Cinco módulos, do fundamento à <span style={{ color: COLORS.bloom, fontStyle: "italic" }}>Inteligência Artificial</span> e aos dados.
+        {/* COMO FUNCIONA */}
+        <section aria-labelledby="como-funciona-titulo" className="gp-wrap" style={{ paddingTop: 90, paddingBottom: 30 }}>
+          <Reveal as="p" className="gp-eyebrow" style={{ color: COLORS.bloomDeep }}>Como funciona</Reveal>
+          <Reveal as="h2" id="como-funciona-titulo" delay={0.05} className="gp-display" style={{ fontSize: "clamp(1.9rem, 5.2vw, 2.5rem)", fontWeight: 900, margin: "10px 0 36px" }}>
+            Um encontro por semana. O ano inteiro com você.
           </Reveal>
-          <p style={{ color: COLORS.onBandCaption, marginBottom: 40, maxWidth: 560 }}>
-            36 aulas que crescem como os ramos do garapuvu — da raiz dos fundamentos
-            até a floração com IA e Data Science.
-          </p>
+          {/* Lista de definição: o NVDA lê cada par como termo + descrição. */}
+          <dl style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 56px", margin: 0 }} className="gp-grid2">
+            {HOWITWORKS.map(([k, v], i) => (
+              <Reveal key={k} delay={i * 0.05} className="gp-row2"
+                style={{ padding: "16px 0", borderTop: `1px solid ${COLORS.border}` }}>
+                <dt style={{ fontWeight: 700, color: COLORS.bloomDeep }}>{k}</dt>
+                <dd style={{ color: COLORS.textSoft, margin: 0 }}>{v}</dd>
+              </Reveal>
+            ))}
+          </dl>
+          <Reveal className="gp-card" delay={0.1}
+            style={{ marginTop: 28, padding: "18px 22px", background: COLORS.surfaceAlt, borderColor: "transparent", fontSize: 14.5, color: COLORS.muted }}>
+            <strong style={{ color: COLORS.text }}>Importante:</strong> participantes a partir de 16 anos são bem-vindos
+            mediante autorização dos pais ou responsáveis. Qualquer nacionalidade pode participar.
+          </Reveal>
+        </section>
 
-          <div className="gp-modlayout" style={{ display: "grid", gridTemplateColumns: "320px 1fr", gap: 40, alignItems: "start" }}>
-            {/* tabs */}
-            <div className="gp-modtabs" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        {/* CURRÍCULO — assinatura: módulos como ramos */}
+        <section id="conteudo" aria-labelledby="conteudo-titulo" style={{ background: COLORS.band, color: COLORS.onBand, marginTop: 70, scrollMarginTop: 24 }}>
+          <div className="gp-wrap" style={{ paddingTop: 80, paddingBottom: 80 }}>
+            <Reveal as="p" className="gp-eyebrow" style={{ color: COLORS.bloom }}>Planejamento do curso 2026</Reveal>
+            {/* tabIndex -1: recebe o foco quando a pessoa usa "Ver o conteúdo" no topo. */}
+            <Reveal as="h2" id="conteudo-titulo" tabIndex={-1} delay={0.05} className="gp-display" style={{ fontSize: "clamp(1.9rem, 5.4vw, 2.625rem)", fontWeight: 900, margin: "10px 0 8px" }}>
+              Cinco módulos, do fundamento à <span style={{ color: COLORS.bloom, fontStyle: "italic" }}>Inteligência Artificial</span> e aos dados.
+            </Reveal>
+            <p style={{ color: COLORS.onBandCaption, marginBottom: 40, maxWidth: 560 }}>
+              36 aulas que crescem como os ramos do garapuvu — da raiz dos fundamentos
+              até a floração com IA e Data Science.
+            </p>
+
+            {/* Acordeão: no HTML, cada botão de módulo vem seguido do próprio
+                conteúdo. É essa a ordem do Tab e do NVDA: Módulo 01 → aulas do 01 →
+                Módulo 02 → ... O grid (ver .gp-modlayout no CSS) mantém o visual de
+                duas colunas no desktop: botões à esquerda, conteúdo à direita. */}
+            <div className="gp-modlayout">
               {MODULES.map((m, i) => {
                 const active = i === openModule;
                 return (
-                  <button key={m.n} className="gp-modtab" onClick={() => { setOpenModule(i); track("modulo_" + m.slug); }}
-                    aria-pressed={active}
-                    style={{ background: active ? COLORS.bloom : "rgba(255,255,255,.05)", color: active ? COLORS.onBloom : COLORS.onBand, minWidth: 240 }}>
-                    <div className="gp-display" style={{ fontSize: 13, fontWeight: 600, opacity: 0.7 }}>Módulo {m.n}</div>
-                    <div className="gp-display" style={{ fontSize: 21, fontWeight: 900, lineHeight: 1.1, marginTop: 4 }}>{m.title}</div>
-                  </button>
+                  <React.Fragment key={m.n}>
+                    <h3 className="gp-modhead" style={{ margin: 0, gridRow: i + 1 }}>
+                      <button type="button" className="gp-modtab"
+                        ref={(el) => { abasRef.current[i] = el; }}
+                        id={`modulo-botao-${m.slug}`}
+                        aria-expanded={active}
+                        aria-controls={`modulo-painel-${m.slug}`}
+                        onClick={() => selecionarModulo(i)}
+                        onKeyDown={(e) => navegarModulos(e, i)}
+                        style={{ background: active ? COLORS.bloom : "rgba(255,255,255,.05)", color: active ? COLORS.onBloom : COLORS.onBand }}>
+                        <span className="gp-display" style={{ display: "block", fontSize: 13, fontWeight: 600, opacity: active ? 0.9 : 0.85 }}>Módulo {m.n}</span>
+                        <span className="gp-display" style={{ display: "block", fontSize: 21, fontWeight: 900, lineHeight: 1.1, marginTop: 4 }}>{m.title}</span>
+                      </button>
+                    </h3>
+
+                    {/* aulas do módulo — só o aberto aparece */}
+                    <div className="gp-card gp-modpainel" id={`modulo-painel-${m.slug}`} role="region" tabIndex={0}
+                      aria-labelledby={`modulo-botao-${m.slug}`}
+                      hidden={!active}
+                      style={{ padding: "30px 32px", background: COLORS.surface, color: COLORS.text }}>
+                      <p style={{ fontSize: 14, color: COLORS.muted, fontStyle: "italic", margin: "0 0 18px" }}>
+                        {m.tag}
+                      </p>
+                      <ol role="list" className="gp-list-reset">
+                        {m.lessons.map((l, j) => (
+                          <li className="gp-lesson" key={j}>
+                            <span className="gp-num" aria-hidden="true">{String(j + 1).padStart(2, "0")}</span>
+                            <span style={{ fontSize: 15.5, lineHeight: 1.4 }}>{l}</span>
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+                  </React.Fragment>
                 );
               })}
             </div>
+          </div>
+        </section>
 
-            {/* lessons */}
-            <div className="gp-card" style={{ padding: "30px 32px", background: COLORS.surface, color: COLORS.text }}>
-              <p style={{ fontSize: 14, color: COLORS.muted, fontStyle: "italic", margin: "0 0 18px" }}>
-                {MODULES[openModule].tag}
-              </p>
-              <div>
-                {MODULES[openModule].lessons.map((l, i) => (
-                  <div className="gp-lesson" key={i}>
-                    <span className="gp-num">{String(i + 1).padStart(2, "0")}</span>
-                    <span style={{ fontSize: 15.5, lineHeight: 1.4 }}>{l}</span>
-                  </div>
-                ))}
-              </div>
+        {/* ENCONTROS GRAVADOS */}
+        <EncontrosSection />
+
+        {/* OBJETIVOS */}
+        <section aria-labelledby="objetivos-titulo" className="gp-wrap" style={{ paddingTop: 90, paddingBottom: 30 }}>
+          <Reveal as="p" className="gp-eyebrow" style={{ color: COLORS.bloomDeep }}>Objetivos</Reveal>
+          <Reveal as="h2" id="objetivos-titulo" delay={0.05} className="gp-display" style={{ fontSize: "clamp(1.9rem, 5.2vw, 2.5rem)", fontWeight: 900, margin: "10px 0 40px" }}>
+            Por que o Garapuvu existe
+          </Reveal>
+          <div className="gp-grid3">
+            {OBJECTIVES.map(([t, d], i) => (
+              <Reveal key={t} delay={(i % 3) * 0.06} className="gp-card" style={{ padding: "24px 22px" }}>
+                <div aria-hidden="true" style={{ width: 28, height: 4, borderRadius: 4, background: COLORS.bloom, marginBottom: 14 }} />
+                <h3 style={{ fontSize: 18, fontWeight: 700, margin: "0 0 8px" }}>{t}</h3>
+                <p style={{ fontSize: 14.5, lineHeight: 1.55, color: COLORS.textSoft, margin: 0 }}>{d}</p>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        {/* MARCOS */}
+        <section aria-labelledby="marcos-titulo" className="gp-wrap" style={{ paddingTop: 70, paddingBottom: 40 }}>
+          <Reveal as="p" className="gp-eyebrow" style={{ color: COLORS.bloomDeep }}>Marcos 2026 – 2027</Reveal>
+          <Reveal as="h2" id="marcos-titulo" delay={0.05} className="gp-display" style={{ fontSize: "clamp(1.9rem, 5.2vw, 2.5rem)", fontWeight: 900, margin: "10px 0 40px" }}>
+            O ano, ramo a ramo
+          </Reveal>
+          <div className="gp-grid3">
+            {MILESTONES.map((m, i) => (
+              <Reveal key={m.period} delay={i * 0.08} className="gp-card" style={{ padding: "26px 24px" }}>
+                <h3 className="gp-display" style={{ fontSize: 20, fontWeight: 900, color: COLORS.bloomDeep, margin: "0 0 16px" }}>
+                  {m.period}
+                </h3>
+                <ul role="list" className="gp-list-reset">
+                  {m.items.map((it) => (
+                    <li key={it.t} style={{ display: "flex", gap: 10, padding: "8px 0", fontSize: 14.5, color: COLORS.textSoft }}>
+                      <span
+                        aria-hidden="true"
+                        style={{ color: it.done ? COLORS.leaf : COLORS.bloom, fontWeight: 700 }}
+                      >
+                        {it.done ? "✓" : "→"}
+                      </span>
+                      <span>
+                        {it.t}
+                        {/* O ✓/→ é só visual; o status vai por extenso para o leitor de tela. */}
+                        <span className="gp-sr-only">{it.done ? " (concluído)" : " (previsto)"}</span>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section aria-labelledby="cta-titulo" className="gp-wrap" style={{ paddingTop: 50, paddingBottom: 90 }}>
+          <Reveal className="gp-cta" style={{ background: `linear-gradient(120deg, ${COLORS.bloomWarm}, ${COLORS.bloom})`,
+            borderRadius: 28, padding: "56px 40px", textAlign: "center", color: COLORS.onBloom, position: "relative", overflow: "hidden" }}>
+            <div style={{ position: "absolute", right: 10, top: 10, width: 180, height: 90, opacity: 0.85 }}>
+              <Branch blooms={5} flip />
             </div>
-          </div>
-        </div>
-      </section>
+            <h2 id="cta-titulo" className="gp-display" style={{ fontSize: "clamp(1.8rem, 5vw, 2.375rem)", fontWeight: 900, margin: 0, position: "relative" }}>
+              Quer fazer parte do projeto?
+            </h2>
+            <p style={{ maxWidth: 520, margin: "14px auto 28px", fontSize: 17, fontWeight: 500, position: "relative" }}>
+              Conheça o conteúdo das aulas e inscreva-se na próxima turma. Basta um
+              e-mail e um computador com internet.
+            </p>
+            <button type="button" className="gp-btn" onClick={() => openWhatsApp("cta_inscrever")}
+              style={{ background: COLORS.onBloom, color: COLORS.bloom, position: "relative", cursor: "pointer" }}>
+              Saiba mais e participe <span aria-hidden="true">→</span>
+              <AvisoNovaAba texto="abre o WhatsApp em nova aba" />
+            </button>
+          </Reveal>
+        </section>
 
-      {/* ENCONTROS GRAVADOS */}
-      <EncontrosSection />
-
-      {/* OBJETIVOS */}
-      <section className="gp-wrap" style={{ paddingTop: 90, paddingBottom: 30 }}>
-        <Reveal as="p" className="gp-eyebrow" style={{ color: COLORS.bloomDeep }}>Objetivos</Reveal>
-        <Reveal as="h2" delay={0.05} className="gp-display" style={{ fontSize: "clamp(1.9rem, 5.2vw, 2.5rem)", fontWeight: 900, margin: "10px 0 40px" }}>
-          Por que o Garapuvu existe
-        </Reveal>
-        <div className="gp-grid3">
-          {OBJECTIVES.map(([t, d], i) => (
-            <Reveal key={t} delay={(i % 3) * 0.06} className="gp-card" style={{ padding: "24px 22px" }}>
-              <div style={{ width: 28, height: 4, borderRadius: 4, background: COLORS.bloom, marginBottom: 14 }} />
-              <h3 style={{ fontSize: 18, fontWeight: 700, margin: "0 0 8px" }}>{t}</h3>
-              <p style={{ fontSize: 14.5, lineHeight: 1.55, color: COLORS.textSoft, margin: 0 }}>{d}</p>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* MARCOS */}
-      <section className="gp-wrap" style={{ paddingTop: 70, paddingBottom: 40 }}>
-        <Reveal as="p" className="gp-eyebrow" style={{ color: COLORS.bloomDeep }}>Marcos 2026 – 2027</Reveal>
-        <Reveal as="h2" delay={0.05} className="gp-display" style={{ fontSize: "clamp(1.9rem, 5.2vw, 2.5rem)", fontWeight: 900, margin: "10px 0 40px" }}>
-          O ano, ramo a ramo
-        </Reveal>
-        <div className="gp-grid3">
-          {MILESTONES.map((m, i) => (
-            <Reveal key={m.period} delay={i * 0.08} className="gp-card" style={{ padding: "26px 24px" }}>
-              <div className="gp-display" style={{ fontSize: 20, fontWeight: 900, color: COLORS.bloomDeep, marginBottom: 16 }}>
-                {m.period}
-              </div>
-              {m.items.map((it) => (
-                <div key={it.t} style={{ display: "flex", gap: 10, padding: "8px 0", fontSize: 14.5, color: COLORS.textSoft }}>
-                  <span
-                    aria-hidden="true"
-                    style={{ color: it.done ? COLORS.leaf : COLORS.bloom, fontWeight: 700 }}
-                  >
-                    {it.done ? "✓" : "→"}
-                  </span>
-                  <span>
-                    {it.t}
-                    {it.done && <span style={{ position: "absolute", left: -9999 }}> (concluído)</span>}
-                  </span>
-                </div>
-              ))}
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="gp-wrap" style={{ paddingTop: 50, paddingBottom: 90 }}>
-        <Reveal style={{ background: `linear-gradient(120deg, ${COLORS.bloomWarm}, ${COLORS.bloom})`,
-          borderRadius: 28, padding: "56px 40px", textAlign: "center", color: COLORS.onBloom, position: "relative", overflow: "hidden" }}>
-          <div style={{ position: "absolute", right: 10, top: 10, width: 180, height: 90, opacity: 0.85 }}>
-            <Branch blooms={5} flip />
-          </div>
-          <h2 className="gp-display" style={{ fontSize: "clamp(1.8rem, 5vw, 2.375rem)", fontWeight: 900, margin: 0, position: "relative" }}>
-            Quer fazer parte do projeto?
-          </h2>
-          <p style={{ maxWidth: 520, margin: "14px auto 28px", fontSize: 17, fontWeight: 500, position: "relative" }}>
-            Conheça o conteúdo das aulas e inscreva-se na próxima turma. Basta um
-            e-mail e um computador com internet.
-          </p>
-          <button className="gp-btn" onClick={() => openWhatsApp("cta_inscrever")}
-            style={{ background: COLORS.onBloom, color: COLORS.bloom, position: "relative", cursor: "pointer" }}>
-            Saiba mais e participe →
-          </button>
-        </Reveal>
-      </section>
+      </main>
 
       {/* FOOTER */}
       <footer style={{ background: COLORS.band, color: COLORS.onBandFooter, textAlign: "center", padding: "34px 24px", fontSize: 14 }}>
@@ -1186,7 +1373,6 @@ export default function GarapuvuLanding() {
           Garapuvu<span style={{ color: COLORS.bloom }}>.</span>
         </div>
         <SocialLinks />
-        <br />
         Projeto Social Garapuvu 2026 · Instrutor: Douglas Adriano Queiroz<br />
         Feito para a comunidade de tecnologia — de Florianópolis para o mundo.
       </footer>
