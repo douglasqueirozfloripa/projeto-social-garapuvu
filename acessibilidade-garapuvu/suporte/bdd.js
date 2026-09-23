@@ -51,8 +51,8 @@ const test = base.extend({
     await use(new Narrador(testInfo));
   },
 
-  legenda: async ({ page }, use) => {
-    const legenda = new Legenda(page);
+  legenda: async ({ page, narrador }, use) => {
+    const legenda = new Legenda(page, narrador);
     await legenda.instalar();
     await use(legenda);
   },
@@ -122,12 +122,14 @@ function cenario(nome, passos, detalhes = {}) {
 
     // A legenda só aparece depois da primeira navegação — até lá a página está em branco.
     await legenda.iniciar(nomeFuncionalidade, nome, passos);
+    await narrador.narrar(`Cenário: ${nome}`);
 
     let sucesso = false;
     try {
       for (const [i, p] of passos.entries()) {
         await test.step(`${p.palavra} ${p.texto}`, async () => {
           await legenda.passo(i, 'executando');
+          await narrador.narrar(`${p.palavra} ${p.texto}`);
           try {
             await p.fn(contexto);
           } catch (erro) {
@@ -142,6 +144,7 @@ function cenario(nome, passos, detalhes = {}) {
       sucesso = true;
     } finally {
       await legenda.concluir(sucesso);
+      await narrador.narrar(sucesso ? 'Cenário aprovado.' : 'Cenário reprovado.');
       // Segura o quadro final para o resultado aparecer no vídeo.
       await page.waitForTimeout(sucesso ? 800 : 2500).catch(() => {});
     }

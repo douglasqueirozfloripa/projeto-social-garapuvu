@@ -114,8 +114,9 @@ function instalarNoNavegador() {
 }
 
 class Legenda {
-  constructor(page) {
+  constructor(page, narrador) {
     this.page = page;
+    this.narrador = narrador;
     this.estado = { funcionalidade: '', cenario: '', passos: [], falas: [], focos: [], final: '' };
   }
 
@@ -155,12 +156,22 @@ class Legenda {
   async foco(descricao) {
     this.estado.focos.push(descricao);
     await this.desenhar();
+    // No modo ao vivo, anuncia a parada como o NVDA anuncia o foco.
+    await this.narrador?.narrar(falaDoFoco(descricao));
   }
 
   async concluir(sucesso) {
     this.estado.final = sucesso ? '✓ Cenário aprovado' : '✗ Cenário reprovado';
     await this.desenhar();
   }
+}
+
+// "⇧Tab ← button: Quero participar" → "botão, Quero participar"
+const PAPEL_DA_TAG = { button: 'botão', a: 'link', iframe: 'quadro', div: 'região', h2: 'título', h3: 'título' };
+function falaDoFoco(descricao) {
+  const m = descricao.match(/(\w+): (.*)$/);
+  if (!m) return descricao.replace(/[⇧←→✓✗]/g, '');
+  return `${PAPEL_DA_TAG[m[1]] ?? m[1]}, ${m[2]}`;
 }
 
 module.exports = { Legenda };

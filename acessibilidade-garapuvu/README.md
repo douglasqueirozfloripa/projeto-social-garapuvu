@@ -26,7 +26,7 @@ npx playwright install chromium   # só na primeira vez
 npm test                 # suíte completa contra o build LOCAL (faz o build e sobe o preview sozinho)
 npm run test:producao    # mesma suíte contra o site publicado
 npm run test:nvda        # só o NVDA simulado (com voz)
-npm run test:ao-vivo     # navegador visível + voz nos alto-falantes, passo a passo (bom para aula)
+npm run test:ao-vivo     # navegador visível + tudo narrado nos alto-falantes (bom para aula)
 npm run test:ci          # sem voz e sem pausas (para CI)
 npm run relatorio        # abre o relatório HTML
 ```
@@ -46,6 +46,17 @@ Nos cenários de leitor de tela, o vídeo tem **áudio**: cada frase é falada p
 macOS (`say`, voz Luciana) e colocada no instante em que foi dita. O teste espera cada frase
 terminar antes de seguir, como alguém ouvindo o NVDA.
 
+### Modo ao vivo (`npm run test:ao-vivo`)
+
+Abre o navegador, roda um cenário por vez e fala tudo nos alto-falantes, com duas vozes:
+
+- **Eddy (narrador):** lê o nome do cenário, cada passo Dado / Quando / Então quando ele começa,
+  cada parada do Tab e do Shift+Tab ("botão, Quero participar…") e o resultado no fim.
+- **Luciana (leitor de tela):** o que o NVDA simulado fala nos cenários do `03-nvda-simulado`.
+
+Sem o modo ao vivo, só a voz do leitor de tela é gravada nos vídeos, e os cenários sem leitor de
+tela (axe, árvore, layout) ficam em silêncio. Por isso a suíte normal é bem mais rápida.
+
 Os mesmos vídeos, os JSON do axe, a árvore de acessibilidade, as capturas de tela e o trace
 ficam anexados ao relatório HTML (`npm run relatorio`).
 
@@ -53,8 +64,10 @@ ficam anexados ao relatório HTML (`npm run relatorio`).
 |---|---|
 | `BASE_URL` | site a testar (padrão: build local em `http://localhost:4173`) |
 | `AUDIO=0` | desliga a voz |
-| `FALAR=1` | toca a voz ao vivo, além de gravá-la |
-| `VOZ`, `VELOCIDADE` | voz do `say` e palavras por minuto (padrão: Luciana, 210) |
+| `FALAR=1` | modo ao vivo: toca as vozes nos alto-falantes e **narra tudo** (veja acima) |
+| `VOZ` | voz do leitor de tela simulado (padrão: Luciana) |
+| `VOZ_NARRADOR` | voz do narrador do modo ao vivo (padrão: Eddy) |
+| `VELOCIDADE` | palavras por minuto das duas vozes (padrão: 210) |
 | `PASSO_MS` | pausa entre passos, para o vídeo ficar legível (padrão: 600; use 0 em CI) |
 
 ## Como funciona o "NVDA simulado"
