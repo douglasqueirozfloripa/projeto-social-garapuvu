@@ -11,7 +11,7 @@
     "test:nvda": "playwright test testes/03-nvda-simulado.spec.js",
     "test:teclado": "playwright test testes/04-usabilidade-teclado.spec.js",
     "test:layout": "playwright test testes/05-layout-responsivo.spec.js",
-    "test:ao-vivo": "FALAR=1 PASSO_MS=1200 playwright test --headed --workers=1",
+    "test:ao-vivo": "FALAR=1 PASSO_MS=1200 playwright test testes/03-nvda-simulado.spec.js --headed --workers=1",
     "test:ci": "AUDIO=0 PASSO_MS=0 playwright test",
     "relatorio": "playwright show-report playwright-report"
   },
