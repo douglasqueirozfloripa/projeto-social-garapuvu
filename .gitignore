@@ -34,3 +34,6 @@ test-results/
 .vscode/*
 !.vscode/extensions.json
 .idea
+
+# Vídeos dos testes de acessibilidade (gerados a cada execução)
+acessibilidade-garapuvu/videos/

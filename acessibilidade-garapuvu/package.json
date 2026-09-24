@@ -1,0 +1,37 @@
+{
+  "name": "acessibilidade-garapuvu",
+  "version": "1.0.0",
+  "description": "Testes de interface do site do Projeto Garapuvu com Playwright: acessibilidade (WCAG + árvore de acessibilidade), NVDA simulado com voz, usabilidade com teclado e layout — com vídeo legendado em BDD.",
+  "scripts": {
+    "pretest": "node -e \"require('fs').rmSync('videos',{recursive:true,force:true})\"",
+    "test": "playwright test",
+    "test:producao": "BASE_URL=https://projeto-garapuvu.web.app playwright test",
+    "test:wcag": "playwright test testes/01-wcag-axe.spec.js",
+    "test:arvore": "playwright test testes/02-arvore-acessibilidade.spec.js",
+    "test:nvda": "playwright test testes/03-nvda-simulado.spec.js",
+    "test:teclado": "playwright test testes/04-usabilidade-teclado.spec.js",
+    "test:layout": "playwright test testes/05-layout-responsivo.spec.js",
+    "test:ao-vivo": "FALAR=1 PASSO_MS=1200 playwright test testes/03-nvda-simulado.spec.js --headed --workers=1",
+    "test:ci": "AUDIO=0 PASSO_MS=0 playwright test",
+    "relatorio": "playwright show-report playwright-report"
+  },
+  "keywords": [
+    "qa",
+    "acessibilidade",
+    "nvda",
+    "wcag",
+    "playwright",
+    "bdd",
+    "garapuvu"
+  ],
+  "author": "Douglas Adriano Queiroz — Projeto Social Garapuvu 2026",
+  "license": "MIT",
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@guidepup/virtual-screen-reader": "^0.33.0",
+    "@playwright/test": "^1.63.0",
+    "esbuild": "^0.28.2",
+    "ffmpeg-static": "^5.3.0"
+  },
+  "private": true
+}
